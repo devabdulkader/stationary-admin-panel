@@ -11,6 +11,7 @@ import DataOverviewCard from '../card/DataOverviewCard';
 import LowStock from '../card/LowStock';
 import DeadStock from '../card/DeadStock';
 import StockLevel from '../card/StockLevel';
+import FadeUp from '../motion/FadeUp';
 
 interface CardData {
   title: string;
@@ -118,49 +119,66 @@ const AdminDashboard: React.FC = () => {
           <ButtonWithIcon icon={<CgShutterstock />} text="Stocks" />
         </div>
       </header>
-
       <main className="mt-5 grid grid-cols-12 gap-5">
         <section className="col-span-8 space-y-5">
           <div className="grid grid-cols-4 gap-5">
-            <DataOverviewCard
-              data={inventoryData}
-              startDate={startDate}
-              setStartDate={setStartDate}
-            />
-            <DataOverviewCard
-              data={revenueData}
-              startDate={startDate}
-              setStartDate={setStartDate}
-            />
-            <DataOverviewCard
-              data={invoiceData}
-              startDate={startDate}
-              setStartDate={setStartDate}
-            />
-            <DataOverviewCard
-              data={stockHistoryData}
-              startDate={startDate}
-              setStartDate={setStartDate}
-            />{' '}
-          </div>
-          <div className="flex gap-5">
-            <div className="w-1/2">
-              <LowStock
-                data={lowStockData}
+            <FadeUp delay={0.1} duration={1}>
+              <DataOverviewCard
+                data={inventoryData}
                 startDate={startDate}
                 setStartDate={setStartDate}
               />
+            </FadeUp>
+            <FadeUp delay={0.2} duration={1}>
+              <DataOverviewCard
+                data={revenueData}
+                startDate={startDate}
+                setStartDate={setStartDate}
+              />
+            </FadeUp>
+            <FadeUp delay={0.3} duration={1}>
+              <DataOverviewCard
+                data={invoiceData}
+                startDate={startDate}
+                setStartDate={setStartDate}
+              />
+            </FadeUp>
+            <FadeUp delay={0.4} duration={1}>
+              <DataOverviewCard
+                data={stockHistoryData}
+                startDate={startDate}
+                setStartDate={setStartDate}
+              />
+            </FadeUp>
+          </div>
+          <div className="flex gap-5">
+            <div className="w-1/2">
+              <FadeUp delay={1} duration={1}>
+                <LowStock
+                  data={lowStockData}
+                  startDate={startDate}
+                  setStartDate={setStartDate}
+                />
+              </FadeUp>
             </div>
             <div className="w-1/2">
-              {' '}
-              <DeadStock data={deadStockData} linkHref="/dead-stock-details" />
+              <FadeUp delay={0.6} duration={1}>
+                <DeadStock
+                  data={deadStockData}
+                  linkHref="/dead-stock-details"
+                />
+              </FadeUp>
             </div>
           </div>
-          <StockLevel data={stockLevelData} linkHref="/dead-stock-details" />
+          <FadeUp delay={1.5} duration={1}>
+            <StockLevel data={stockLevelData} linkHref="/dead-stock-details" />
+          </FadeUp>
         </section>
 
         <section className="col-span-4 space-y-5">
-          <DropDownMenu />
+          <FadeUp delay={0.8} duration={1}>
+            <DropDownMenu />
+          </FadeUp>
         </section>
       </main>
     </div>
