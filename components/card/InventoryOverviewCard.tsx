@@ -59,7 +59,21 @@ const DataOverviewCard: React.FC<CardProps> = ({
           className="h-16 w-24"
         />
         <div>
-          <h3>{data.value.toLocaleString()}</h3>
+          <div className="flex items-center">
+            {data.title === 'Inventory Value' || data.title === 'Revenue' ? (
+              <Image
+                alt=""
+                src="/symbol.svg"
+                width={300}
+                height={300}
+                className="h-4 w-6"
+              />
+            ) : (
+              ''
+            )}
+            <h3>{data.value.toLocaleString()}</h3>
+          </div>
+
           <p className={`${textColor}`}>
             {sign}
             {Math.abs(data.percentageChange)}%{' '}

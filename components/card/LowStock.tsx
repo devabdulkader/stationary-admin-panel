@@ -7,7 +7,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 
@@ -113,7 +112,7 @@ const LowStock: React.FC<CardProps> = ({ data, startDate, setStartDate }) => {
               tickFormatter={formatYAxisTicks}
             />
             <Tooltip />
-            <Legend />
+
             <CartesianGrid strokeDasharray="3 3" />
             <Bar
               dataKey="pv"

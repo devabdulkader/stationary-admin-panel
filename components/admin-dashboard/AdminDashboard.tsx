@@ -2,16 +2,17 @@
 import React, { useState } from 'react';
 import { BsPlusLg } from 'react-icons/bs';
 import { CgShutterstock } from 'react-icons/cg';
-import { IoChevronDownSharp } from 'react-icons/io5';
 import { PiFire } from 'react-icons/pi';
 import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '../button/ButtonWithIcon';
-import DataOverviewCard from '../card/DataOverviewCard';
+import InventoryOverviewCard from '../card/InventoryOverviewCard';
 import LowStock from '../card/LowStock';
 import DeadStock from '../card/DeadStock';
-import StockLevel from '../card/StockLevel';
 import FadeUp from '../motion/FadeUp';
+import ProductPerformance from '../card/ProductPerformance';
+import MyProducts from '../card/MyProducts';
+import Table from '../common/Table';
 
 interface CardData {
   title: string;
@@ -48,6 +49,9 @@ const AdminDashboard: React.FC = () => {
     value: 3540400,
     percentageChange: 23.04,
   };
+  const productPerformanceData = {
+    title: 'Product Performance',
+  };
 
   const deadStockData = {
     title: 'Dead Stock Products',
@@ -57,40 +61,67 @@ const AdminDashboard: React.FC = () => {
       { productName: 'Colors', daysUnsold: 5 },
     ],
   };
-  const stockLevelData = {
-    title: 'Stock Level Overview',
+  const stockLevelData = [
+    {
+      productName: 'Pen',
+      sku: 'PEN001',
+      category: 'Stationery',
+      quantity: 150,
+      stockStatus: 'In Stock',
+    },
+    {
+      productName: 'Notebook',
+      sku: 'NTBK002',
+      category: 'Stationery',
+      quantity: 10,
+      stockStatus: 'Low Stock',
+    },
+    {
+      productName: 'Markers',
+      sku: 'MRK003',
+      category: 'Art Supplies',
+      quantity: 0,
+      stockStatus: 'Out of Stock',
+    },
+    {
+      productName: 'Sketchbook',
+      sku: 'SKBK004',
+      category: 'Art Supplies',
+      quantity: 50,
+      stockStatus: 'In Stock',
+    },
+  ];
+  // Mock data for my products
+  const myProductsData = {
+    title: 'My Products',
     products: [
       {
-        productName: 'Pen',
-        sku: 'PEN001',
-        category: 'Stationery',
-        quantity: 150,
-        stockStatus: 'In Stock',
-        action: 'Reorder',
+        name: 'Nataraj Color Pencil (12 pcs)',
+        price: 149,
+        sku: '1101234',
+        stock: 45600,
+        imageUrl: '/product-1.png', // Replace with the actual image path
       },
       {
-        productName: 'Notebook',
-        sku: 'NTBK002',
-        category: 'Stationery',
-        quantity: 10,
-        stockStatus: 'Low Stock',
-        action: 'Order Now',
+        name: 'Nataraj Color Pencil (12 pcs)',
+        price: 149,
+        sku: '1101234',
+        stock: 45600,
+        imageUrl: '/product-2.png', // Replace with the actual image path
       },
       {
-        productName: 'Markers',
-        sku: 'MRK003',
-        category: 'Art Supplies',
-        quantity: 0,
-        stockStatus: 'Out of Stock',
-        action: 'Restock',
+        name: 'Faber-Castell Colored Pencils (24 pcs)',
+        price: 299,
+        sku: '1105678',
+        stock: 32000,
+        imageUrl: '/product-3.png', // Replace with the actual image path
       },
       {
-        productName: 'Sketchbook',
-        sku: 'SKBK004',
-        category: 'Art Supplies',
-        quantity: 50,
-        stockStatus: 'In Stock',
-        action: 'Reorder',
+        name: 'Crayola Crayons (16 pcs)',
+        price: 89,
+        sku: '1109123',
+        stock: 15000,
+        imageUrl: '/product-4.png', // Replace with the actual image path
       },
     ],
   };
@@ -98,7 +129,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-5 sm:px-10 2xl:px-20">
       <header className="flex items-center gap-4">
-        <h1 className="text-4xl text-blue-600">Inventory</h1>
+        <h1 className="pr-10 text-4xl text-blue-600">Inventory</h1>
 
         {/* Search Bar */}
         <div className="relative flex-grow">
@@ -123,28 +154,28 @@ const AdminDashboard: React.FC = () => {
         <section className="col-span-8 space-y-5">
           <div className="grid grid-cols-4 gap-5">
             <FadeUp delay={0.1} duration={1}>
-              <DataOverviewCard
+              <InventoryOverviewCard
                 data={inventoryData}
                 startDate={startDate}
                 setStartDate={setStartDate}
               />
             </FadeUp>
             <FadeUp delay={0.2} duration={1}>
-              <DataOverviewCard
+              <InventoryOverviewCard
                 data={revenueData}
                 startDate={startDate}
                 setStartDate={setStartDate}
               />
             </FadeUp>
             <FadeUp delay={0.3} duration={1}>
-              <DataOverviewCard
+              <InventoryOverviewCard
                 data={invoiceData}
                 startDate={startDate}
                 setStartDate={setStartDate}
               />
             </FadeUp>
             <FadeUp delay={0.4} duration={1}>
-              <DataOverviewCard
+              <InventoryOverviewCard
                 data={stockHistoryData}
                 startDate={startDate}
                 setStartDate={setStartDate}
@@ -170,40 +201,36 @@ const AdminDashboard: React.FC = () => {
               </FadeUp>
             </div>
           </div>
+
+          {/* table */}
           <FadeUp delay={1.5} duration={1}>
-            <StockLevel data={stockLevelData} linkHref="/dead-stock-details" />
+            {/* <StockLevel data={stockLevelData} linkHref="/dead-stock-details" /> */}
+            <Table
+              title="Stock Level"
+              headings={[
+                'Product Name',
+                'SKU',
+                'Category',
+                'Quantity',
+                'Stock Status',
+              ]}
+              data={stockLevelData}
+              href="/"
+            />
           </FadeUp>
         </section>
 
         <section className="col-span-4 space-y-5">
           <FadeUp delay={0.8} duration={1}>
-            <DropDownMenu />
+            <ProductPerformance data={productPerformanceData} />
+          </FadeUp>
+          <FadeUp delay={1} duration={1}>
+            <MyProducts data={myProductsData} linkHref="/products" />
           </FadeUp>
         </section>
       </main>
     </div>
   );
 };
-
-// DropDownMenu component
-const DropDownMenu: React.FC = () => (
-  <div className="row-span-3 rounded-lg bg-white shadow">
-    <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5 font-semibold">
-      <span>Drop down menu</span>
-      <button
-        type="button"
-        className="-mr-1 inline-flex justify-center rounded-md bg-white px-1 text-sm font-medium leading-5 text-gray-500 hover:text-gray-600"
-        id="options-menu"
-        aria-haspopup="true"
-        aria-expanded="true"
-      >
-        <IoChevronDownSharp className="-mr-1 ml-1" />
-      </button>
-    </div>
-    <div className="overflow-y-auto">
-      <ul className="space-y-6 p-6"></ul>
-    </div>
-  </div>
-);
 
 export default AdminDashboard;
