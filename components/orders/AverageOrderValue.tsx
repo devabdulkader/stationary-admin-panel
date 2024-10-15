@@ -9,7 +9,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 
@@ -41,6 +40,7 @@ const AverageOrderValue = () => {
       amt: 2000,
     },
   ];
+
   return (
     <div className="rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4 font-semibold">
@@ -66,7 +66,7 @@ const AverageOrderValue = () => {
         </div>
       </div>
 
-      <div style={{ height: '250px', width: '100%' }}>
+      <div style={{ height: '250px', width: '100%' }} className="py-5">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             width={500}
@@ -81,23 +81,16 @@ const AverageOrderValue = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <YAxis yAxisId="left" />
-            <YAxis yAxisId="right" orientation="right" />
+            <YAxis />
             <Tooltip />
-            <Legend />
+
             <Line
-              yAxisId="left"
               type="monotone"
               dataKey="pv"
               stroke="#8884d8"
               activeDot={{ r: 8 }}
             />
-            <Line
-              yAxisId="right"
-              type="monotone"
-              dataKey="uv"
-              stroke="#82ca9d"
-            />
+            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
           </LineChart>
         </ResponsiveContainer>
       </div>

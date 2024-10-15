@@ -83,7 +83,7 @@ const OrderTrends = () => {
         </div>
       </div>
 
-      <div style={{ height: '250px', width: '100%' }}>
+      <div style={{ height: '250px', width: '100%' }} className="py-5">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             width={500}

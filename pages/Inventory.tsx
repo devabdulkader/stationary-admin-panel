@@ -10,9 +10,9 @@ import FadeUp from '@/components/motion/FadeUp';
 import InventoryOverviewCard from '@/components/inventory/InventoryOverviewCard';
 import LowStock from '@/components/inventory/LowStock';
 import DeadStock from '@/components/inventory/DeadStock';
-import Table from '@/components/common/Table';
 import ProductPerformance from '@/components/inventory/ProductPerformance';
 import MyProducts from '@/components/inventory/MyProducts';
+import StoackLevel from '@/components/inventory/StoackLevel';
 
 const Inventory: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
@@ -40,36 +40,7 @@ const Inventory: React.FC = () => {
     { productName: 'Notebook', daysUnsold: 10 },
     { productName: 'Colors', daysUnsold: 5 },
   ];
-  const stockLevelData = [
-    {
-      productName: 'Pen',
-      sku: 'PEN001',
-      category: 'Stationery',
-      quantity: 150,
-      status: 'In Stock',
-    },
-    {
-      productName: 'Notebook',
-      sku: 'NTBK002',
-      category: 'Stationery',
-      quantity: 10,
-      status: 'Low Stock',
-    },
-    {
-      productName: 'Markers',
-      sku: 'MRK003',
-      category: 'Art Supplies',
-      quantity: 0,
-      status: 'Out of Stock',
-    },
-    {
-      productName: 'Sketchbook',
-      sku: 'SKBK004',
-      category: 'Art Supplies',
-      quantity: 50,
-      status: 'In Stock',
-    },
-  ];
+
   const myProductsData = {
     title: 'My Products',
     products: [
@@ -187,18 +158,7 @@ const Inventory: React.FC = () => {
 
           {/* table */}
           <FadeUp delay={1.5} duration={1}>
-            <Table
-              title="Stock Level"
-              headings={[
-                'Product Name',
-                'SKU',
-                'Category',
-                'Quantity',
-                'Stock Status',
-              ]}
-              data={stockLevelData}
-              href="/"
-            />
+            <StoackLevel />
           </FadeUp>
         </section>
 

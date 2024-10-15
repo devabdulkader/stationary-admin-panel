@@ -23,8 +23,11 @@ const Table = <T extends Record<string, any>>({
         return 'bg-[#E1E5FF] text-[#00359E]';
       case 'Low Stock':
       case 'Returned':
+      case 'Refunded':
         return 'bg-[#FFCCCC] text-[#B12704]';
       case 'Pending':
+        return 'bg-[#F6F7FF] text-[#0709F7]';
+      case 'Failed':
         return 'bg-[#F6F7FF] text-gray-600';
       case 'Shipped':
         return 'bg-[#F6F7FF] text-[#0709F7]';
@@ -64,7 +67,7 @@ const Table = <T extends Record<string, any>>({
                   {(index + 1).toString().padStart(2, '0')}{' '}
                 </td>
                 {Object.entries(product).map(([key, value], idx) => (
-                  <td key={idx} className="px-10 py-3">
+                  <td key={idx} className="px-4 py-3">
                     <span
                       className={`inline-block w-full rounded-full text-center ${
                         key === 'status' ? getStatusClass(value as string) : ''

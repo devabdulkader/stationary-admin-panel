@@ -4,10 +4,17 @@ import { BsPlusLg } from 'react-icons/bs';
 import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '@/components/button/ButtonWithIcon';
+import FadeUp from '@/components/motion/FadeUp'; // Assuming you have a FadeUp animation component
+import ProfitLoss from '@/components/accounts/ProfitLoss';
+import GrowthProgression from '@/components/accounts/GrowthProgression';
+import Transactions from '@/components/accounts/Transactions';
+import ProfitMargin from '@/components/accounts/ProfitMargin';
+import ExpenseBreakdown from '@/components/accounts/ExpenseBreakdown';
+import FinancialPerformance from '@/components/accounts/FinancialPerformance';
+import SupplierDue from '@/components/accounts/SupplierDue';
+import InvoiceSummary from '@/components/accounts/InvoiceSummary';
 
 const Accounts: React.FC = () => {
-  // const [startDate, setStartDate] = useState<Date | null>(new Date());
-
   return (
     <div className="min-h-screen bg-gray-100 p-5 sm:px-10 2xl:px-20">
       <header className="flex items-center gap-4">
@@ -31,8 +38,57 @@ const Accounts: React.FC = () => {
           <ButtonWithIcon icon={<BsPlusLg />} text="Entry Expense" />
         </div>
       </header>
-      <main className="mt-5 grid grid-cols-12 gap-5">
-        <section className="col-span-12 space-y-5"></section>
+
+      <main className="mt-5 flex flex-col gap-5">
+        {/* First Row - Two Cards */}
+        <section className="grid grid-cols-2 gap-5">
+          <FadeUp delay={0.1} duration={1}>
+            <ProfitLoss />
+          </FadeUp>
+          <FadeUp delay={0.2} duration={1}>
+            <GrowthProgression />
+          </FadeUp>
+        </section>
+
+        {/* Second Row - Two Sections */}
+        <div className="grid grid-cols-12 gap-5">
+          {/* Section 1 - Cols 8 */}
+          <section className="col-span-8 grid gap-5">
+            <FadeUp delay={0.3} duration={1}>
+              <Transactions />
+            </FadeUp>
+          </section>
+
+          {/* Section 2 - Cols 4 with Two Cards */}
+          <section className="col-span-4 grid grid-rows-2 gap-5">
+            <FadeUp delay={0.4} duration={1}>
+              <ProfitMargin />
+            </FadeUp>
+            <FadeUp delay={0.5} duration={1}>
+              <ExpenseBreakdown />
+            </FadeUp>
+          </section>
+        </div>
+
+        {/* Third Row - Two Sections */}
+        <div className="grid grid-cols-12 gap-5">
+          {/* Section 1 - Cols 7 */}
+          <section className="col-span-7 grid gap-5">
+            <FadeUp delay={0.3} duration={1}>
+              <FinancialPerformance />
+            </FadeUp>
+          </section>
+
+          {/* Section 2 - Cols 5 with Two Cards */}
+          <section className="col-span-5 grid grid-cols-2 gap-5">
+            <FadeUp delay={0.4} duration={1}>
+              <SupplierDue />
+            </FadeUp>
+            <FadeUp delay={0.5} duration={1}>
+              <InvoiceSummary />
+            </FadeUp>
+          </section>
+        </div>
       </main>
     </div>
   );

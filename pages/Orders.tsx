@@ -10,11 +10,11 @@ import { GiSandsOfTime } from 'react-icons/gi';
 import { IoCheckmarkSharp } from 'react-icons/io5';
 import { GrDeliver } from 'react-icons/gr';
 import { RiArrowGoBackLine } from 'react-icons/ri';
-import Table from '@/components/common/Table';
 import PaymentStatus from '@/components/orders/PaymentStatus';
 import OrderTrends from '@/components/orders/OrderTrends';
 import CustomerOverview from '@/components/orders/CustomerOverview';
 import AverageOrderValue from '@/components/orders/AverageOrderValue';
+import RecentOrders from '@/components/orders/RecentOrders';
 
 interface OrderData {
   totalOrders?: number;
@@ -59,64 +59,6 @@ const Orders: React.FC = () => {
     value: 434,
     percentageChange: 0.8,
   };
-  const orderData = [
-    {
-      customerName: 'John Doe',
-      orderNumber: 'ORD001',
-      amount: 250.0,
-      deliveredVia: 'Courier',
-      status: 'Completed',
-    },
-    {
-      customerName: 'Jane Smith',
-      orderNumber: 'ORD002',
-      amount: 100.5,
-      deliveredVia: 'Email',
-      status: 'Pending',
-    },
-    {
-      customerName: 'Alice Johnson',
-      orderNumber: 'ORD003',
-      amount: 150.75,
-      deliveredVia: 'Courier',
-      status: 'Shipped',
-    },
-    {
-      customerName: 'Bob Brown',
-      orderNumber: 'ORD004',
-      amount: 200.0,
-      deliveredVia: 'In-Person',
-      status: 'Returned',
-    },
-    {
-      customerName: 'Charlie White',
-      orderNumber: 'ORD005',
-      amount: 300.25,
-      deliveredVia: 'Courier',
-      status: 'Completed',
-    },
-    {
-      customerName: 'Eve Black',
-      orderNumber: 'ORD006',
-      amount: 120.99,
-      deliveredVia: 'Email',
-      status: 'Pending',
-    },
-    {
-      customerName: 'Frank Green',
-      orderNumber: 'ORD007',
-      amount: 99.99,
-      deliveredVia: 'In-Person',
-      status: 'Shipped',
-    },
-    {
-      customerName: 'Grace Blue',
-      orderNumber: 'ORD008',
-      amount: 175.5,
-      deliveredVia: 'Courier',
-      status: 'Returned',
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-100 p-5 sm:px-10 2xl:px-20">
@@ -200,22 +142,11 @@ const Orders: React.FC = () => {
             </FadeUp>
           </div>
 
-          {/* Stock Level Tables */}
+          {/* Recent Orders Tables */}
           <div className="grid grid-cols-12 gap-5">
             <div className="col-span-8">
               <FadeUp delay={0.6} duration={1}>
-                <Table
-                  title="Stock Level"
-                  headings={[
-                    'Customer Name',
-                    'Order Number',
-                    'Amount',
-                    'Delivered Via',
-                    'Status',
-                  ]}
-                  data={orderData}
-                  href="/"
-                />
+                <RecentOrders />
               </FadeUp>
             </div>
             <div className="col-span-4">
