@@ -4,18 +4,19 @@ import { FaArrowTrendDown, FaArrowTrendUp } from 'react-icons/fa6';
 import { IoChevronDownSharp } from 'react-icons/io5';
 
 interface CardData {
-  title: string;
   value: number;
   percentageChange: number;
 }
 
 interface CardProps {
+  title: string;
   data: CardData;
   startDate: Date | null;
   setStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
 }
 
-const DataOverviewCard: React.FC<CardProps> = ({
+const InventoryOverviewCard: React.FC<CardProps> = ({
+  title,
   data,
   startDate,
   setStartDate,
@@ -28,7 +29,7 @@ const DataOverviewCard: React.FC<CardProps> = ({
   return (
     <div className="rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
-        <span>{data.title}</span>
+        <span>{title}</span>
         <div className="relative">
           <DatePicker
             selected={startDate}
@@ -60,7 +61,7 @@ const DataOverviewCard: React.FC<CardProps> = ({
         />
         <div>
           <div className="flex items-center">
-            {data.title === 'Inventory Value' || data.title === 'Revenue' ? (
+            {title === 'Inventory Value' || title === 'Revenue' ? (
               <Image
                 alt=""
                 src="/symbol.svg"
@@ -89,4 +90,4 @@ const DataOverviewCard: React.FC<CardProps> = ({
   );
 };
 
-export default DataOverviewCard;
+export default InventoryOverviewCard;

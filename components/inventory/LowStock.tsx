@@ -10,10 +10,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-interface CardData {
-  title: string;
-}
-
 interface ChartData {
   name: string;
   uv: number;
@@ -21,12 +17,12 @@ interface ChartData {
 }
 
 interface CardProps {
-  data: CardData;
+  title: string;
   startDate: Date | null;
   setStartDate: React.Dispatch<React.SetStateAction<Date | null>>;
 }
 
-const LowStock: React.FC<CardProps> = ({ data, startDate, setStartDate }) => {
+const LowStock: React.FC<CardProps> = ({ title, startDate, setStartDate }) => {
   const chartData: ChartData[] = [
     { name: 'Pen', uv: 15, pv: 3 },
     { name: 'Notebook', uv: 30, pv: 5 },
@@ -67,7 +63,7 @@ const LowStock: React.FC<CardProps> = ({ data, startDate, setStartDate }) => {
   return (
     <div className="h-full rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
-        <span>{data.title}</span>
+        <span>{title}</span>
         <div className="relative">
           <DatePicker
             selected={startDate}

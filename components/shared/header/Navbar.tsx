@@ -6,6 +6,7 @@ import { LuSettings } from 'react-icons/lu';
 import { TbChevronDown } from 'react-icons/tb';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 
 interface NavLink {
   title: string;
@@ -13,7 +14,7 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { title: 'Inventory', href: '/inventory' },
+  { title: 'Inventory', href: '/' },
   { title: 'Accounts', href: '/accounts' },
   { title: 'Orders', href: '/orders' },
 ];
@@ -35,9 +36,9 @@ const Navbar = () => {
           <ul className="flex gap-10">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="text-lg text-white">
+                <Link href={link.href} className="text-lg text-white">
                   {link.title}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

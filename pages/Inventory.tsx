@@ -5,93 +5,71 @@ import { CgShutterstock } from 'react-icons/cg';
 import { PiFire } from 'react-icons/pi';
 import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
-import ButtonWithIcon from '../button/ButtonWithIcon';
-import InventoryOverviewCard from '../card/InventoryOverviewCard';
-import LowStock from '../card/LowStock';
-import DeadStock from '../card/DeadStock';
-import FadeUp from '../motion/FadeUp';
-import ProductPerformance from '../card/ProductPerformance';
-import MyProducts from '../card/MyProducts';
-import Table from '../common/Table';
+import ButtonWithIcon from '@/components/button/ButtonWithIcon';
+import FadeUp from '@/components/motion/FadeUp';
+import InventoryOverviewCard from '@/components/inventory/InventoryOverviewCard';
+import LowStock from '@/components/inventory/LowStock';
+import DeadStock from '@/components/inventory/DeadStock';
+import Table from '@/components/common/Table';
+import ProductPerformance from '@/components/inventory/ProductPerformance';
+import MyProducts from '@/components/inventory/MyProducts';
 
-interface CardData {
-  title: string;
-  value: number;
-  percentageChange: number;
-}
-
-const AdminDashboard: React.FC = () => {
+const Inventory: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const inventoryData: CardData = {
-    title: 'Inventory Value',
+  const inventoryData = {
     value: 3540400,
     percentageChange: 23.04,
   };
-  const revenueData: CardData = {
-    title: 'Revenue',
+  const revenueData = {
     value: 3540400,
     percentageChange: 23.04,
   };
 
-  const invoiceData: CardData = {
-    title: 'Invoice',
+  const invoiceData = {
     value: 3540400,
     percentageChange: -23.04,
   };
 
-  const stockHistoryData: CardData = {
-    title: 'Stock History',
+  const stockHistoryData = {
     value: 3540400,
     percentageChange: 23.04,
-  };
-  const lowStockData = {
-    title: 'Low Stock',
-    value: 3540400,
-    percentageChange: 23.04,
-  };
-  const productPerformanceData = {
-    title: 'Product Performance',
   };
 
-  const deadStockData = {
-    title: 'Dead Stock Products',
-    products: [
-      { productName: 'Pen', daysUnsold: 15 },
-      { productName: 'Notebook', daysUnsold: 10 },
-      { productName: 'Colors', daysUnsold: 5 },
-    ],
-  };
+  const deadStockData = [
+    { productName: 'Pen', daysUnsold: 15 },
+    { productName: 'Notebook', daysUnsold: 10 },
+    { productName: 'Colors', daysUnsold: 5 },
+  ];
   const stockLevelData = [
     {
       productName: 'Pen',
       sku: 'PEN001',
       category: 'Stationery',
       quantity: 150,
-      stockStatus: 'In Stock',
+      status: 'In Stock',
     },
     {
       productName: 'Notebook',
       sku: 'NTBK002',
       category: 'Stationery',
       quantity: 10,
-      stockStatus: 'Low Stock',
+      status: 'Low Stock',
     },
     {
       productName: 'Markers',
       sku: 'MRK003',
       category: 'Art Supplies',
       quantity: 0,
-      stockStatus: 'Out of Stock',
+      status: 'Out of Stock',
     },
     {
       productName: 'Sketchbook',
       sku: 'SKBK004',
       category: 'Art Supplies',
       quantity: 50,
-      stockStatus: 'In Stock',
+      status: 'In Stock',
     },
   ];
-  // Mock data for my products
   const myProductsData = {
     title: 'My Products',
     products: [
@@ -100,28 +78,28 @@ const AdminDashboard: React.FC = () => {
         price: 149,
         sku: '1101234',
         stock: 45600,
-        imageUrl: '/product-1.png', // Replace with the actual image path
+        imageUrl: '/product-1.png',
       },
       {
         name: 'Nataraj Color Pencil (12 pcs)',
         price: 149,
         sku: '1101234',
         stock: 45600,
-        imageUrl: '/product-2.png', // Replace with the actual image path
+        imageUrl: '/product-2.png',
       },
       {
         name: 'Faber-Castell Colored Pencils (24 pcs)',
         price: 299,
         sku: '1105678',
         stock: 32000,
-        imageUrl: '/product-3.png', // Replace with the actual image path
+        imageUrl: '/product-3.png',
       },
       {
         name: 'Crayola Crayons (16 pcs)',
         price: 89,
         sku: '1109123',
         stock: 15000,
-        imageUrl: '/product-4.png', // Replace with the actual image path
+        imageUrl: '/product-4.png',
       },
     ],
   };
@@ -155,6 +133,7 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-4 gap-5">
             <FadeUp delay={0.1} duration={1}>
               <InventoryOverviewCard
+                title="Inventory Value"
                 data={inventoryData}
                 startDate={startDate}
                 setStartDate={setStartDate}
@@ -162,6 +141,7 @@ const AdminDashboard: React.FC = () => {
             </FadeUp>
             <FadeUp delay={0.2} duration={1}>
               <InventoryOverviewCard
+                title="Revenue"
                 data={revenueData}
                 startDate={startDate}
                 setStartDate={setStartDate}
@@ -169,6 +149,7 @@ const AdminDashboard: React.FC = () => {
             </FadeUp>
             <FadeUp delay={0.3} duration={1}>
               <InventoryOverviewCard
+                title="Invoice"
                 data={invoiceData}
                 startDate={startDate}
                 setStartDate={setStartDate}
@@ -176,6 +157,7 @@ const AdminDashboard: React.FC = () => {
             </FadeUp>
             <FadeUp delay={0.4} duration={1}>
               <InventoryOverviewCard
+                title="Stock History"
                 data={stockHistoryData}
                 startDate={startDate}
                 setStartDate={setStartDate}
@@ -186,7 +168,7 @@ const AdminDashboard: React.FC = () => {
             <div className="w-1/2">
               <FadeUp delay={1} duration={1}>
                 <LowStock
-                  data={lowStockData}
+                  title="Low Stock"
                   startDate={startDate}
                   setStartDate={setStartDate}
                 />
@@ -195,6 +177,7 @@ const AdminDashboard: React.FC = () => {
             <div className="w-1/2">
               <FadeUp delay={0.6} duration={1}>
                 <DeadStock
+                  title="Dead Stock Products"
                   data={deadStockData}
                   linkHref="/dead-stock-details"
                 />
@@ -204,7 +187,6 @@ const AdminDashboard: React.FC = () => {
 
           {/* table */}
           <FadeUp delay={1.5} duration={1}>
-            {/* <StockLevel data={stockLevelData} linkHref="/dead-stock-details" /> */}
             <Table
               title="Stock Level"
               headings={[
@@ -222,7 +204,7 @@ const AdminDashboard: React.FC = () => {
 
         <section className="col-span-4 space-y-5">
           <FadeUp delay={0.8} duration={1}>
-            <ProductPerformance data={productPerformanceData} />
+            <ProductPerformance title="Product Performance" />
           </FadeUp>
           <FadeUp delay={1} duration={1}>
             <MyProducts data={myProductsData} linkHref="/products" />
@@ -233,4 +215,4 @@ const AdminDashboard: React.FC = () => {
   );
 };
 
-export default AdminDashboard;
+export default Inventory;

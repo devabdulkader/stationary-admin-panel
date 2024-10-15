@@ -1,10 +1,8 @@
-import AdminDashboard from '@/components/admin-dashboard/AdminDashboard';
-import React from 'react';
-
+import Inventory from '@/pages/Inventory';
 export default function Home() {
   return (
     <div>
-      <AdminDashboard />
+      <Inventory />
     </div>
   );
 }

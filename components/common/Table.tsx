@@ -16,6 +16,23 @@ const Table = <T extends Record<string, any>>({
   data,
   href,
 }: TableProps<T>) => {
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case 'Completed':
+      case 'In Stock':
+        return 'bg-[#E1E5FF] text-[#00359E]';
+      case 'Low Stock':
+      case 'Returned':
+        return 'bg-[#FFCCCC] text-[#B12704]';
+      case 'Pending':
+        return 'bg-[#F6F7FF] text-gray-600';
+      case 'Shipped':
+        return 'bg-[#F6F7FF] text-[#0709F7]';
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
@@ -28,7 +45,7 @@ const Table = <T extends Record<string, any>>({
         <table className="min-w-full table-auto border-collapse">
           <thead>
             <tr className="border-b text-gray-400">
-              <th className="px-4 py-3 text-left">#Number</th>{' '}
+              <th className="px-4 py-3 text-center">#Number</th>
               {headings.map((heading) => (
                 <th key={heading} className="px-4 py-3 text-center">
                   <span>
@@ -43,13 +60,18 @@ const Table = <T extends Record<string, any>>({
           <tbody>
             {data.map((product, index) => (
               <tr key={index} className="border-b">
-                <td className="px-4 py-3 text-left">
+                <td className="px-4 py-3 text-center">
                   {(index + 1).toString().padStart(2, '0')}{' '}
                 </td>
-                {Object.values(product).map((value, idx) => (
-                  <td key={idx} className="px-4 py-3 text-center">
-                    {' '}
-                    {value}
+                {Object.entries(product).map(([key, value], idx) => (
+                  <td key={idx} className="px-10 py-3">
+                    <span
+                      className={`inline-block w-full rounded-full text-center ${
+                        key === 'status' ? getStatusClass(value as string) : ''
+                      }`}
+                    >
+                      {value}
+                    </span>
                   </td>
                 ))}
                 <td className="px-4 py-3 text-center">

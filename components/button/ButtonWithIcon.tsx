@@ -20,11 +20,9 @@ const ButtonWithIcon: React.FC<ButtonWithIconProps> = ({
 
   if (href) {
     return (
-      <Link href={href} passHref>
-        <a className={buttonClassNames}>
-          <span className="mr-2">{icon}</span>
-          {text}
-        </a>
+      <Link href={href} className={buttonClassNames}>
+        <span className="mr-2">{icon}</span>
+        {text}
       </Link>
     );
   }

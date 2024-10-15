@@ -1,10 +1,10 @@
-import Orders from '@/pages/Orders';
+import Accounts from '@/pages/Accounts';
 import React from 'react';
 
 const page = () => {
   return (
     <div>
-      <Orders />
+      <Accounts />
     </div>
   );
 };

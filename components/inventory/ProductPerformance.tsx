@@ -9,10 +9,6 @@ import {
 } from 'recharts';
 import { FC } from 'react';
 
-interface CardData {
-  title: string;
-}
-
 interface ChartData {
   name: string;
   uv: number;
@@ -22,7 +18,7 @@ interface ChartData {
 }
 
 interface CardProps {
-  data: CardData;
+  title: string;
 }
 
 interface CustomTooltipProps {
@@ -77,7 +73,7 @@ const CustomLegend: FC = () => {
   );
 };
 
-const ProductPerformance: React.FC<CardProps> = ({ data }) => {
+const ProductPerformance: React.FC<CardProps> = ({ title }) => {
   const chartData: ChartData[] = [
     {
       name: 'MON',
@@ -126,7 +122,7 @@ const ProductPerformance: React.FC<CardProps> = ({ data }) => {
   return (
     <div className="h-full rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4 font-semibold">
-        <span>{data.title}</span>
+        <span>{title}</span>
         <div className="relative space-x-3">
           <button>Daily</button>
           <button>Weekly</button>

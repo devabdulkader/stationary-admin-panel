@@ -8,20 +8,20 @@ interface ProductData {
 }
 
 interface DeadStockProps {
-  data: {
-    title: string;
-    products: ProductData[];
-  };
+  title: string;
+
+  data: ProductData[];
+
   linkHref: string;
 }
 
-const DeadStock: React.FC<DeadStockProps> = ({ data, linkHref }) => {
+const DeadStock: React.FC<DeadStockProps> = ({ title, data, linkHref }) => {
   const totalDaysInYear = 365;
 
   return (
     <div className="rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
-        <span>{data.title}</span>
+        <span>{title}</span>
         <Link href={linkHref}>
           <button className="py-2 text-blue-500">View</button>{' '}
         </Link>
@@ -45,7 +45,7 @@ const DeadStock: React.FC<DeadStockProps> = ({ data, linkHref }) => {
             </tr>
           </thead>
           <tbody>
-            {data.products.map((product, index) => {
+            {data.map((product, index) => {
               const progressPercentage =
                 (product.daysUnsold / totalDaysInYear) * 100;
 
