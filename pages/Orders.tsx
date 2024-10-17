@@ -1,13 +1,13 @@
 'use client';
 import React, { useState } from 'react';
-import { BsBox2, BsPlusLg } from 'react-icons/bs';
+import { BsBox2 } from 'react-icons/bs';
 import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '@/components/button/ButtonWithIcon';
 import FadeUp from '@/components/motion/FadeUp';
 import OrderOverviewCard from '@/components/orders/OrderOverviewCard';
 import { GiSandsOfTime } from 'react-icons/gi';
-import { IoCheckmarkSharp } from 'react-icons/io5';
+import { IoCheckmarkSharp, IoManOutline } from 'react-icons/io5';
 import { GrDeliver } from 'react-icons/gr';
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import PaymentStatus from '@/components/orders/PaymentStatus';
@@ -15,6 +15,9 @@ import OrderTrends from '@/components/orders/OrderTrends';
 import CustomerOverview from '@/components/orders/CustomerOverview';
 import AverageOrderValue from '@/components/orders/AverageOrderValue';
 import RecentOrders from '@/components/orders/RecentOrders';
+import { TfiBag } from 'react-icons/tfi';
+import Modal from '@/components/common/Modal';
+import CustomersPopup from '@/components/orders/CustomersPopup';
 
 interface OrderData {
   totalOrders?: number;
@@ -59,9 +62,22 @@ const Orders: React.FC = () => {
     value: 434,
     percentageChange: 0.8,
   };
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
 
+  const openCustomerModal = () => {
+    setIsCustomerModalOpen(true);
+  };
+
+  const closeCustomerModal = () => {
+    setIsCustomerModalOpen(false);
+  };
   return (
-    <div className="min-h-screen bg-gray-100 p-5 sm:px-10 2xl:px-20">
+    <div className="">
+      {isCustomerModalOpen && (
+        <Modal closeModal={closeCustomerModal}>
+          <CustomersPopup />
+        </Modal>
+      )}
       <header className="flex items-center gap-4">
         <h1 className="pr-10 text-4xl text-blue-600">Orders</h1>
 
@@ -79,8 +95,17 @@ const Orders: React.FC = () => {
 
         {/* Button Section */}
         <div className="flex gap-4">
-          <ButtonWithIcon icon={<BsPlusLg />} text="Customers" />
-          <ButtonWithIcon icon={<BsPlusLg />} text="Manage Customers" />
+          <ButtonWithIcon
+            iconClassName="text-xl"
+            icon={<IoManOutline />}
+            text="Customers"
+            onClick={openCustomerModal}
+          />
+          <ButtonWithIcon
+            icon={<TfiBag />}
+            text="Manage Orders"
+            href="/manage-orders"
+          />
         </div>
       </header>
       <main className="mt-5 grid grid-cols-12 gap-5">

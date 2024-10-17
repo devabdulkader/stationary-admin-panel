@@ -1,9 +1,19 @@
 import React from 'react';
 import Table from '../common/Table';
 
-const StoackLevel = () => {
-  const stockLevelData = [
+interface StockLevelItem {
+  id: number;
+  productName: string;
+  sku: string;
+  category: string;
+  quantity: number;
+  status: string;
+}
+
+const StockLevel = () => {
+  const stockLevelData: StockLevelItem[] = [
     {
+      id: 1,
       productName: 'Pen',
       sku: 'PEN001',
       category: 'Stationery',
@@ -11,6 +21,7 @@ const StoackLevel = () => {
       status: 'In Stock',
     },
     {
+      id: 2,
       productName: 'Notebook',
       sku: 'NTBK002',
       category: 'Stationery',
@@ -18,6 +29,7 @@ const StoackLevel = () => {
       status: 'Low Stock',
     },
     {
+      id: 3,
       productName: 'Markers',
       sku: 'MRK003',
       category: 'Art Supplies',
@@ -25,6 +37,7 @@ const StoackLevel = () => {
       status: 'Out of Stock',
     },
     {
+      id: 4,
       productName: 'Sketchbook',
       sku: 'SKBK004',
       category: 'Art Supplies',
@@ -32,6 +45,7 @@ const StoackLevel = () => {
       status: 'In Stock',
     },
   ];
+
   return (
     <Table
       title="Stock Level"
@@ -42,4 +56,4 @@ const StoackLevel = () => {
   );
 };
 
-export default StoackLevel;
+export default StockLevel;

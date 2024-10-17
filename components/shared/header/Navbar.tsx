@@ -28,7 +28,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <header className="bg-blue flex h-20 items-center px-5 sm:px-10 2xl:px-20">
+      <header className="bg-blue flex h-20 items-center px-5 py-5 2xl:px-10">
         <div className="mr-8 cursor-pointer">
           <Logo />
         </div>

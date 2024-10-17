@@ -104,7 +104,7 @@ const PaymentStatus = () => {
         </ResponsiveContainer>
         <HiOutlineChevronRight
           size={30}
-          className="absolute right-0 top-1/2 -translate-y-1/2 transform"
+          className="absolute right-5 top-1/2 -translate-y-1/2 transform"
         />{' '}
       </div>
 

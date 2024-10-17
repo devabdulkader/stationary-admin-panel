@@ -1,20 +1,39 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IoMdArrowDown } from 'react-icons/io';
+import Pagination from './Pagination';
 
-interface TableProps<T> {
-  title: string;
+interface Item {
+  id: number;
+}
+
+interface TableProps<T extends Item> {
+  title?: string;
+  topHeading?: string;
   headings: string[];
   data: T[];
   href: string;
+  pagination?: boolean;
+  action?: boolean;
+  view?: boolean;
+  search?: boolean;
+  sort?: boolean;
+  arrowDown?: boolean;
 }
 
-const Table = <T extends Record<string, any>>({
+const Table = <T extends Item>({
   title,
+  topHeading,
   headings,
   data,
   href,
+  pagination = false,
+  action = false,
+  view = false,
+  search = false,
+  sort = false,
+  arrowDown = true,
 }: TableProps<T>) => {
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -36,15 +55,65 @@ const Table = <T extends Record<string, any>>({
     }
   };
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  let filteredData = data;
+
+  if (searchTerm) {
+    filteredData = filteredData.filter((item) =>
+      Object.values(item).some((value) =>
+        String(value).toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
+    );
+  }
+
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
+
   return (
-    <div className="rounded-lg bg-white shadow">
-      <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
-        <span>{title}</span>
-        <Link href={href}>
-          <button className="py-2 text-blue-500">View</button>
-        </Link>
-      </div>
-      <div>
+    <>
+      {topHeading && (
+        <h1 className="mb-5 text-3xl font-medium">{topHeading}</h1>
+      )}
+
+      {search || sort ? (
+        <div className="flex items-center gap-3">
+          {search && (
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="mb-4 w-full rounded-lg border border-gray-300 px-4 py-2"
+            />
+          )}
+          {sort && (
+            <select className="mb-4 rounded-lg border border-gray-300 px-4 py-2">
+              <option value="">Sort by</option>
+              {headings.map((heading) => (
+                <option key={heading} value={heading}>
+                  {heading.charAt(0).toUpperCase() + heading.slice(1)}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      ) : null}
+
+      <div className="rounded-lg bg-white shadow">
+        {view && title && (
+          <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
+            <span>{title}</span>
+            <Link href={href}>
+              <button className="py-2 text-blue-500">View</button>
+            </Link>
+          </div>
+        )}
+
+        {/* Table */}
         <table className="min-w-full table-auto border-collapse">
           <thead>
             <tr className="border-b text-gray-400">
@@ -54,40 +123,62 @@ const Table = <T extends Record<string, any>>({
                   <span>
                     {heading.charAt(0).toUpperCase() + heading.slice(1)}
                   </span>
-                  <IoMdArrowDown className="inline text-gray-400" size={24} />
+                  {arrowDown && (
+                    <IoMdArrowDown className="inline text-gray-400" size={24} />
+                  )}
                 </th>
               ))}
-              <th className="px-4 py-3 text-left">Action</th>
+              {action && <th className="px-4 py-3 text-left">Action</th>}
             </tr>
           </thead>
           <tbody>
-            {data.map((product, index) => (
+            {currentItems.map((product, index) => (
               <tr key={index} className="border-b">
                 <td className="px-4 py-3 text-center">
-                  {(index + 1).toString().padStart(2, '0')}{' '}
+                  {(index + 1 + (currentPage - 1) * itemsPerPage)
+                    .toString()
+                    .padStart(2, '0')}{' '}
                 </td>
-                {Object.entries(product).map(([key, value], idx) => (
-                  <td key={idx} className="px-4 py-3">
-                    <span
-                      className={`inline-block w-full rounded-full text-center ${
-                        key === 'status' ? getStatusClass(value as string) : ''
-                      }`}
-                    >
-                      {value}
-                    </span>
+                {Object.entries(product).map(
+                  ([key, value], idx) =>
+                    key !== 'id' &&
+                    key !== '_id' && ( // Ignore rendering 'id' or '_id'
+                      <td key={idx} className="px-4 py-3">
+                        <span
+                          className={`inline-block w-full rounded-full text-center ${
+                            key === 'status'
+                              ? getStatusClass(value as string)
+                              : ''
+                          }`}
+                        >
+                          {value}
+                        </span>
+                      </td>
+                    ),
+                )}
+                {action && (
+                  <td className="px-4 py-3 text-center">
+                    <button className="text-blue-500 hover:underline">
+                      <BiDotsVerticalRounded size={24} />
+                    </button>
                   </td>
-                ))}
-                <td className="px-4 py-3 text-center">
-                  <button className="text-blue-500 hover:underline">
-                    <BiDotsVerticalRounded size={24} />
-                  </button>
-                </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </div>
+
+      {/* Pagination */}
+      {pagination && (
+        <Pagination
+          data={filteredData}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+    </>
   );
 };
 

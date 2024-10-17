@@ -12,14 +12,19 @@ import LowStock from '@/components/inventory/LowStock';
 import DeadStock from '@/components/inventory/DeadStock';
 import ProductPerformance from '@/components/inventory/ProductPerformance';
 import MyProducts from '@/components/inventory/MyProducts';
-import StoackLevel from '@/components/inventory/StoackLevel';
+import StockLevel from '@/components/inventory/StockLevel';
+import Modal from '@/components/common/Modal';
+import AddNewProduct from '@/components/inventory/AddNewProduct';
+import StocksPopup from '@/components/inventory/StocksPopup';
 
 const Inventory: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
+
   const inventoryData = {
     value: 3540400,
     percentageChange: 23.04,
   };
+
   const revenueData = {
     value: 3540400,
     percentageChange: 23.04,
@@ -75,13 +80,44 @@ const Inventory: React.FC = () => {
     ],
   };
 
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+
+  const openAddProductModal = () => {
+    setIsAddProductModalOpen(true);
+  };
+
+  const closeAddProductModal = () => {
+    setIsAddProductModalOpen(false);
+  };
+
+  const openStockModal = () => {
+    setIsStockModalOpen(true);
+  };
+
+  const closeStockModal = () => {
+    setIsStockModalOpen(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-5 sm:px-10 2xl:px-20">
-      <header className="flex items-center gap-4">
-        <h1 className="pr-10 text-4xl text-blue-600">Inventory</h1>
+    <div className="">
+      {isAddProductModalOpen && (
+        <Modal closeModal={closeAddProductModal}>
+          <AddNewProduct />
+        </Modal>
+      )}
+
+      {isStockModalOpen && (
+        <Modal closeModal={closeStockModal}>
+          <StocksPopup />
+        </Modal>
+      )}
+
+      <header className="flex flex-wrap items-center gap-4">
+        <h1 className="text-2xl text-blue-600 sm:text-4xl">Inventory</h1>
 
         {/* Search Bar */}
-        <div className="relative flex-grow">
+        <div className="relative mt-4 w-full flex-grow sm:mt-0 sm:w-auto">
           <input
             type="text"
             placeholder="Search..."
@@ -93,15 +129,28 @@ const Inventory: React.FC = () => {
         </div>
 
         {/* Button Section */}
-        <div className="flex gap-4">
-          <ButtonWithIcon icon={<BsPlusLg />} text="Add New Product" />
-          <ButtonWithIcon icon={<PiFire />} text="Deals of the Day" />
-          <ButtonWithIcon icon={<CgShutterstock />} text="Stocks" />
+        <div className="flex flex-wrap gap-2 sm:gap-4">
+          <ButtonWithIcon
+            icon={<BsPlusLg />}
+            text="Add New Product"
+            onClick={openAddProductModal}
+          />
+          <ButtonWithIcon
+            icon={<PiFire />}
+            text="Deals of the Day"
+            href="/deals-of-the-day"
+          />
+          <ButtonWithIcon
+            icon={<CgShutterstock />}
+            text="Stocks"
+            onClick={openStockModal}
+          />
         </div>
       </header>
-      <main className="mt-5 grid grid-cols-12 gap-5">
-        <section className="col-span-8 space-y-5">
-          <div className="grid grid-cols-4 gap-5">
+
+      <main className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-12">
+        <section className="space-y-5 md:col-span-8">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 2xl:grid-cols-4">
             <FadeUp delay={0.1} duration={1}>
               <InventoryOverviewCard
                 title="Inventory Value"
@@ -135,8 +184,9 @@ const Inventory: React.FC = () => {
               />
             </FadeUp>
           </div>
-          <div className="flex gap-5">
-            <div className="w-1/2">
+
+          <div className="flex flex-col gap-5 2xl:flex-row">
+            <div className="flex-1">
               <FadeUp delay={1} duration={1}>
                 <LowStock
                   title="Low Stock"
@@ -145,7 +195,7 @@ const Inventory: React.FC = () => {
                 />
               </FadeUp>
             </div>
-            <div className="w-1/2">
+            <div className="flex-1">
               <FadeUp delay={0.6} duration={1}>
                 <DeadStock
                   title="Dead Stock Products"
@@ -158,16 +208,16 @@ const Inventory: React.FC = () => {
 
           {/* table */}
           <FadeUp delay={1.5} duration={1}>
-            <StoackLevel />
+            <StockLevel />
           </FadeUp>
         </section>
 
-        <section className="col-span-4 space-y-5">
+        <section className="space-y-5 md:col-span-4">
           <FadeUp delay={0.8} duration={1}>
             <ProductPerformance title="Product Performance" />
           </FadeUp>
           <FadeUp delay={1} duration={1}>
-            <MyProducts data={myProductsData} linkHref="/products" />
+            <MyProducts data={myProductsData} linkHref="/list-of-products" />
           </FadeUp>
         </section>
       </main>

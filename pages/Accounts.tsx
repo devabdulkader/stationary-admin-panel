@@ -1,6 +1,6 @@
 'use client';
 
-import { BsPlusLg } from 'react-icons/bs';
+import { BsArrowRepeat } from 'react-icons/bs';
 import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '@/components/button/ButtonWithIcon';
@@ -13,10 +13,29 @@ import ExpenseBreakdown from '@/components/accounts/ExpenseBreakdown';
 import FinancialPerformance from '@/components/accounts/FinancialPerformance';
 import SupplierDue from '@/components/accounts/SupplierDue';
 import InvoiceSummary from '@/components/accounts/InvoiceSummary';
+import { useState } from 'react';
+import EntryExpensePopup from '@/components/accounts/EntryExpensePopup';
+import Modal from '@/components/common/Modal';
+import { AiOutlineInbox } from 'react-icons/ai';
 
 const Accounts: React.FC = () => {
+  const [isEntryExpenseModalOpen, setIsEntryExpenseModalOpen] = useState(false);
+
+  const openEntryExpenseModal = () => {
+    setIsEntryExpenseModalOpen(true);
+  };
+
+  const closeEntryExpenseModal = () => {
+    setIsEntryExpenseModalOpen(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-5 sm:px-10 2xl:px-20">
+    <div className="">
+      {isEntryExpenseModalOpen && (
+        <Modal closeModal={closeEntryExpenseModal}>
+          <EntryExpensePopup />{' '}
+        </Modal>
+      )}
       <header className="flex items-center gap-4">
         <h1 className="pr-10 text-4xl text-blue-600">Accounts</h1>
 
@@ -34,13 +53,16 @@ const Accounts: React.FC = () => {
 
         {/* Button Section */}
         <div className="flex gap-4">
-          <ButtonWithIcon icon={<BsPlusLg />} text="Generate Report" />
-          <ButtonWithIcon icon={<BsPlusLg />} text="Entry Expense" />
+          <ButtonWithIcon icon={<BsArrowRepeat />} text="Generate Report" />
+          <ButtonWithIcon
+            icon={<AiOutlineInbox />}
+            text="Entry Expense"
+            onClick={openEntryExpenseModal}
+          />
         </div>
       </header>
 
       <main className="mt-5 flex flex-col gap-5">
-        {/* First Row - Two Cards */}
         <section className="grid grid-cols-2 gap-5">
           <FadeUp delay={0.1} duration={1}>
             <ProfitLoss />
@@ -50,16 +72,13 @@ const Accounts: React.FC = () => {
           </FadeUp>
         </section>
 
-        {/* Second Row - Two Sections */}
         <div className="grid grid-cols-12 gap-5">
-          {/* Section 1 - Cols 8 */}
           <section className="col-span-8 grid gap-5">
             <FadeUp delay={0.3} duration={1}>
               <Transactions />
             </FadeUp>
           </section>
 
-          {/* Section 2 - Cols 4 with Two Cards */}
           <section className="col-span-4 grid grid-rows-2 gap-5">
             <FadeUp delay={0.4} duration={1}>
               <ProfitMargin />
@@ -70,16 +89,13 @@ const Accounts: React.FC = () => {
           </section>
         </div>
 
-        {/* Third Row - Two Sections */}
         <div className="grid grid-cols-12 gap-5">
-          {/* Section 1 - Cols 7 */}
           <section className="col-span-7 grid gap-5">
             <FadeUp delay={0.3} duration={1}>
               <FinancialPerformance />
             </FadeUp>
           </section>
 
-          {/* Section 2 - Cols 5 with Two Cards */}
           <section className="col-span-5 grid grid-cols-2 gap-5">
             <FadeUp delay={0.4} duration={1}>
               <SupplierDue />

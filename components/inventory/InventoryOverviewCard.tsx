@@ -28,7 +28,7 @@ const InventoryOverviewCard: React.FC<CardProps> = ({
 
   return (
     <div className="rounded-lg bg-white shadow">
-      <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
+      <div className="flex items-center justify-between text-nowrap border-b border-gray-100 px-6 py-2 font-semibold">
         <span>{title}</span>
         <div className="relative">
           <DatePicker
