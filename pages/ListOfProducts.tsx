@@ -242,11 +242,11 @@ const ListOfProducts = () => {
     },
   ];
 
-  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
   let filteredData = productData;
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Apply search filter
   if (searchTerm) {

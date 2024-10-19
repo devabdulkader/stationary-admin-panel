@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import ProductImage from '../card/ProductImage';
 
-const HeroCarousel = () => {
+const ProductImages = () => {
   const [carouselData, setCarouselData] = useState<any[]>([]);
 
   const totalSlots = 4;
@@ -22,10 +22,10 @@ const HeroCarousel = () => {
   const handleDeleteImage = () => {};
 
   return (
-    <div className="rounded-lg bg-white p-5">
-      <h1 className="p-5 text-2xl font-medium">Hero Carousel</h1>
+    <div className="">
+      <h1 className="py-5 text-2xl font-medium">Product Image</h1>
 
-      <div className="grid grid-cols-4 gap-5 rounded-lg bg-white p-5">
+      <div className="grid grid-cols-4 gap-5 rounded-lg">
         {Array.from({ length: totalSlots }).map((_, index) => {
           const data = carouselData[index];
           return data ? (
@@ -53,4 +53,4 @@ const HeroCarousel = () => {
   );
 };
 
-export default HeroCarousel;
+export default ProductImages;

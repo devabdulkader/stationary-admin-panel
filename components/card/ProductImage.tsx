@@ -2,12 +2,12 @@ import Image from 'next/image';
 import React from 'react';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 
-type HeroImageProps = {
+type ProductImageProps = {
   src: string;
   onDelete: () => void;
 };
 
-const HeroImage: React.FC<HeroImageProps> = ({ src, onDelete }) => {
+const ProductImage: React.FC<ProductImageProps> = ({ src, onDelete }) => {
   return (
     <div className="relative max-h-[240px]">
       <Image
@@ -28,4 +28,4 @@ const HeroImage: React.FC<HeroImageProps> = ({ src, onDelete }) => {
   );
 };
 
-export default HeroImage;
+export default ProductImage;
