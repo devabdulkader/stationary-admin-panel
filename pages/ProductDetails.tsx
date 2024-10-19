@@ -1,4 +1,4 @@
-import ProductImages from '@/components/productDetails.tsx/ProductImages';
+import ProductImages from '@/components/ProductDetails.tsx/ProductImages';
 import Link from 'next/link';
 import React from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
