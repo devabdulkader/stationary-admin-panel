@@ -33,13 +33,13 @@ const MyProducts: React.FC<ProductProps> = ({ data, linkHref }) => {
         {data.products.map((product, index) => (
           <div
             key={index}
-            className={`flex items-center justify-between px-4 py-2 ${
+            className={`flex items-center justify-between gap-2 px-4 py-2 ${
               index !== data.products.length - 1
                 ? 'border-b border-gray-200'
                 : ''
             }`}
           >
-            <div className="flex w-16 items-center">
+            <div className="flex items-center">
               <RxDragHandleDots2 className="h-6 w-6" />
             </div>
 
@@ -61,7 +61,7 @@ const MyProducts: React.FC<ProductProps> = ({ data, linkHref }) => {
               <p>Available Stock: {product.stock} units</p>
             </div>
 
-            <div className="flex w-16 items-center justify-end">
+            <div className="flex items-center justify-end">
               <Link href="#" className="text-gray-600">
                 <GoChevronRight size={24} />
               </Link>

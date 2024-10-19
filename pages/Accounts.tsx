@@ -4,7 +4,7 @@ import { BsArrowRepeat } from 'react-icons/bs';
 import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '@/components/button/ButtonWithIcon';
-import FadeUp from '@/components/motion/FadeUp'; // Assuming you have a FadeUp animation component
+import FadeUp from '@/components/motion/FadeUp';
 import ProfitLoss from '@/components/accounts/ProfitLoss';
 import GrowthProgression from '@/components/accounts/GrowthProgression';
 import Transactions from '@/components/accounts/Transactions';
@@ -63,7 +63,7 @@ const Accounts: React.FC = () => {
       </header>
 
       <main className="mt-5 flex flex-col gap-5">
-        <section className="grid grid-cols-2 gap-5">
+        <section className="grid gap-5 lg:grid-cols-2">
           <FadeUp delay={0.1} duration={1}>
             <ProfitLoss />
           </FadeUp>
@@ -73,13 +73,15 @@ const Accounts: React.FC = () => {
         </section>
 
         <div className="grid grid-cols-12 gap-5">
-          <section className="col-span-8 grid gap-5">
+          {/* First section - Transactions */}
+          <section className="col-span-12 2xl:col-span-7">
             <FadeUp delay={0.3} duration={1}>
               <Transactions />
             </FadeUp>
           </section>
 
-          <section className="col-span-4 grid grid-rows-2 gap-5">
+          {/* Second section - Profit Margin and Expense Breakdown */}
+          <section className="col-span-12 gap-5 space-y-5 xl:grid xl:grid-cols-2 xl:space-y-0 2xl:col-span-5 2xl:grid-cols-1">
             <FadeUp delay={0.4} duration={1}>
               <ProfitMargin />
             </FadeUp>
@@ -90,13 +92,13 @@ const Accounts: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-12 gap-5">
-          <section className="col-span-7 grid gap-5">
+          <section className="col-span-12 grid gap-5 xl:col-span-6 2xl:col-span-7">
             <FadeUp delay={0.3} duration={1}>
               <FinancialPerformance />
             </FadeUp>
           </section>
 
-          <section className="col-span-5 grid grid-cols-2 gap-5">
+          <section className="col-span-12 grid grid-cols-2 gap-5 xl:col-span-6 2xl:col-span-5">
             <FadeUp delay={0.4} duration={1}>
               <SupplierDue />
             </FadeUp>

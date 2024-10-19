@@ -16,13 +16,13 @@ const SelectedProducts: React.FC = () => {
   return (
     <div>
       <p className="py-5 text-xl">Selected Products</p>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="flex flex-wrap justify-center gap-5 md:justify-between">
         {displayProducts.map((product, index) => (
           <div key={index}>
             {product ? (
               <ProductCard product={product} />
             ) : (
-              <div className="border-blue-dashed flex h-full min-h-[420px] cursor-pointer items-center justify-center rounded-lg border hover:bg-gray-100">
+              <div className="border-blue-dashed flex h-full min-h-[420px] w-[320px] cursor-pointer items-center justify-center rounded-lg border hover:bg-gray-100">
                 <IoImagesOutline className="text-blue" size={40} />
               </div>
             )}

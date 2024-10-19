@@ -149,7 +149,7 @@ const Inventory: React.FC = () => {
       </header>
 
       <main className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-12">
-        <section className="space-y-5 md:col-span-8">
+        <section className="col-span-12 space-y-5 xl:col-span-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 2xl:grid-cols-4">
             <FadeUp delay={0.1} duration={1}>
               <InventoryOverviewCard
@@ -212,7 +212,7 @@ const Inventory: React.FC = () => {
           </FadeUp>
         </section>
 
-        <section className="space-y-5 md:col-span-4">
+        <section className="col-span-12 space-y-5 xl:col-span-4">
           <FadeUp delay={0.8} duration={1}>
             <ProductPerformance title="Product Performance" />
           </FadeUp>

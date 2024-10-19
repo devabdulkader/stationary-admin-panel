@@ -7,6 +7,7 @@ import { TbChevronDown } from 'react-icons/tb';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import CustomBackDrop from '@/components/common/CustomBackDrop';
 
 interface NavLink {
   title: string;
@@ -20,84 +21,159 @@ const navLinks: NavLink[] = [
 ];
 
 const Navbar = () => {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
   };
 
   return (
     <div>
       <header className="bg-blue flex h-20 items-center px-5 py-5 2xl:px-10">
-        <div className="mr-8 cursor-pointer">
-          <Logo />
-        </div>
-        <div className="relative w-full max-w-md sm:ml-8">
-          <ul className="flex gap-10">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="text-lg text-white">
-                  {link.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="ml-auto flex flex-shrink-0 items-center gap-4">
-          <div className="ml-3 space-x-1 pl-3">
-            <button className="foucus:text-slate-800 group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100">
+        <div className="flex w-full items-center justify-between">
+          {/* Left side: Logo and Nav Links */}
+          <div className="flex items-center gap-10">
+            <Logo />
+            <div className="hidden flex-grow sm:block">
+              <Nav />
+            </div>
+          </div>
+
+          {/* Right side: Notification, Settings, Profile */}
+          <div className="hidden items-center space-x-3 sm:flex">
+            <button className="group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100">
               <IoNotificationsOutline
                 size={24}
-                className="text-white group-hover:text-slate-800 group-focus:text-black"
+                className="text-white group-hover:text-slate-800"
               />
             </button>
-            <button className="foucus:text-slate-800 group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100">
+            <button className="group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100">
               <LuSettings
                 size={24}
-                className="text-white group-hover:text-slate-800 group-focus:text-black"
+                className="text-white group-hover:text-slate-800"
               />
             </button>
+            <ProfileDropdown />
           </div>
-          <button
-            onClick={toggleDropdown}
-            className="relative inline-flex items-center gap-3 rounded-lg border border-white p-2"
+
+          {/* Mobile Menu Button */}
+          <div
+            className="flex items-center justify-between py-2 sm:hidden"
+            onClick={toggleMenu}
           >
-            <Image
-              src="/profile.jpeg"
-              alt="user profile photo"
-              height={300}
-              width={300}
-              className="size-8 rounded-full object-cover"
-            />
-            <span className="text-white">Admin</span>
-            <TbChevronDown className="text-white" size={24} />
-          </button>
-          {/* Dropdown */}
-          <AnimatePresence>
-            {isDropdownOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="absolute right-0 top-20 w-56 rounded-md border bg-white"
-              >
-                <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">
-                  Profile
-                </div>
-                <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">
-                  Messages
-                </div>
-                <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">
-                  To Do
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            <div className="flex flex-col items-start gap-1.5">
+              <div className="h-0.5 w-8 bg-white"></div>
+              <div className="h-0.5 w-12 bg-white"></div>
+            </div>
+            <div className="ml-4 text-xl font-semibold text-white">Menu</div>
+          </div>
         </div>
       </header>
+
+      {/* Sliding menu for mobile */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <section className="fixed left-0 top-0 z-30 h-screen w-screen">
+            <CustomBackDrop onClose={toggleMenu} zIndex="100" />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ duration: 0.5 }}
+              className="z-20 h-full w-64 bg-white shadow-lg"
+            >
+              <div className="bg-blue h-20 p-5">
+                <Logo />
+              </div>
+              <ul className="flex flex-col">
+                {navLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100"
+                    >
+                      {link.title}
+                    </Link>
+                  </li>
+                ))}
+                <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
+                  Notifications
+                </li>
+                <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
+                  Settings
+                </li>
+                <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
+                  Profile
+                </li>
+              </ul>
+            </motion.div>
+          </section>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export default Navbar;
+
+const Nav = () => (
+  <nav>
+    <ul className="flex gap-5">
+      {navLinks.map((link) => (
+        <li key={link.href}>
+          <Link href={link.href} className="text-lg text-white">
+            {link.title}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </nav>
+);
+
+const ProfileDropdown = () => {
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={toggleDropdown}
+        className="flex items-center gap-3 rounded-lg border border-white p-2"
+      >
+        <Image
+          src="/profile.jpeg"
+          alt="user profile photo"
+          height={300}
+          width={300}
+          className="h-8 w-8 rounded-full object-cover"
+        />
+        <span className="text-white">Admin</span>
+        <TbChevronDown className="text-white" size={24} />
+      </button>
+      {/* Dropdown */}
+      <AnimatePresence>
+        {isDropdownOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.1 }}
+            className="absolute right-0 top-12 z-10 w-56 rounded-md border bg-white shadow-lg"
+          >
+            <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">
+              Profile
+            </div>
+            <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">
+              Messages
+            </div>
+            <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">
+              To Do
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};

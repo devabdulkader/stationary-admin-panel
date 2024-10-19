@@ -278,7 +278,7 @@ const DealsOfTheDay = () => {
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
   return (
-    <div className="p-5">
+    <div className="pt-5">
       <ToastContainer />
       <Link href="/">
         <h1 className="text-blue mb-10 flex items-center gap-2 text-3xl font-medium">
@@ -289,10 +289,10 @@ const DealsOfTheDay = () => {
       <section>
         <p className="text-2xl">Date and Time</p>
 
-        <div className="mt-5 grid grid-cols-2 gap-5">
+        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
           <div className="relative w-full rounded-lg border bg-white p-5">
             <p className="mb-2">From</p>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
               <div className="relative w-full rounded-lg border bg-white">
                 <DatePicker
                   selected={fromDate}
@@ -314,7 +314,7 @@ const DealsOfTheDay = () => {
 
           <div className="relative w-full rounded-lg border bg-white p-5">
             <p className="mb-2">To</p>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
               <div className="relative w-full rounded-lg border bg-white">
                 <DatePicker
                   selected={toDate}
@@ -343,7 +343,7 @@ const DealsOfTheDay = () => {
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-4 w-2/3 rounded-lg border border-gray-300 px-4 py-3"
+          className="mb-4 w-full rounded-lg border border-gray-300 px-4 py-3 md:w-2/3"
         />
       </div>
 

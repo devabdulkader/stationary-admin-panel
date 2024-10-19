@@ -49,6 +49,7 @@ const StockLevel = () => {
   return (
     <Table
       title="Stock Level"
+      view={true}
       headings={['Product Name', 'SKU', 'Category', 'Quantity', 'Stock Status']}
       data={stockLevelData}
       href="/"

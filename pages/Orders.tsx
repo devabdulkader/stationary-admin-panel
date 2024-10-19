@@ -110,7 +110,7 @@ const Orders: React.FC = () => {
       </header>
       <main className="mt-5 grid grid-cols-12 gap-5">
         <section className="col-span-12 space-y-5">
-          <div className="grid grid-cols-5 gap-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
             {/* Total Orders Card */}
             <FadeUp delay={0.1} duration={1}>
               <OrderOverviewCard
@@ -169,18 +169,18 @@ const Orders: React.FC = () => {
 
           {/* Recent Orders Tables */}
           <div className="grid grid-cols-12 gap-5">
-            <div className="col-span-8">
+            <div className="col-span-12 xl:col-span-6 2xl:col-span-8">
               <FadeUp delay={0.6} duration={1}>
                 <RecentOrders />
               </FadeUp>
             </div>
-            <div className="col-span-4">
+            <div className="col-span-12 xl:col-span-6 2xl:col-span-4">
               <FadeUp delay={0.7} duration={1}>
                 <PaymentStatus />
               </FadeUp>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-3">
             <FadeUp delay={0.8} duration={1}>
               <OrderTrends />
             </FadeUp>

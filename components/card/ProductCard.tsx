@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <FadeUp>
-      <div className="relative flex h-full min-w-[300px] max-w-[320px] flex-col bg-[#F5F8FF] shadow 2xl:max-w-full">
+      <div className="relative flex h-full min-w-[300px] max-w-[320px] flex-col bg-[#F5F8FF] shadow">
         {/* Image */}
         <div className="relative h-64">
           <Image
