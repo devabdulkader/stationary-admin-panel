@@ -114,59 +114,64 @@ const Table = <T extends Item>({
         )}
 
         {/* Table */}
-        <table className="min-w-full table-auto border-collapse">
-          <thead>
-            <tr className="border-b text-gray-400">
-              <th className="px-4 py-3 text-center">#Number</th>
-              {headings.map((heading) => (
-                <th key={heading} className="px-4 py-3 text-center">
-                  <span>
-                    {heading.charAt(0).toUpperCase() + heading.slice(1)}
-                  </span>
-                  {arrowDown && (
-                    <IoMdArrowDown className="inline text-gray-400" size={24} />
-                  )}
-                </th>
-              ))}
-              {action && <th className="px-4 py-3 text-left">Action</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((product, index) => (
-              <tr key={index} className="border-b">
-                <td className="px-4 py-3 text-center">
-                  {(index + 1 + (currentPage - 1) * itemsPerPage)
-                    .toString()
-                    .padStart(2, '0')}{' '}
-                </td>
-                {Object.entries(product).map(
-                  ([key, value], idx) =>
-                    key !== 'id' &&
-                    key !== '_id' && ( // Ignore rendering 'id' or '_id'
-                      <td key={idx} className="px-4 py-3">
-                        <span
-                          className={`inline-block w-full rounded-full text-center ${
-                            key === 'status'
-                              ? getStatusClass(value as string)
-                              : ''
-                          }`}
-                        >
-                          {value}
-                        </span>
-                      </td>
-                    ),
-                )}
-                {action && (
-                  <td className="px-4 py-3 text-center">
-                    <button className="text-blue-500 hover:underline">
-                      <BiDotsVerticalRounded size={24} />
-                    </button>
-                  </td>
-                )}
+        <div className="min-w-full overflow-x-auto">
+          <table className="table-auto border-collapse text-nowrap">
+            <thead>
+              <tr className="border-b text-gray-400">
+                <th className="px-4 py-3 text-center">#Number</th>
+                {headings.map((heading) => (
+                  <th key={heading} className="px-4 py-3 text-center">
+                    <span>
+                      {heading.charAt(0).toUpperCase() + heading.slice(1)}
+                    </span>
+                    {arrowDown && (
+                      <IoMdArrowDown
+                        className="inline text-gray-400"
+                        size={24}
+                      />
+                    )}
+                  </th>
+                ))}
+                {action && <th className="px-4 py-3 text-left">Action</th>}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentItems.map((product, index) => (
+                <tr key={index} className="border-b">
+                  <td className="px-4 py-3 text-center">
+                    {(index + 1 + (currentPage - 1) * itemsPerPage)
+                      .toString()
+                      .padStart(2, '0')}{' '}
+                  </td>
+                  {Object.entries(product).map(
+                    ([key, value], idx) =>
+                      key !== 'id' &&
+                      key !== '_id' && ( // Ignore rendering 'id' or '_id'
+                        <td key={idx} className="px-4 py-3">
+                          <span
+                            className={`inline-block w-full rounded-full text-center ${
+                              key === 'status'
+                                ? getStatusClass(value as string)
+                                : ''
+                            }`}
+                          >
+                            {value}
+                          </span>
+                        </td>
+                      ),
+                  )}
+                  {action && (
+                    <td className="px-4 py-3 text-center">
+                      <button className="text-blue-500 hover:underline">
+                        <BiDotsVerticalRounded size={24} />
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Pagination */}

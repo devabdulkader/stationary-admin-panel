@@ -41,17 +41,21 @@ const Navbar = () => {
 
           {/* Right side: Notification, Settings, Profile */}
           <div className="hidden items-center space-x-3 sm:flex">
-            <button className="group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100">
-              <IoNotificationsOutline
-                size={24}
-                className="text-white group-hover:text-slate-800"
-              />
+            <button className="group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100 focus:text-black">
+              <Link href="/notifications">
+                <IoNotificationsOutline
+                  size={24}
+                  className="text-white group-hover:text-slate-800"
+                />
+              </Link>
             </button>
-            <button className="group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100">
-              <LuSettings
-                size={24}
-                className="text-white group-hover:text-slate-800"
-              />
+            <button className="group relative rounded-full p-2 hover:bg-gray-100 focus:bg-gray-100 focus:text-black">
+              <Link href="/settings">
+                <LuSettings
+                  size={24}
+                  className="text-white group-hover:text-slate-800"
+                />
+              </Link>
             </button>
             <ProfileDropdown />
           </div>
@@ -99,12 +103,16 @@ const Navbar = () => {
                 <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
                   Notifications
                 </li>
-                <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
-                  Settings
-                </li>
-                <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
-                  Profile
-                </li>
+                <Link href="/settings">
+                  <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
+                    Settings
+                  </li>
+                </Link>
+                <Link href="/profile">
+                  <li className="block w-full px-5 py-3 text-lg text-black hover:bg-gray-100">
+                    Profile
+                  </li>
+                </Link>
               </ul>
             </motion.div>
           </section>
