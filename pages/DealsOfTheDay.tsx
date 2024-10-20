@@ -24,6 +24,14 @@ interface Product {
   stockQuantity: number;
 }
 const DealsOfTheDay = () => {
+  const { message } = useSelectedProducts();
+
+  useEffect(() => {
+    if (message) {
+      toast(message);
+    }
+  }, [message]);
+
   const [fromDate, setFromDate] = useState<Date | null>(null);
   const [fromTime, setFromTime] = useState<string>('');
   const [toDate, setToDate] = useState<Date | null>(null);
@@ -251,14 +259,6 @@ const DealsOfTheDay = () => {
       stockQuantity: 55,
     },
   ];
-
-  const { message } = useSelectedProducts();
-
-  useEffect(() => {
-    if (message) {
-      toast(message);
-    }
-  }, [message]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
