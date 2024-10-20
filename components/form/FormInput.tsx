@@ -23,10 +23,10 @@ const FormInput = ({
   type = 'text',
   value,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  id,
+  // id,
   placeholder,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  validation,
+  // validation,
   label,
   required,
   disabled,
@@ -42,7 +42,7 @@ const FormInput = ({
   const errorMessage = getErrorMessageByPropertyName(errors, name);
 
   return (
-    <div>
+    <div className="flex-grow">
       <label className="mb-1 block font-semibold text-[#00359E]">
         {label ? label : null}
         {required ? <span className="">*</span> : null}
