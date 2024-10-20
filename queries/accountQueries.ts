@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_YEARLY_PROFIT_LOSS = gql`
-  query GetYearlyProfitLoss {
+  query {
     getYearlyProfitLoss {
       year
       summary {
@@ -13,21 +13,21 @@ export const GET_YEARLY_PROFIT_LOSS = gql`
   }
 `;
 
-export const GET_GROWTH_PROGRESSION = gql`
-  query GetGrowthProgression {
-    getGrowthProgression {
-      month
-      data {
-        week
-        current
-        last
-      }
+export const GET_ALL_PAYMENTS = gql`
+  query {
+    getAllPayments {
+      id
+      amount
+      status
+      trxId
+      paymentMethod
+      createdAt
     }
   }
 `;
 
-export const GET_TOTAL_PROFIT_AND_EXPENSE = gql`
-  query GetTotalProfitAndExpense {
+export const GET_TOTAL_PROFIT_EXPENSE = gql`
+  query {
     getTotalProfitAndExpense {
       totalProfit
       totalExpense
@@ -36,7 +36,7 @@ export const GET_TOTAL_PROFIT_AND_EXPENSE = gql`
 `;
 
 export const GET_MONTHLY_EXPENSE_BY_CATEGORY = gql`
-  query GetMonthlyExpenseByCategory {
+  query {
     getMonthlyExpenseByCategory {
       month
       data {
@@ -48,8 +48,21 @@ export const GET_MONTHLY_EXPENSE_BY_CATEGORY = gql`
   }
 `;
 
+export const GET_GROWTH_PROGRESSION = gql`
+  query {
+    getGrowthProgression {
+      month
+      data {
+        week
+        current
+        last
+      }
+    }
+  }
+`;
+
 export const GET_YEARLY_PROFIT_AND_LOSS = gql`
-  query GetYearlyProfitAndLoss {
+  query {
     getYearlyProfitAndLoss {
       year
       profit
@@ -59,7 +72,7 @@ export const GET_YEARLY_PROFIT_AND_LOSS = gql`
 `;
 
 export const GET_INVOICE_SUMMARY = gql`
-  query GetInvoiceSummary {
+  query {
     getInvoiceSummary {
       month
       data {
