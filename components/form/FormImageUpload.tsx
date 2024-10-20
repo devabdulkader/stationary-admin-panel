@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useMutation, gql } from '@apollo/client';
 import Image from 'next/image';
+import { BsFillPlusCircleFill } from 'react-icons/bs';
 
 const GENERATE_UPLOAD_URL = gql`
   mutation GenerateUploadUrl($fileType: String!, $fileName: String) {
@@ -127,13 +128,14 @@ const FormImageUpload = ({
                 />
               ) : (
                 <div className="flex flex-col items-center">
-                  <Image
-                    src={'/plus.png'} // Placeholder image
+                  {/* <Image
+                    src={'/plus.png'} 
                     alt="Placeholder"
                     width={50}
                     height={50}
                     className="mb-2"
-                  />
+                  /> */}
+                  <BsFillPlusCircleFill className="text-blue" size={30} />
                   <p className="text-sm text-gray-500">Click to upload</p>
                 </div>
               )}

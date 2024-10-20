@@ -34,13 +34,13 @@ const FormDateTimePicker = ({
   const errorMessage = (errors[name] as FieldError)?.message;
 
   return (
-    <div className="flex-grow">
+    <div className="input-bg flex-grow">
       <label className="mb-1 block font-semibold">
         {label ? label : null}
         {required ? <span className="">*</span> : null}
       </label>
       <div className={`${className}`}>
-        <div className="relative pb-[3px]">
+        <div className="relative">
           <Controller
             control={control}
             name={name}
@@ -56,7 +56,7 @@ const FormDateTimePicker = ({
                 placeholderText={placeholder}
                 required={required}
                 disabled={disabled}
-                className="w-full border-none bg-slate-600 focus:outline-none"
+                className="input-bg w-full border-none focus:outline-none"
                 ref={ref}
                 open={open}
                 onInputClick={() => setOpen(true)}
@@ -66,10 +66,10 @@ const FormDateTimePicker = ({
               />
             )}
           />
-          <span className="absolute right-0 top-1">
+          <span className="absolute right-5 top-1">
             <FaCalendar
               onClick={() => setOpen(!open)}
-              className="cursor-pointer text-gray-200"
+              className="cursor-pointer"
             />
           </span>
         </div>
