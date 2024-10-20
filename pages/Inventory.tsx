@@ -7,46 +7,78 @@ import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '@/components/button/ButtonWithIcon';
 import FadeUp from '@/components/motion/FadeUp';
+import InventoryOverviewCard from '@/components/inventory/InventoryOverviewCard';
+import LowStock from '@/components/inventory/LowStock';
 import DeadStock from '@/components/inventory/DeadStock';
 import ProductPerformance from '@/components/inventory/ProductPerformance';
+import MyProducts from '@/components/inventory/MyProducts';
+import StockLevel from '@/components/inventory/StockLevel';
 import Modal from '@/components/common/Modal';
 import AddNewProduct from '@/components/inventory/AddNewProduct';
-import { useQuery } from '@apollo/client';
-import InventoryOverviewCard2 from '@/components/inventory/InventoryOverviewCard2';
-import {
-  GET_ALL_PRODUCTS,
-  GET_DEAD_STOCK,
-  GET_LOW_STOCK,
-  GET_MONTHLY_INVENTORY_VALUE,
-  GET_MONTHLY_INVOICE,
-  GET_MONTHLY_REVENUE,
-  GET_MONTHLY_STOCK,
-} from '@/queries/inventoryQueries';
-import LowStock2 from '@/components/inventory/LowStock2';
-import StockLevel2 from '@/components/inventory/StockLevel2';
-import MyProducts2 from '@/components/inventory/MyProducts2';
-import StocksPopup2 from '@/components/inventory/StocksPopup2';
+import StocksPopup from '@/components/inventory/StocksPopup';
 
 const Inventory: React.FC = () => {
-  const { data: monthlyInventoryValue, loading: monthlyInventoryValueLoading } =
-    useQuery(GET_MONTHLY_INVENTORY_VALUE);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
 
-  const { data: monthlyRevenue, loading: monthlyRevenueLoading } =
-    useQuery(GET_MONTHLY_REVENUE);
+  const inventoryData = {
+    value: 3540400,
+    percentageChange: 23.04,
+  };
 
-  const { data: monthlyStock, loading: monthlyStockLoading } =
-    useQuery(GET_MONTHLY_STOCK);
+  const revenueData = {
+    value: 3540400,
+    percentageChange: 23.04,
+  };
 
-  const { data: monthlyInvoice, loading: monthlyInvoiceLoading } =
-    useQuery(GET_MONTHLY_INVOICE);
+  const invoiceData = {
+    value: 3540400,
+    percentageChange: -23.04,
+  };
 
-  const { data: lowStock, loading: lowStockLoading } = useQuery(GET_LOW_STOCK);
+  const stockHistoryData = {
+    value: 3540400,
+    percentageChange: 23.04,
+  };
 
-  const { data: deadStock, loading: deadStockLoading } =
-    useQuery(GET_DEAD_STOCK);
+  const deadStockData = [
+    { productName: 'Pen', daysUnsold: 15 },
+    { productName: 'Notebook', daysUnsold: 10 },
+    { productName: 'Colors', daysUnsold: 5 },
+  ];
 
-  const { data: allProducts, loading: allProductsLoading } =
-    useQuery(GET_ALL_PRODUCTS);
+  const myProductsData = {
+    title: 'My Products',
+    products: [
+      {
+        name: 'Nataraj Color Pencil (12 pcs)',
+        price: 149,
+        sku: '1101234',
+        stock: 45600,
+        imageUrl: '/product-1.png',
+      },
+      {
+        name: 'Nataraj Color Pencil (12 pcs)',
+        price: 149,
+        sku: '1101234',
+        stock: 45600,
+        imageUrl: '/product-2.png',
+      },
+      {
+        name: 'Faber-Castell Colored Pencils (24 pcs)',
+        price: 299,
+        sku: '1105678',
+        stock: 32000,
+        imageUrl: '/product-3.png',
+      },
+      {
+        name: 'Crayola Crayons (16 pcs)',
+        price: 89,
+        sku: '1109123',
+        stock: 15000,
+        imageUrl: '/product-4.png',
+      },
+    ],
+  };
 
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
@@ -67,18 +99,6 @@ const Inventory: React.FC = () => {
     setIsStockModalOpen(false);
   };
 
-  if (
-    monthlyInventoryValueLoading ||
-    monthlyRevenueLoading ||
-    monthlyStockLoading ||
-    monthlyInvoiceLoading ||
-    lowStockLoading ||
-    deadStockLoading ||
-    allProductsLoading
-  ) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="">
       {isAddProductModalOpen && (
@@ -89,7 +109,7 @@ const Inventory: React.FC = () => {
 
       {isStockModalOpen && (
         <Modal closeModal={closeStockModal}>
-          <StocksPopup2 products={allProducts?.products?.items} />
+          <StocksPopup />
         </Modal>
       )}
 
@@ -132,27 +152,35 @@ const Inventory: React.FC = () => {
         <section className="col-span-12 space-y-5 xl:col-span-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 2xl:grid-cols-4">
             <FadeUp delay={0.1} duration={1}>
-              <InventoryOverviewCard2
+              <InventoryOverviewCard
                 title="Inventory Value"
-                data={monthlyInventoryValue?.getMonthlyInventoryValues}
+                data={inventoryData}
+                startDate={startDate}
+                setStartDate={setStartDate}
               />
             </FadeUp>
             <FadeUp delay={0.2} duration={1}>
-              <InventoryOverviewCard2
+              <InventoryOverviewCard
                 title="Revenue"
-                data={monthlyRevenue?.getMonthlyRevenueValues}
+                data={revenueData}
+                startDate={startDate}
+                setStartDate={setStartDate}
               />
             </FadeUp>
             <FadeUp delay={0.3} duration={1}>
-              <InventoryOverviewCard2
+              <InventoryOverviewCard
                 title="Invoice"
-                data={monthlyInvoice?.getMonthlyInvoiceValues}
+                data={invoiceData}
+                startDate={startDate}
+                setStartDate={setStartDate}
               />
             </FadeUp>
             <FadeUp delay={0.4} duration={1}>
-              <InventoryOverviewCard2
+              <InventoryOverviewCard
                 title="Stock History"
-                data={monthlyStock?.getMonthlyStockValues}
+                data={stockHistoryData}
+                startDate={startDate}
+                setStartDate={setStartDate}
               />
             </FadeUp>
           </div>
@@ -160,14 +188,18 @@ const Inventory: React.FC = () => {
           <div className="flex flex-col gap-5 2xl:flex-row">
             <div className="flex-1">
               <FadeUp delay={1} duration={1}>
-                <LowStock2 title="Low Stock" data={lowStock.lowStockCategory} />
+                <LowStock
+                  title="Low Stock"
+                  startDate={startDate}
+                  setStartDate={setStartDate}
+                />
               </FadeUp>
             </div>
             <div className="flex-1">
               <FadeUp delay={0.6} duration={1}>
                 <DeadStock
                   title="Dead Stock Products"
-                  data={deadStock.deadStockProducts}
+                  data={deadStockData}
                   linkHref="/dead-stock-details"
                 />
               </FadeUp>
@@ -176,15 +208,7 @@ const Inventory: React.FC = () => {
 
           {/* table */}
           <FadeUp delay={1.5} duration={1}>
-            <StockLevel2
-              data={allProducts?.products?.items?.map((product: any) => ({
-                id: product.id,
-                title: product.title,
-                sku: product.sku,
-                category: product.category.name, // Pass the category name (string)
-                stockQuantity: Number(product.stockQuantity),
-              }))}
-            />
+            <StockLevel />
           </FadeUp>
         </section>
 
@@ -193,10 +217,7 @@ const Inventory: React.FC = () => {
             <ProductPerformance title="Product Performance" />
           </FadeUp>
           <FadeUp delay={1} duration={1}>
-            <MyProducts2
-              data={allProducts?.products?.items}
-              linkHref="/list-of-products"
-            />
+            <MyProducts data={myProductsData} linkHref="/list-of-products" />
           </FadeUp>
         </section>
       </main>

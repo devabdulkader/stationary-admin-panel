@@ -1,5 +1,4 @@
 import React from 'react';
-import FormPhoneInput from '../form/FormPhoneInput';
 
 const ContactNumber = () => {
   return (
@@ -8,9 +7,10 @@ const ContactNumber = () => {
 
       <div className="flex flex-col gap-5 p-5">
         <div className="flex items-center gap-5">
-          <FormPhoneInput
-            name="contactNumber"
-            className="input-bg w-full flex-grow rounded-md p-3"
+          <input
+            className="input-bg flex-grow rounded-md p-3"
+            value="2302u32"
+            disabled
           />
         </div>
       </div>

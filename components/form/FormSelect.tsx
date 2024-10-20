@@ -42,7 +42,7 @@ const FormSelect = ({
   const errorMessage = getErrorMessageByPropertyName(errors, name);
 
   return (
-    <div className={``}>
+    <div className={`mb-4 flex flex-col`}>
       {label && (
         <label className="mb-2 font-semibold text-gray-200">
           {label}
@@ -60,7 +60,7 @@ const FormSelect = ({
               value={fieldValue}
               required={required}
               disabled={disabled}
-              className={`${className}`}
+              className={`py-4 ${className}`}
             >
               <option value="" disabled>
                 Select an option
