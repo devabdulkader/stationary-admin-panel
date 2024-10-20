@@ -1,72 +1,96 @@
 import { gql } from '@apollo/client';
 
-export const GET_YEARLY_PROFIT_LOSS = gql`
-  query GetYearlyProfitLoss {
-    getYearlyProfitLoss {
-      year
-      summary {
-        month
-        profit
-        loss
-      }
-    }
-  }
-`;
-
-export const GET_GROWTH_PROGRESSION = gql`
-  query GetGrowthProgression {
-    getGrowthProgression {
+export const GET_MONTHLY_INVENTORY_VALUE = gql`
+  query {
+    getMonthlyInventoryValues {
       month
-      data {
-        week
-        current
-        last
-      }
+      value
+      change
     }
   }
 `;
 
-export const GET_TOTAL_PROFIT_AND_EXPENSE = gql`
-  query GetTotalProfitAndExpense {
-    getTotalProfitAndExpense {
-      totalProfit
-      totalExpense
-    }
-  }
-`;
-
-export const GET_MONTHLY_EXPENSE_BY_CATEGORY = gql`
-  query GetMonthlyExpenseByCategory {
-    getMonthlyExpenseByCategory {
+export const GET_MONTHLY_REVENUE = gql`
+  query {
+    getMonthlyRevenueValues {
       month
-      data {
-        categoryName
-        value
-        percentage
-      }
+      value
+      change
     }
   }
 `;
 
-export const GET_YEARLY_PROFIT_AND_LOSS = gql`
-  query GetYearlyProfitAndLoss {
-    getYearlyProfitAndLoss {
-      year
-      profit
-      loss
-    }
-  }
-`;
-
-export const GET_INVOICE_SUMMARY = gql`
-  query GetInvoiceSummary {
-    getInvoiceSummary {
+export const GET_MONTHLY_STOCK = gql`
+  query {
+    getMonthlyStockValues {
       month
-      data {
-        totalInvoice
-        amountDue
-        paidInvoice
+      value
+      change
+    }
+  }
+`;
+export const GET_MONTHLY_INVOICE = gql`
+  query {
+    getMonthlyInvoiceValues {
+      month
+      value
+      change
+    }
+  }
+`;
+
+export const GET_LOW_STOCK = gql`
+  query {
+    lowStockCategory {
+      categoryName
+      stockQuantity
+    }
+  }
+`;
+
+export const GET_DEAD_STOCK = gql`
+  query {
+    deadStockProducts {
+      productName
+      daysUnsold
+    }
+  }
+`;
+
+export const GET_ALL_PRODUCTS = gql`
+  query {
+    products {
+      items {
+        id
+        sku
+        title
+        description
+        price
+        buyPrice
+        stockQuantity
+        images {
+          url
+          alt
+        }
+        category {
+          name
+        }
+        variants {
+          id
+          name
+          value
+        }
+        discount {
+          id
+          discountedPrice
+          startsAt
+          endsAt
+          isActive
+        }
       }
+      totalItems
+      currentPage
+      totalPages
     }
   }
 `;
