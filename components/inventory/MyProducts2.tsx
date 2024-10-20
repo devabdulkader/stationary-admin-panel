@@ -8,6 +8,7 @@ interface ProductData {
   id: string;
   title: string;
   price: string;
+  sku: string;
   stockQuantity: string;
   images: { url: string; alt: string | null }[];
   category: { name: string };
@@ -53,7 +54,7 @@ const MyProducts2: React.FC<ProductProps> = ({ data, linkHref }) => {
             <div className="w-1/2">
               <h4 className="font-semibold">{product.title}</h4>
               <p>Price: ${product.price}</p>
-              <p>SKU: {product.id}</p>
+              <p>SKU: {product.sku}</p>
               <p>Available Stock: {product.stockQuantity} units</p>
             </div>
 

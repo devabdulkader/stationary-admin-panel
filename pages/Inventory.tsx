@@ -26,6 +26,7 @@ import {
 import LowStock2 from '@/components/inventory/LowStock2';
 import StockLevel2 from '@/components/inventory/StockLevel2';
 import MyProducts2 from '@/components/inventory/MyProducts2';
+import StocksPopup2 from '@/components/inventory/StocksPopup2';
 
 const Inventory: React.FC = () => {
   const { data: monthlyInventoryValue, loading: monthlyInventoryValueLoading } =
@@ -89,7 +90,7 @@ const Inventory: React.FC = () => {
 
       {isStockModalOpen && (
         <Modal closeModal={closeStockModal}>
-          <StocksPopup />
+          <StocksPopup2 products={allProducts?.products?.items} />
         </Modal>
       )}
 
