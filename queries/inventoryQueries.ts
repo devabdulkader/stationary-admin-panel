@@ -94,3 +94,41 @@ export const GET_ALL_PRODUCTS = gql`
     }
   }
 `;
+
+export const GET_ALL_ORDERS = gql`
+  query GetAllOrders($pagination: PaginationInput) {
+    getAllOrders(pagination: $pagination) {
+      totalItems
+      totalPages
+      currentPage
+      items {
+        id
+        vat
+        trackingId
+        shippingAndHandlingFee
+        totalAmount
+        status
+        shippingMethod
+        payment {
+          id
+          amount
+          paymentMethod
+          trxId
+          status
+        }
+        orderedItems {
+          variant
+          quantity
+          price
+          product {
+            id
+            title
+          }
+        }
+        user {
+          fullName
+        }
+      }
+    }
+  }
+`;

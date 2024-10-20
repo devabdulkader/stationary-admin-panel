@@ -45,7 +45,6 @@ const FormInput = ({
     <div className="flex-grow">
       <label className="mb-1 block font-semibold text-[#00359E]">
         {label ? label : null}
-        {required ? <span className="">*</span> : null}
       </label>
       <Controller
         control={control}

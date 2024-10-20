@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import Form from '../form/Form';
 import { CgDanger } from 'react-icons/cg';
@@ -6,22 +7,49 @@ import FormImageUpload from '../form/FormImageUpload';
 import FormSelect from '../form/FormSelect';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
+import { useQuery, useMutation } from '@apollo/client';
+import {
+  CREATE_PRODUCT,
+  GET_ALL_PRODUCT_CATEGORIES,
+} from '@/queries/accountQueries';
+import { tempToken } from '@/middleware';
+
 interface Variant {
   id: number;
   value: string;
 }
-const AddNewProduct = () => {
-  const categoryOptions = [
-    { value: 'electronics', label: 'Electronics' },
-    { value: 'furniture', label: 'Furniture' },
-    { value: 'clothing', label: 'Clothing' },
-  ];
 
-  const [variants, setVariants] = useState<Variant[]>([
-    { id: 1, value: '' },
-    { id: 2, value: '' },
-    { id: 3, value: '' },
-  ]);
+const AddNewProduct = () => {
+  // State for product SKU
+  const [sku] = useState<string>(
+    'SKU-' + Math.floor(100000 + Math.random() * 900000),
+  );
+
+  // State for variants
+  const [variants, setVariants] = useState<Variant[]>([{ id: 1, value: '' }]);
+
+  // Fetch product categories
+  const { data: categoryData, loading: categoryLoading } = useQuery(
+    GET_ALL_PRODUCT_CATEGORIES,
+  );
+  const categoryOptions = categoryData?.getAllProductCategories.map(
+    (category: any) => ({
+      value: category.id,
+      label: category.name,
+    }),
+  );
+
+  // Mutation for creating product
+  const [createProduct, { loading: mutationLoading, error: mutationError }] =
+    useMutation(CREATE_PRODUCT, {
+      context: {
+        headers: {
+          Authorization: tempToken,
+        },
+      },
+    });
+
+  // Handle adding a new variant
   const handleAddVariant = () => {
     setVariants((prevVariants) => [
       ...prevVariants,
@@ -29,9 +57,54 @@ const AddNewProduct = () => {
     ]);
   };
 
+  // Handle form submission
   const submitHandler = async (data: any) => {
-    console.log(data);
+    const {
+      title,
+      category,
+      prouctPrice,
+      buyingPrice,
+      quantity,
+      productDescription,
+    } = data;
+
+    const formData = {
+      title,
+      categoryId: category,
+      price: prouctPrice,
+      buyPrice: buyingPrice,
+      stockQuantity: quantity,
+      sku, // Use the generated SKU
+      description: productDescription,
+      imageUrls: [
+        data.photo?.[1],
+        data.photo?.[2],
+        data.photo?.[3],
+        data.photo?.[4],
+      ].filter((imageUrl) => imageUrl !== undefined && imageUrl !== ''), // Filter out undefined images
+      variants: variants
+        .map((variant) => ({
+          name: `Color`,
+          value: data[`variant.${variant.id}`],
+        }))
+        .filter((variant) => variant.value), // Filter out empty variant values
+    };
+
+    try {
+      const response = await createProduct({
+        variables: {
+          input: formData,
+        },
+      });
+      console.log('Product created:', response.data.createProduct);
+    } catch (error) {
+      console.error('Error creating product:', error);
+    }
   };
+
+  // Show loading state if categories are still being fetched
+  if (categoryLoading) return <div>Loading categories...</div>;
+
   return (
     <Form
       submitHandler={submitHandler}
@@ -66,11 +139,15 @@ const AddNewProduct = () => {
         First image will be the thumbnail
       </p>
       <div>
-        <p className="text-md mb-2 font-semibold">Product SKU: 232323</p>
+        <p className="text-md mb-2 font-semibold">Product SKU: {sku}</p>
         <label className="text-md mb-2 block font-semibold">
           Product Title
         </label>
-        <FormInput name="title" className="input-bg w-full rounded-md p-2" />
+        <FormInput
+          name="title"
+          className="input-bg w-full rounded-md p-2"
+          required
+        />
       </div>
       {/* Product Category and Price */}
       <div className="flex gap-4">
@@ -94,6 +171,7 @@ const AddNewProduct = () => {
             type="number"
             className="input-bg w-full rounded-md p-2"
             placeholder="MVR"
+            required
           />
         </div>
       </div>
@@ -108,6 +186,7 @@ const AddNewProduct = () => {
             type="number"
             className="input-bg w-full rounded-md p-2"
             placeholder="Unit"
+            required
           />
         </div>
         <div className="flex-1">
@@ -119,6 +198,7 @@ const AddNewProduct = () => {
             type="number"
             className="input-bg w-full rounded-md p-2"
             placeholder="MVR"
+            required
           />
         </div>
       </div>
@@ -132,6 +212,7 @@ const AddNewProduct = () => {
           className="input-bg w-full rounded-md p-2"
           placeholder="0/300"
           rows={4}
+          required
         />
       </div>
       {/* Variants Section */}
@@ -139,7 +220,7 @@ const AddNewProduct = () => {
         {variants.map((variant, index) => (
           <FormInput
             key={variant.id}
-            name={`variant${variant.id}`}
+            name={`variant.${variant.id}`}
             type="text"
             className="input-bg w-full rounded-md p-2"
             placeholder={`Variant ${index + 1}`}
@@ -161,10 +242,14 @@ const AddNewProduct = () => {
         <button
           type="submit"
           className="bg-blue w-full rounded-md px-4 py-2 text-white"
+          disabled={mutationLoading}
         >
-          Save
+          {mutationLoading ? 'Saving...' : 'Save'}
         </button>
       </div>
+      {mutationError && (
+        <div className="mt-4 text-red-500">Error: {mutationError.message}</div>
+      )}
     </Form>
   );
 };

@@ -1,7 +1,6 @@
 'use client';
 import Form from '@/components/form/Form';
 import FormInput from '@/components/form/FormInput';
-import ProductImages from '@/components/ProductDetails.tsx/ProductImages';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
@@ -10,6 +9,7 @@ import { IoToggleSharp } from 'react-icons/io5';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import FormTextarea from './../components/form/FormTextarea';
 import FormDateTimePicker from '@/components/form/FormDateTimePicker';
+import ProductImages from '@/components/productDetails.tsx/ProductImages';
 
 const ProductDetails = () => {
   const [isDiscountDisabled, setIsDiscountDisabled] = useState(false);

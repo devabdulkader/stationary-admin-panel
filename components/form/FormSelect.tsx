@@ -46,7 +46,7 @@ const FormSelect = ({
       {label && (
         <label className="mb-2 font-semibold text-gray-200">
           {label}
-          {required && <span className="">*</span>}
+          {/* {required && <span className="">*</span>} */}
         </label>
       )}
       <Controller

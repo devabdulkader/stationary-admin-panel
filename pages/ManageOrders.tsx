@@ -1,182 +1,37 @@
 'use client';
+
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
-import 'react-datepicker/dist/react-datepicker.css';
-
-import Pagination from '@/components/common/Pagination';
 import { RiMenuUnfold2Line } from 'react-icons/ri';
 import { VscZoomIn } from 'react-icons/vsc';
 import Modal from '@/components/common/Modal';
+import Pagination from '@/components/common/Pagination';
 import ViewOrderPopup from '@/components/orders/ViewOrderPopup';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_ORDERS } from '@/queries/inventoryQueries';
+import { tempToken } from '@/middleware';
 
 const ManageOrders = () => {
-  const orderData = [
-    {
-      id: 1,
-      customerName: 'John Doe',
-      orderId: 'ORD001',
-      orderDate: '20 Sep, 24',
-      orderStatus: 'Shipped',
-      totalAmount: '120.00',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 2,
-      customerName: 'Jane Smith',
-      orderId: 'ORD002',
-      orderDate: '18 Sep, 24',
-      orderStatus: 'Pending',
-      totalAmount: '90.50',
-      paymentStatus: 'Unpaid',
-    },
-    {
-      id: 3,
-      customerName: 'Michael Brown',
-      orderId: 'ORD003',
-      orderDate: '15 Sep, 24',
-      orderStatus: 'Completed',
-      totalAmount: '250.75',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 4,
-      customerName: 'Emily Davis',
-      orderId: 'ORD004',
-      orderDate: '12 Sep, 24',
-      orderStatus: 'Returned',
-      totalAmount: '65.00',
-      paymentStatus: 'Refunded',
-    },
-    {
-      id: 5,
-      customerName: 'David Johnson',
-      orderId: 'ORD005',
-      orderDate: '10 Sep, 24',
-      orderStatus: 'Shipped',
-      totalAmount: '145.25',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 6,
-      customerName: 'Sarah Williams',
-      orderId: 'ORD006',
-      orderDate: '08 Sep, 24',
-      orderStatus: 'Completed',
-      totalAmount: '200.00',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 7,
-      customerName: 'Chris Evans',
-      orderId: 'ORD007',
-      orderDate: '05 Sep, 24',
-      orderStatus: 'Pending',
-      totalAmount: '75.00',
-      paymentStatus: 'Unpaid',
-    },
-    {
-      id: 8,
-      customerName: 'Anna Taylor',
-      orderId: 'ORD008',
-      orderDate: '03 Sep, 24',
-      orderStatus: 'Shipped',
-      totalAmount: '110.00',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 9,
-      customerName: 'James Wilson',
-      orderId: 'ORD009',
-      orderDate: '01 Sep, 24',
-      orderStatus: 'Returned',
-      totalAmount: '80.50',
-      paymentStatus: 'Refunded',
-    },
-    {
-      id: 10,
-      customerName: 'Sophia Martinez',
-      orderId: 'ORD010',
-      orderDate: '28 Aug, 24',
-      orderStatus: 'Completed',
-      totalAmount: '225.00',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 11,
-      customerName: 'Oliver Thomas',
-      orderId: 'ORD011',
-      orderDate: '26 Aug, 24',
-      orderStatus: 'Shipped',
-      totalAmount: '95.75',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 12,
-      customerName: 'Isabella White',
-      orderId: 'ORD012',
-      orderDate: '24 Aug, 24',
-      orderStatus: 'Pending',
-      totalAmount: '60.00',
-      paymentStatus: 'Unpaid',
-    },
-    {
-      id: 13,
-      customerName: 'Liam Harris',
-      orderId: 'ORD013',
-      orderDate: '22 Aug, 24',
-      orderStatus: 'Completed',
-      totalAmount: '185.50',
-      paymentStatus: 'Paid',
-    },
-    {
-      id: 14,
-      customerName: 'Mia Lewis',
-      orderId: 'ORD014',
-      orderDate: '20 Aug, 24',
-      orderStatus: 'Returned',
-      totalAmount: '50.25',
-      paymentStatus: 'Refunded',
-    },
-    {
-      id: 15,
-      customerName: 'Ethan Clark',
-      orderId: 'ORD015',
-      orderDate: '18 Aug, 24',
-      orderStatus: 'Shipped',
-      totalAmount: '140.00',
-      paymentStatus: 'Paid',
-    },
-  ];
-
-  const headings = [
-    'Customer Name',
-    'Order ID',
-    'Order Date',
-    'Order Status',
-    'Total Amount',
-    'Payment Status',
-  ];
-
+  const [isViewOrderModalOpen, setIsViewOrderModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 20; // Adjusted to match your pageSize variable
 
-  let filteredData = orderData;
-
-  if (searchTerm) {
-    filteredData = filteredData.filter((item) =>
-      Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
-    );
-  }
-
-  const indexOfLast = currentPage * itemsPerPage;
-  const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
-
-  const [isViewOrderModalOpen, setIsViewOrderModalOpen] = useState(false);
+  // Fetch orders using the Apollo GraphQL query
+  const { loading, error, data } = useQuery(GET_ALL_ORDERS, {
+    variables: {
+      pagination: {
+        page: currentPage.toString(), // Pagination values passed as strings
+        pageSize: itemsPerPage.toString(),
+      },
+    },
+    context: {
+      headers: {
+        Authorization: tempToken,
+      },
+    },
+  });
 
   const openViewOrderModal = () => {
     setIsViewOrderModalOpen(true);
@@ -186,13 +41,28 @@ const ManageOrders = () => {
     setIsViewOrderModalOpen(false);
   };
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const orderData = data.getAllOrders.items;
+
+  // Filter orders based on search term
+  const filteredData = searchTerm
+    ? orderData.filter((item: any) =>
+        Object.values(item).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
+      )
+    : orderData;
+
   return (
     <div className="min-h-screen pt-5">
       {isViewOrderModalOpen && (
         <Modal closeModal={closeViewOrderModal}>
-          <ViewOrderPopup />{' '}
+          <ViewOrderPopup /> {/* Add actual data to the popup */}
         </Modal>
       )}
+
       <div className="flex flex-col gap-5 pb-10 lg:flex-row">
         <Link href="/">
           <h1 className="text-blue flex items-center gap-2 pr-10 text-3xl font-medium">
@@ -200,6 +70,7 @@ const ManageOrders = () => {
             <span>Manage Orders</span>
           </h1>
         </Link>
+
         <div className="flex flex-grow flex-col gap-5 sm:flex-row">
           <div className="flex-grow">
             <input
@@ -221,29 +92,25 @@ const ManageOrders = () => {
           <thead className="">
             <tr className="border-b text-gray-400">
               <th className="px-4 py-3 text-center">#Number</th>
-              {headings.map((heading) => (
-                <th key={heading} className="px-4 py-3 text-center">
-                  <span>
-                    {heading.charAt(0).toUpperCase() + heading.slice(1)}
-                  </span>
-                </th>
-              ))}
+              <th className="px-4 py-3 text-center">Customer Name</th>
+              <th className="px-4 py-3 text-center">Order ID</th>
+              <th className="px-4 py-3 text-center">Order Date</th>
+              <th className="px-4 py-3 text-center">Order Status</th>
+              <th className="px-4 py-3 text-center">Total Amount</th>
+              <th className="px-4 py-3 text-center">Payment Status</th>
               <th className="px-4 py-3 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((product, index) => (
+            {filteredData.map((order: any, index: number) => (
               <tr key={index} className="border-b">
-                {Object.entries(product).map(([, value], idx) => (
-                  <td key={idx} className="px-4 py-3">
-                    <span
-                      className={`inline-block w-full rounded-full text-center`}
-                    >
-                      {value}
-                    </span>
-                  </td>
-                ))}
-
+                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3">{order.user.fullName}</td>
+                <td className="px-4 py-3">{order.id}</td>
+                <td className="px-4 py-3">{order.orderDate}</td>
+                <td className="px-4 py-3">{order.status}</td>
+                <td className="px-4 py-3">{order.totalAmount}</td>
+                <td className="px-4 py-3">{order.payment.status}</td>
                 <td className="flex items-center py-3 pl-7">
                   <button
                     className="text-blue-500"
@@ -256,9 +123,11 @@ const ManageOrders = () => {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
         <div className="flex w-full items-center justify-center py-5">
           <Pagination
-            data={filteredData}
+            data={data.getAllOrders}
             itemsPerPage={itemsPerPage}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}

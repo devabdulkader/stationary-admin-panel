@@ -83,3 +83,54 @@ export const GET_INVOICE_SUMMARY = gql`
     }
   }
 `;
+
+export const GET_ALL_EXPENSE_CATEGORIES = gql`
+  query {
+    getAllExpenseCategories {
+      id
+      name
+    }
+  }
+`;
+
+export const CREATE_EXPENSE = gql`
+  mutation CREATE_EXPENSE($categoryId: ID!, $value: String!) {
+    createExpense(categoryId: $categoryId, value: $value) {
+      id
+    }
+  }
+`;
+
+export const GET_ALL_PRODUCT_CATEGORIES = gql`
+  query {
+    getAllProductCategories {
+      id
+      name
+    }
+  }
+`;
+
+export const CREATE_PRODUCT = gql`
+  mutation CreateProduct($input: CreateProductInput!) {
+    createProduct(input: $input) {
+      id
+      title
+      description
+      price
+      buyPrice
+      stockQuantity
+      images {
+        url
+        alt
+      }
+      category {
+        name
+      }
+      variants {
+        id
+        name
+        value
+      }
+    }
+  }
+`;
