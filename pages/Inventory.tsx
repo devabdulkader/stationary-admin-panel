@@ -11,7 +11,6 @@ import DeadStock from '@/components/inventory/DeadStock';
 import ProductPerformance from '@/components/inventory/ProductPerformance';
 import Modal from '@/components/common/Modal';
 import AddNewProduct from '@/components/inventory/AddNewProduct';
-import StocksPopup from '@/components/inventory/StocksPopup';
 import { useQuery } from '@apollo/client';
 import InventoryOverviewCard2 from '@/components/inventory/InventoryOverviewCard2';
 import {
