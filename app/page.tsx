@@ -1,11 +1,8 @@
-import React from 'react';
-
+import Inventory from '@/pages/Inventory';
 export default function Home() {
   return (
     <div>
-      <h1 className="flex h-screen items-center justify-center text-3xl">
-        Hello World
-      </h1>
+      <Inventory />
     </div>
   );
 }

@@ -42,7 +42,7 @@ const FormTextarea = ({
     <div className={`mb-4 flex flex-col`}>
       {label && (
         <label className="mb-2 font-semibold text-[#00359E]">
-          {label} {required && <span className="">*</span>}
+          {/* {label} {required && <span className="">*</span>} */}
         </label>
       )}
       <Controller

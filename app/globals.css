@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-blue {
+  background-color: #00359e;
+}
+.bg-gray {
+  background-color: #e6eaef;
+}
+.text-blue {
+  color: #0040c1;
+}
+.border-blue-dashed {
+  border: 1px dashed #00359e;
+}
+.input-bg {
+  background-color: #f1f3ff;
+}
+/* Scrollbar for a specific container */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  border-radius: 10px;
+  border: 2px solid #f0f0f0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a0;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 #f0f0f0;
+}

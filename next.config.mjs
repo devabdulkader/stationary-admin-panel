@@ -5,6 +5,9 @@ const nextConfig = {
       {
         hostname: 'dummyimage.com',
       },
+      {
+        hostname: 'test-bucket-zorgit.s3.amazonaws.com',
+      },
     ],
   },
 };

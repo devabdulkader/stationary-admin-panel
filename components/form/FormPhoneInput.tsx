@@ -26,7 +26,7 @@ const FormPhoneInput = ({
   const errorMessage = getErrorMessageByPropertyName(errors, name);
 
   return (
-    <div>
+    <div className="flex-grow">
       <label className="mb-1 block font-semibold">
         {label ? label : null}
         {required ? <span className="text-red-500">*</span> : null}
