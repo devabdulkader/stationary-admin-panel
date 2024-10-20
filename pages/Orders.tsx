@@ -5,64 +5,56 @@ import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '@/components/button/ButtonWithIcon';
 import FadeUp from '@/components/motion/FadeUp';
-import OrderOverviewCard from '@/components/orders/OrderOverviewCard';
 import { GiSandsOfTime } from 'react-icons/gi';
 import { IoCheckmarkSharp, IoManOutline } from 'react-icons/io5';
 import { GrDeliver } from 'react-icons/gr';
 import { RiArrowGoBackLine } from 'react-icons/ri';
-import PaymentStatus from '@/components/orders/PaymentStatus';
 import OrderTrends from '@/components/orders/OrderTrends';
 import CustomerOverview from '@/components/orders/CustomerOverview';
 import AverageOrderValue from '@/components/orders/AverageOrderValue';
-import RecentOrders from '@/components/orders/RecentOrders';
 import { TfiBag } from 'react-icons/tfi';
 import Modal from '@/components/common/Modal';
 import CustomersPopup from '@/components/orders/CustomersPopup';
-
-interface OrderData {
-  totalOrders?: number;
-  revenue?: number;
-  pending?: number;
-  completed?: number;
-  shipped?: number;
-  returned?: number;
-  value?: number;
-  percentageChange: number;
-}
+import { useQuery } from '@apollo/client';
+import {
+  GET_ALL_ORDERS,
+  GET_COMPLETED_ORDERS,
+  GET_PAYMENT_STATUS,
+  GET_PENDING_ORDERS,
+  GET_RETURNED_ORDERS,
+  GET_SHIPPED_ORDERS,
+  GET_TOTAL_ORDERS,
+} from '@/queries/orderQueries';
+import OrderOverviewCard2 from '@/components/orders/OrderOverviewCard2';
+import PaymentStatus2 from '@/components/orders/PaymentStatus2';
+import RecentOrders2 from '@/components/orders/RecentOrders2';
+import { tempToken } from '@/middleware';
 
 const Orders: React.FC = () => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-
-  const totalOrdersData: OrderData = {
-    totalOrders: 200,
-    revenue: 5200,
-    percentageChange: 21.01,
-  };
-
-  const pendingOrdersData: OrderData = {
-    pending: 213,
-    value: 434,
-    percentageChange: 0.8,
-  };
-
-  const completedOrdersData: OrderData = {
-    completed: 200,
-    value: 5200,
-    percentageChange: 21.01,
-  };
-
-  const shippedOrdersData: OrderData = {
-    shipped: 213,
-    value: 434,
-    percentageChange: 0.8,
-  };
-
-  const returnedOrdersData: OrderData = {
-    returned: 213,
-    value: 434,
-    percentageChange: 0.8,
-  };
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+
+  const { data: totalOrdersData, loading: totalOrdersDataLoading } =
+    useQuery(GET_TOTAL_ORDERS);
+  const { data: pendingOrdersData, loading: pendingOrdersDataLoading } =
+    useQuery(GET_PENDING_ORDERS);
+  const { data: completedOrdersData, loading: completedOrdersDataLoading } =
+    useQuery(GET_COMPLETED_ORDERS);
+  const { data: shippedOrdersData, loading: shippedOrdersDataLoading } =
+    useQuery(GET_SHIPPED_ORDERS);
+  const { data: returnedOrdersData, loading: returnedOrdersDataLoading } =
+    useQuery(GET_RETURNED_ORDERS);
+  const { data: paymentStatusData, loading: paymentStatusDataLoading } =
+    useQuery(GET_PAYMENT_STATUS);
+  const { data: allOrdersData, loading: allOrdersDataLoading } = useQuery(
+    GET_ALL_ORDERS,
+    {
+      context: {
+        headers: {
+          Authorization: tempToken,
+        },
+      },
+    },
+  );
 
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
@@ -71,6 +63,18 @@ const Orders: React.FC = () => {
   const closeCustomerModal = () => {
     setIsCustomerModalOpen(false);
   };
+
+  if (
+    totalOrdersDataLoading ||
+    pendingOrdersDataLoading ||
+    completedOrdersDataLoading ||
+    shippedOrdersDataLoading ||
+    returnedOrdersDataLoading ||
+    paymentStatusDataLoading ||
+    allOrdersDataLoading
+  ) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="">
       {isCustomerModalOpen && (
@@ -113,56 +117,46 @@ const Orders: React.FC = () => {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
             {/* Total Orders Card */}
             <FadeUp delay={0.1} duration={1}>
-              <OrderOverviewCard
+              <OrderOverviewCard2
                 title="Total Orders"
-                data={totalOrdersData}
+                orderData={totalOrdersData.getTotalOrdersByMonth}
                 icon={<BsBox2 size={40} />}
-                startDate={startDate}
-                setStartDate={setStartDate}
               />
             </FadeUp>
 
             {/* Pending Orders Card */}
             <FadeUp delay={0.2} duration={1}>
-              <OrderOverviewCard
+              <OrderOverviewCard2
                 title="Pending Orders"
-                data={pendingOrdersData}
+                orderData={pendingOrdersData.getPendingOrdersByMonth}
                 icon={<GiSandsOfTime size={40} />}
-                startDate={startDate}
-                setStartDate={setStartDate}
               />
             </FadeUp>
 
             {/* Completed Orders Card */}
             <FadeUp delay={0.3} duration={1}>
-              <OrderOverviewCard
+              <OrderOverviewCard2
                 title="Completed Orders"
-                data={completedOrdersData}
+                orderData={completedOrdersData.getCompletedOrdersByMonth}
                 icon={<IoCheckmarkSharp size={40} />}
-                startDate={startDate}
-                setStartDate={setStartDate}
               />
             </FadeUp>
 
             {/* Shipped Orders Card */}
             <FadeUp delay={0.4} duration={1}>
-              <OrderOverviewCard
+              <OrderOverviewCard2
                 title="Shipped Orders"
-                data={shippedOrdersData}
+                orderData={shippedOrdersData.getShippedOrdersByMonth}
                 icon={<GrDeliver size={40} />}
-                startDate={startDate}
-                setStartDate={setStartDate}
               />
             </FadeUp>
 
             {/* Returned Orders Card */}
             <FadeUp delay={0.5} duration={1}>
-              <OrderOverviewCard
+              <OrderOverviewCard2
                 title="Returned Orders"
-                data={returnedOrdersData}
+                orderData={returnedOrdersData.getReturnedOrdersByMonth}
                 icon={<RiArrowGoBackLine size={40} />}
-                startDate={startDate}
-                setStartDate={setStartDate}
               />
             </FadeUp>
           </div>
@@ -171,12 +165,14 @@ const Orders: React.FC = () => {
           <div className="grid grid-cols-12 gap-5">
             <div className="col-span-12 xl:col-span-6 2xl:col-span-8">
               <FadeUp delay={0.6} duration={1}>
-                <RecentOrders />
+                <RecentOrders2 orders={allOrdersData?.getAllOrders?.items} />
               </FadeUp>
             </div>
             <div className="col-span-12 xl:col-span-6 2xl:col-span-4">
               <FadeUp delay={0.7} duration={1}>
-                <PaymentStatus />
+                <PaymentStatus2
+                  paymentData={paymentStatusData.getPaymentStatusByMonth}
+                />
               </FadeUp>
             </div>
           </div>
