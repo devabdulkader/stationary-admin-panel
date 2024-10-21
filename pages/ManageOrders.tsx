@@ -19,7 +19,8 @@ const ManageOrders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [paginationData, setPaginationData] = useState(null);
-  const itemsPerPage = 20;
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchOrders();
@@ -62,6 +63,9 @@ const ManageOrders = () => {
                 }
                 user {
                   fullName
+                  email
+                  phoneNumber
+                  address
                 }
               }
             }
@@ -109,7 +113,8 @@ const ManageOrders = () => {
     <div className="min-h-screen pt-5">
       {isViewOrderModalOpen && (
         <Modal closeModal={closeViewOrderModal}>
-          <ViewOrderPopup /> {/* Add actual data to the popup */}
+          <ViewOrderPopup orderData={selectedOrder} />{' '}
+          {/* Add actual data to the popup */}
         </Modal>
       )}
 
@@ -143,7 +148,7 @@ const ManageOrders = () => {
             <tr className="border-b text-gray-400">
               <th className="px-4 py-3 text-center">#Number</th>
               <th className="px-4 py-3 text-center">Customer Name</th>
-              <th className="px-4 py-3 text-center">Order ID</th>
+              <th className="px-4 py-3 text-center">Tracking ID</th>
               <th className="px-4 py-3 text-center">Order Date</th>
               <th className="px-4 py-3 text-center">Order Status</th>
               <th className="px-4 py-3 text-center">Total Amount</th>
@@ -156,7 +161,7 @@ const ManageOrders = () => {
               <tr key={index} className="border-b">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{order.user.fullName}</td>
-                <td className="px-4 py-3">{order.id}</td>
+                <td className="px-4 py-3">{order.trackingId}</td>
                 <td className="px-4 py-3">
                   {formatUTCDateTime(order.createdAt)}
                 </td>
@@ -166,7 +171,10 @@ const ManageOrders = () => {
                 <td className="flex items-center py-3 pl-7">
                   <button
                     className="text-blue-500"
-                    onClick={openViewOrderModal}
+                    onClick={() => {
+                      openViewOrderModal();
+                      setSelectedOrder(order);
+                    }}
                   >
                     <VscZoomIn size={24} />
                   </button>
