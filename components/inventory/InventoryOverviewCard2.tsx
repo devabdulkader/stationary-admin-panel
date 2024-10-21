@@ -19,8 +19,9 @@ const InventoryOverviewCard: React.FC<CardProps> = ({ title, data }) => {
 
   const isPositive =
     selectedMonth !== null &&
-    selectedMonth.change !== null &&
-    selectedMonth.change >= 0;
+    selectedMonth?.change !== null &&
+    selectedMonth?.change !== undefined &&
+    selectedMonth?.change >= 0;
   const imageUrl = isPositive ? '/positive-chart.png' : '/negative-chart.png';
   const sign = isPositive ? '+' : '';
   const textColor = isPositive ? 'text-blue-500' : 'text-red-500';
@@ -86,7 +87,7 @@ const InventoryOverviewCard: React.FC<CardProps> = ({ title, data }) => {
           <p className={`${textColor}`}>
             {sign}
             {selectedMonth && selectedMonth?.change !== null
-              ? Math.abs(selectedMonth.change).toFixed(2)
+              ? Math.abs(selectedMonth?.change).toFixed(2)
               : 'N/A'}
             %
             {selectedMonth?.change !== null ? (
