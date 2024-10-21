@@ -8,9 +8,46 @@ import { VscZoomIn } from 'react-icons/vsc';
 import Modal from '@/components/common/Modal';
 import Pagination from '@/components/common/Pagination';
 import ViewOrderPopup from '@/components/orders/ViewOrderPopup';
-import { useQuery } from '@apollo/client';
-import { GET_ALL_ORDERS } from '@/queries/inventoryQueries';
+import { gql, useQuery } from '@apollo/client';
 import { tempToken } from '@/middleware';
+
+const GET_ALL_ORDERS = gql`
+  query GetAllOrders($pagination: PaginationInput) {
+    getAllOrders(pagination: $pagination) {
+      totalItems
+      totalPages
+      currentPage
+      items {
+        id
+        vat
+        trackingId
+        shippingAndHandlingFee
+        totalAmount
+        status
+        shippingMethod
+        payment {
+          id
+          amount
+          paymentMethod
+          trxId
+          status
+        }
+        orderedItems {
+          variant
+          quantity
+          price
+          product {
+            id
+            title
+          }
+        }
+        user {
+          fullName
+        }
+      }
+    }
+  }
+`;
 
 const ManageOrders = () => {
   const [isViewOrderModalOpen, setIsViewOrderModalOpen] = useState(false);

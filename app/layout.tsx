@@ -31,12 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <main className="bg-gray-100 px-5 py-5 2xl:px-10">
-          <ApolloWrapper>
-            <SelectedProductsProvider>{children}</SelectedProductsProvider>
-          </ApolloWrapper>
-        </main>
+        <ApolloWrapper>
+          <SelectedProductsProvider>
+            <Navbar />
+            <main className="bg-gray-100 px-5 py-5 2xl:px-10">{children}</main>
+          </SelectedProductsProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

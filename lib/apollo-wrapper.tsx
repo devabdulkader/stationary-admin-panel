@@ -11,7 +11,7 @@ import React from 'react';
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: 'http://localhost:5000/graphql',
+    uri: 'https://stationary-backend-five.vercel.app/graphql',
   });
 
   return new ApolloClient({

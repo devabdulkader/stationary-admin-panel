@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import Form from '../form/Form';
@@ -7,12 +9,42 @@ import FormImageUpload from '../form/FormImageUpload';
 import FormSelect from '../form/FormSelect';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
-import { useQuery, useMutation } from '@apollo/client';
-import {
-  CREATE_PRODUCT,
-  GET_ALL_PRODUCT_CATEGORIES,
-} from '@/queries/accountQueries';
+import { useQuery, useMutation, gql } from '@apollo/client';
 import { tempToken } from '@/middleware';
+
+const GET_ALL_PRODUCT_CATEGORIES = gql`
+  query {
+    getAllProductCategories {
+      id
+      name
+    }
+  }
+`;
+
+const CREATE_PRODUCT = gql`
+  mutation CreateProduct($input: CreateProductInput!) {
+    createProduct(input: $input) {
+      id
+      title
+      description
+      price
+      buyPrice
+      stockQuantity
+      images {
+        url
+        alt
+      }
+      category {
+        name
+      }
+      variants {
+        id
+        name
+        value
+      }
+    }
+  }
+`;
 
 interface Variant {
   id: number;

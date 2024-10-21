@@ -6,63 +6,88 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ButtonWithIcon from '@/components/button/ButtonWithIcon';
 import FadeUp from '@/components/motion/FadeUp';
 import SupplierDue from '@/components/accounts/SupplierDue';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EntryExpensePopup from '@/components/accounts/EntryExpensePopup';
 import Modal from '@/components/common/Modal';
 import { AiOutlineInbox } from 'react-icons/ai';
-import { useQuery } from '@apollo/client';
-import {
-  GET_ALL_PAYMENTS,
-  GET_GROWTH_PROGRESSION,
-  GET_INVOICE_SUMMARY,
-  GET_MONTHLY_EXPENSE_BY_CATEGORY,
-  GET_TOTAL_PROFIT_EXPENSE,
-  GET_YEARLY_PROFIT_AND_LOSS,
-  GET_YEARLY_PROFIT_LOSS,
-} from '@/queries/accountQueries';
 import ProfitLoss2 from '@/components/accounts/ProfitLoss2';
 import Transactions2 from '@/components/accounts/Transactions2';
-import { tempToken } from '@/middleware';
 import ProfitMargin2 from '@/components/accounts/ProfitMargin2';
 import ExpenseBreakdown2 from '@/components/accounts/ExpenseBreakdown2';
 import GrowthProgression2 from '@/components/accounts/GrowthProgression2';
 import FinancialPerformance2 from '@/components/accounts/FinancialPerformance2';
 import InvoiceSummary2 from '@/components/accounts/InvoiceSummary2';
+import { instance } from '@/axios/axiosInstance';
 
 const Accounts: React.FC = () => {
   const [isEntryExpenseModalOpen, setIsEntryExpenseModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({
+    yearlyProfitLoss: null,
+    allPayments: null,
+    totalProfitExpense: null,
+    monthlyExpenseByCategory: null,
+    growthProgression: null,
+    yearlyProfitAndLoss: null,
+    invoiceSummary: null,
+  });
 
-  const { data: yearlyProfitLoss, loading: yearlyProfitLossLoading } = useQuery(
-    GET_YEARLY_PROFIT_LOSS,
-  );
-
-  const { data: allPayments, loading: allPaymentsLoading } = useQuery(
-    GET_ALL_PAYMENTS,
-    {
-      context: {
-        headers: {
-          Authorization: tempToken,
+  const fetchGraphQLData = async () => {
+    try {
+      const queries = [
+        {
+          name: 'yearlyProfitLoss',
+          query: `query { getYearlyProfitLoss { year summary { month profit loss } } }`,
         },
-      },
-    },
-  );
+        {
+          name: 'allPayments',
+          query: `query { getAllPayments { id amount status trxId paymentMethod createdAt } }`,
+        },
+        {
+          name: 'totalProfitExpense',
+          query: `query { getTotalProfitAndExpense { totalProfit totalExpense } }`,
+        },
+        {
+          name: 'monthlyExpenseByCategory',
+          query: `query { getMonthlyExpenseByCategory { month data { categoryName value percentage } } }`,
+        },
+        {
+          name: 'growthProgression',
+          query: `query { getGrowthProgression { month data { week current last } } }`,
+        },
+        {
+          name: 'yearlyProfitAndLoss',
+          query: `query { getYearlyProfitAndLoss { year profit loss } }`,
+        },
+        {
+          name: 'invoiceSummary',
+          query: `query { getInvoiceSummary { month data { totalInvoice amountDue paidInvoice } } }`,
+        },
+      ];
 
-  const { data: totalProfitExpense, loading: totalProfitExpenseLoading } =
-    useQuery(GET_TOTAL_PROFIT_EXPENSE);
+      const responses = await Promise.all(
+        queries.map(({ query }) => instance.post('', { query })),
+      );
 
-  const {
-    data: monthlyExpenseByCategory,
-    loading: monthlyExpenseByCategoryLoading,
-  } = useQuery(GET_MONTHLY_EXPENSE_BY_CATEGORY);
+      const result = responses.reduce(
+        (acc: Record<string, any>, res, index) => {
+          acc[queries[index].name] = res.data.data[queries[index].name];
+          return acc;
+        },
+        {},
+      );
 
-  const { data: growthProgression, loading: growthProgressionLoading } =
-    useQuery(GET_GROWTH_PROGRESSION);
+      setData(result as any);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  };
 
-  const { data: yearlyProfitAndLoss, loading: yearlyProfitAndLossLoading } =
-    useQuery(GET_YEARLY_PROFIT_AND_LOSS);
-
-  const { data: invoiceSummary, loading: invoiceSummaryLoading } =
-    useQuery(GET_INVOICE_SUMMARY);
+  useEffect(() => {
+    fetchGraphQLData();
+  }, []);
 
   const openEntryExpenseModal = () => {
     setIsEntryExpenseModalOpen(true);
@@ -72,15 +97,7 @@ const Accounts: React.FC = () => {
     setIsEntryExpenseModalOpen(false);
   };
 
-  if (
-    yearlyProfitLossLoading ||
-    allPaymentsLoading ||
-    totalProfitExpenseLoading ||
-    monthlyExpenseByCategoryLoading ||
-    growthProgressionLoading ||
-    yearlyProfitAndLossLoading ||
-    invoiceSummaryLoading
-  ) {
+  if (loading) {
     return <p>Loading...</p>;
   }
 
@@ -120,10 +137,10 @@ const Accounts: React.FC = () => {
       <main className="mt-5 flex flex-col gap-5">
         <section className="grid gap-5 lg:grid-cols-2">
           <FadeUp delay={0.1} duration={1}>
-            <ProfitLoss2 data={yearlyProfitLoss.getYearlyProfitLoss} />
+            <ProfitLoss2 data={data.yearlyProfitLoss || []} />
           </FadeUp>
           <FadeUp delay={0.2} duration={1}>
-            <GrowthProgression2 data={growthProgression.getGrowthProgression} />
+            <GrowthProgression2 data={data.growthProgression || []} />
           </FadeUp>
         </section>
 
@@ -131,7 +148,7 @@ const Accounts: React.FC = () => {
           {/* First section - Transactions */}
           <section className="col-span-12 2xl:col-span-7">
             <FadeUp delay={0.3} duration={1}>
-              <Transactions2 transactionData={allPayments.getAllPayments} />
+              <Transactions2 transactionData={data.allPayments || []} />
             </FadeUp>
           </section>
 
@@ -139,18 +156,12 @@ const Accounts: React.FC = () => {
           <section className="col-span-12 gap-5 space-y-5 xl:grid xl:grid-cols-2 xl:space-y-0 2xl:col-span-5 2xl:grid-cols-1">
             <FadeUp delay={0.4} duration={1}>
               <ProfitMargin2
-                totalExpense={
-                  totalProfitExpense.getTotalProfitAndExpense.totalExpense
-                }
-                totalProfit={
-                  totalProfitExpense.getTotalProfitAndExpense.totalProfit
-                }
+                totalExpense={data.totalProfitExpense?.totalExpense || 0}
+                totalProfit={data.totalProfitExpense?.totalProfit || 0}
               />
             </FadeUp>
             <FadeUp delay={0.5} duration={1}>
-              <ExpenseBreakdown2
-                data={monthlyExpenseByCategory.getMonthlyExpenseByCategory}
-              />
+              <ExpenseBreakdown2 data={data.monthlyExpenseByCategory || []} />
             </FadeUp>
           </section>
         </div>
@@ -158,9 +169,7 @@ const Accounts: React.FC = () => {
         <div className="grid grid-cols-12 gap-5">
           <section className="col-span-12 grid gap-5 xl:col-span-6 2xl:col-span-7">
             <FadeUp delay={0.3} duration={1}>
-              <FinancialPerformance2
-                data={yearlyProfitAndLoss.getYearlyProfitAndLoss}
-              />
+              <FinancialPerformance2 data={data.yearlyProfitAndLoss || []} />
             </FadeUp>
           </section>
 
@@ -169,7 +178,7 @@ const Accounts: React.FC = () => {
               <SupplierDue />
             </FadeUp>
             <FadeUp delay={0.5} duration={1}>
-              <InvoiceSummary2 invoiceData={invoiceSummary.getInvoiceSummary} />
+              <InvoiceSummary2 invoiceData={data.invoiceSummary || []} />
             </FadeUp>
           </section>
         </div>

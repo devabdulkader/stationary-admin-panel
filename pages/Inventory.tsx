@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState } from 'react';
 import { BsPlusLg } from 'react-icons/bs';
 import { CgShutterstock } from 'react-icons/cg';
@@ -11,21 +12,109 @@ import DeadStock from '@/components/inventory/DeadStock';
 import ProductPerformance from '@/components/inventory/ProductPerformance';
 import Modal from '@/components/common/Modal';
 import AddNewProduct from '@/components/inventory/AddNewProduct';
-import { useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import InventoryOverviewCard2 from '@/components/inventory/InventoryOverviewCard2';
-import {
-  GET_ALL_PRODUCTS,
-  GET_DEAD_STOCK,
-  GET_LOW_STOCK,
-  GET_MONTHLY_INVENTORY_VALUE,
-  GET_MONTHLY_INVOICE,
-  GET_MONTHLY_REVENUE,
-  GET_MONTHLY_STOCK,
-} from '@/queries/inventoryQueries';
+
 import LowStock2 from '@/components/inventory/LowStock2';
 import StockLevel2 from '@/components/inventory/StockLevel2';
 import MyProducts2 from '@/components/inventory/MyProducts2';
 import StocksPopup2 from '@/components/inventory/StocksPopup2';
+
+const GET_ALL_PRODUCTS = gql`
+  query {
+    products {
+      items {
+        id
+        sku
+        title
+        description
+        price
+        buyPrice
+        stockQuantity
+        images {
+          url
+          alt
+        }
+        category {
+          name
+        }
+        variants {
+          id
+          name
+          value
+        }
+        discount {
+          id
+          discountedPrice
+          startsAt
+          endsAt
+          isActive
+        }
+      }
+      totalItems
+      currentPage
+      totalPages
+    }
+  }
+`;
+
+const GET_DEAD_STOCK = gql`
+  query {
+    deadStockProducts {
+      productName
+      daysUnsold
+    }
+  }
+`;
+
+const GET_LOW_STOCK = gql`
+  query {
+    lowStockCategory {
+      categoryName
+      stockQuantity
+    }
+  }
+`;
+
+const GET_MONTHLY_INVOICE = gql`
+  query {
+    getMonthlyInvoiceValues {
+      month
+      value
+      change
+    }
+  }
+`;
+
+const GET_MONTHLY_STOCK = gql`
+  query {
+    getMonthlyStockValues {
+      month
+      value
+      change
+    }
+  }
+`;
+
+const GET_MONTHLY_REVENUE = gql`
+  query {
+    getMonthlyRevenueValues {
+      month
+      value
+      change
+    }
+  }
+`;
+
+const GET_MONTHLY_INVENTORY_VALUE = gql`
+  query {
+    getMonthlyInventoryValues {
+      month
+      value
+      change
+    }
+  }
+`;
 
 const Inventory: React.FC = () => {
   const { data: monthlyInventoryValue, loading: monthlyInventoryValueLoading } =

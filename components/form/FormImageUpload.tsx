@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useMutation, gql } from '@apollo/client';

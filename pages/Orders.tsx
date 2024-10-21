@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState } from 'react';
 import { BsBox2 } from 'react-icons/bs';
 import { RiSearchLine } from 'react-icons/ri';
@@ -15,20 +16,117 @@ import AverageOrderValue from '@/components/orders/AverageOrderValue';
 import { TfiBag } from 'react-icons/tfi';
 import Modal from '@/components/common/Modal';
 import CustomersPopup from '@/components/orders/CustomersPopup';
-import { useQuery } from '@apollo/client';
-import {
-  GET_ALL_ORDERS,
-  GET_COMPLETED_ORDERS,
-  GET_PAYMENT_STATUS,
-  GET_PENDING_ORDERS,
-  GET_RETURNED_ORDERS,
-  GET_SHIPPED_ORDERS,
-  GET_TOTAL_ORDERS,
-} from '@/queries/orderQueries';
+import { gql, useQuery } from '@apollo/client';
 import OrderOverviewCard2 from '@/components/orders/OrderOverviewCard2';
 import PaymentStatus2 from '@/components/orders/PaymentStatus2';
 import RecentOrders2 from '@/components/orders/RecentOrders2';
 import { tempToken } from '@/middleware';
+
+const GET_ALL_ORDERS = gql`
+  query {
+    getAllOrders {
+      totalItems
+      totalPages
+      currentPage
+      items {
+        id
+        vat
+        trackingId
+        shippingAndHandlingFee
+        totalAmount
+        status
+        shippingMethod
+        payment {
+          id
+          amount
+          paymentMethod
+          trxId
+          status
+        }
+        orderedItems {
+          variant
+          quantity
+          price
+          product {
+            id
+            title
+          }
+        }
+        user {
+          fullName
+        }
+      }
+    }
+  }
+`;
+
+const GET_PAYMENT_STATUS = gql`
+  query {
+    getPaymentStatusByMonth {
+      month
+      totalPaid
+      totalPending
+      totalRefund
+      total
+      noOfOrders
+    }
+  }
+`;
+
+const GET_RETURNED_ORDERS = gql`
+  query {
+    getReturnedOrdersByMonth {
+      month
+      totalOrders
+      totalRevenue
+      change
+    }
+  }
+`;
+
+const GET_SHIPPED_ORDERS = gql`
+  query {
+    getShippedOrdersByMonth {
+      month
+      totalOrders
+      totalRevenue
+      change
+    }
+  }
+`;
+
+const GET_COMPLETED_ORDERS = gql`
+  query {
+    getCompletedOrdersByMonth {
+      month
+      totalOrders
+      totalRevenue
+      change
+    }
+  }
+`;
+
+const GET_PENDING_ORDERS = gql`
+  query {
+    getPendingOrdersByMonth {
+      month
+      totalOrders
+      totalRevenue
+      change
+    }
+  }
+`;
+
+const GET_TOTAL_ORDERS = gql`
+  query {
+    getTotalOrdersByMonth {
+      month
+      totalOrders
+      totalRevenue
+      change
+    }
+  }
+`;
 
 const Orders: React.FC = () => {
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
