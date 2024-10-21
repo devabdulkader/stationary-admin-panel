@@ -4,8 +4,8 @@ const instance = axios.create();
 instance.defaults.timeout = 60000;
 
 instance.defaults.baseURL =
-  // 'https://stationary-backend-five.vercel.app/graphql';
-  instance.defaults.baseURL = 'http://localhost:5000/graphql';
+  'https://stationary-backend-five.vercel.app/graphql';
+// instance.defaults.baseURL = 'http://localhost:5000/graphql';
 
 // Add a request interceptor
 instance.interceptors.request.use(
