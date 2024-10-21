@@ -1,7 +1,6 @@
 'use client';
 
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from '../form/Form';
 import { CgDanger } from 'react-icons/cg';
 import { GoPlus } from 'react-icons/go';
@@ -9,42 +8,7 @@ import FormImageUpload from '../form/FormImageUpload';
 import FormSelect from '../form/FormSelect';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
-import { useQuery, useMutation, gql } from '@apollo/client';
-import { tempToken } from '@/middleware';
-
-const GET_ALL_PRODUCT_CATEGORIES = gql`
-  query {
-    getAllProductCategories {
-      id
-      name
-    }
-  }
-`;
-
-const CREATE_PRODUCT = gql`
-  mutation CreateProduct($input: CreateProductInput!) {
-    createProduct(input: $input) {
-      id
-      title
-      description
-      price
-      buyPrice
-      stockQuantity
-      images {
-        url
-        alt
-      }
-      category {
-        name
-      }
-      variants {
-        id
-        name
-        value
-      }
-    }
-  }
-`;
+import { instance } from '@/axios/axiosInstance';
 
 interface Variant {
   id: number;
@@ -60,26 +24,44 @@ const AddNewProduct = () => {
   // State for variants
   const [variants, setVariants] = useState<Variant[]>([{ id: 1, value: '' }]);
 
-  // Fetch product categories
-  const { data: categoryData, loading: categoryLoading } = useQuery(
-    GET_ALL_PRODUCT_CATEGORIES,
-  );
-  const categoryOptions = categoryData?.getAllProductCategories.map(
-    (category: any) => ({
-      value: category.id,
-      label: category.name,
-    }),
-  );
+  // State for product categories
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [categoryLoading, setCategoryLoading] = useState(true);
 
-  // Mutation for creating product
-  const [createProduct, { loading: mutationLoading, error: mutationError }] =
-    useMutation(CREATE_PRODUCT, {
-      context: {
-        headers: {
-          Authorization: tempToken,
-        },
-      },
-    });
+  // State for mutation
+  const [mutationLoading, setMutationLoading] = useState(false);
+  const [mutationError, setMutationError] = useState(null);
+
+  // Fetch product categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await instance.post('', {
+          query: `
+            query {
+              getAllProductCategories {
+                id
+                name
+              }
+            }
+          `,
+        });
+        const categories = response.data.data.getAllProductCategories;
+        setCategoryOptions(
+          categories.map((category: any) => ({
+            value: category.id,
+            label: category.name,
+          })),
+        );
+        setCategoryLoading(false);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategoryLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Handle adding a new variant
   const handleAddVariant = () => {
@@ -91,6 +73,9 @@ const AddNewProduct = () => {
 
   // Handle form submission
   const submitHandler = async (data: any) => {
+    setMutationLoading(true);
+    setMutationError(null);
+
     const {
       title,
       category,
@@ -123,14 +108,42 @@ const AddNewProduct = () => {
     };
 
     try {
-      const response = await createProduct({
+      const response = await instance.post('', {
+        query: `
+          mutation CreateProduct($input: CreateProductInput!) {
+            createProduct(input: $input) {
+              id
+              title
+              description
+              price
+              buyPrice
+              stockQuantity
+              images {
+                url
+                alt
+              }
+              category {
+                name
+              }
+              variants {
+                id
+                name
+                value
+              }
+            }
+          }
+        `,
         variables: {
           input: formData,
         },
       });
-      console.log('Product created:', response.data.createProduct);
-    } catch (error) {
+
+      console.log('Product created:', response.data.data.createProduct);
+      setMutationLoading(false);
+    } catch (error: any) {
       console.error('Error creating product:', error);
+      setMutationError(error.message);
+      setMutationLoading(false);
     }
   };
 
@@ -280,7 +293,7 @@ const AddNewProduct = () => {
         </button>
       </div>
       {mutationError && (
-        <div className="mt-4 text-red-500">Error: {mutationError.message}</div>
+        <div className="mt-4 text-red-500">Error: {mutationError}</div>
       )}
     </Form>
   );

@@ -4,10 +4,12 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { LuPen } from 'react-icons/lu';
 
 interface ExpenseBreakdownProps {
-  data: {
-    month: string;
-    data: { categoryName: string; value: number; percentage: number }[];
-  }[];
+  data:
+    | {
+        month: string;
+        data: { categoryName: string; value: number; percentage: number }[];
+      }[]
+    | null;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -47,14 +49,14 @@ const renderCustomizedLabel = ({
 };
 
 const ExpenseBreakdown2: React.FC<ExpenseBreakdownProps> = ({ data }) => {
-  const [selectedMonth, setSelectedMonth] = useState(data[0].month);
+  const [selectedMonth, setSelectedMonth] = useState(data?.[0]?.month);
 
   const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedMonth(e.target.value);
   };
 
   const selectedData =
-    data.find((item) => item.month === selectedMonth)?.data || [];
+    data?.find((item) => item.month === selectedMonth)?.data || [];
 
   return (
     <div className="h-full rounded-lg bg-white shadow">
@@ -66,7 +68,7 @@ const ExpenseBreakdown2: React.FC<ExpenseBreakdownProps> = ({ data }) => {
             onChange={handleMonthChange}
             className="flex items-center justify-between bg-white font-semibold text-gray-700"
           >
-            {data.map((item, index) => (
+            {data?.map((item, index) => (
               <option key={index} value={item.month}>
                 {item.month}
               </option>
@@ -123,8 +125,8 @@ const ExpenseBreakdown2: React.FC<ExpenseBreakdownProps> = ({ data }) => {
                       {entry.categoryName}
                     </span>
                   </td>
-                  <td>{entry.value}</td>
-                  <td>{entry.percentage}%</td>
+                  <td>{(+entry.value).toFixed(2)}</td>
+                  <td>{(+entry.percentage).toFixed(2)}%</td>
                   <td className="flex items-center justify-center pt-3">
                     <LuPen className="cursor-pointer text-blue-600" />
                   </td>

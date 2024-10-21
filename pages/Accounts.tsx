@@ -23,44 +23,47 @@ const Accounts: React.FC = () => {
   const [isEntryExpenseModalOpen, setIsEntryExpenseModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
-    yearlyProfitLoss: null,
-    allPayments: null,
-    totalProfitExpense: null,
-    monthlyExpenseByCategory: null,
-    growthProgression: null,
-    yearlyProfitAndLoss: null,
-    invoiceSummary: null,
+    getYearlyProfitLoss: null,
+    getAllPayments: null,
+    getTotalProfitAndExpense: {
+      totalProfit: 0,
+      totalExpense: 0,
+    },
+    getMonthlyExpenseByCategory: null,
+    getGrowthProgression: null,
+    getYearlyProfitAndLoss: null,
+    getInvoiceSummary: null,
   });
 
   const fetchGraphQLData = async () => {
     try {
       const queries = [
         {
-          name: 'yearlyProfitLoss',
+          name: 'getYearlyProfitLoss',
           query: `query { getYearlyProfitLoss { year summary { month profit loss } } }`,
         },
         {
-          name: 'allPayments',
+          name: 'getAllPayments',
           query: `query { getAllPayments { id amount status trxId paymentMethod createdAt } }`,
         },
         {
-          name: 'totalProfitExpense',
+          name: 'getTotalProfitAndExpense',
           query: `query { getTotalProfitAndExpense { totalProfit totalExpense } }`,
         },
         {
-          name: 'monthlyExpenseByCategory',
+          name: 'getMonthlyExpenseByCategory',
           query: `query { getMonthlyExpenseByCategory { month data { categoryName value percentage } } }`,
         },
         {
-          name: 'growthProgression',
+          name: 'getGrowthProgression',
           query: `query { getGrowthProgression { month data { week current last } } }`,
         },
         {
-          name: 'yearlyProfitAndLoss',
+          name: 'getYearlyProfitAndLoss',
           query: `query { getYearlyProfitAndLoss { year profit loss } }`,
         },
         {
-          name: 'invoiceSummary',
+          name: 'getInvoiceSummary',
           query: `query { getInvoiceSummary { month data { totalInvoice amountDue paidInvoice } } }`,
         },
       ];
@@ -137,10 +140,10 @@ const Accounts: React.FC = () => {
       <main className="mt-5 flex flex-col gap-5">
         <section className="grid gap-5 lg:grid-cols-2">
           <FadeUp delay={0.1} duration={1}>
-            <ProfitLoss2 data={data.yearlyProfitLoss || []} />
+            <ProfitLoss2 data={data.getYearlyProfitLoss || []} />
           </FadeUp>
           <FadeUp delay={0.2} duration={1}>
-            <GrowthProgression2 data={data.growthProgression || []} />
+            <GrowthProgression2 data={data.getGrowthProgression || []} />
           </FadeUp>
         </section>
 
@@ -148,7 +151,7 @@ const Accounts: React.FC = () => {
           {/* First section - Transactions */}
           <section className="col-span-12 2xl:col-span-7">
             <FadeUp delay={0.3} duration={1}>
-              <Transactions2 transactionData={data.allPayments || []} />
+              <Transactions2 transactionData={data.getAllPayments || []} />
             </FadeUp>
           </section>
 
@@ -156,12 +159,14 @@ const Accounts: React.FC = () => {
           <section className="col-span-12 gap-5 space-y-5 xl:grid xl:grid-cols-2 xl:space-y-0 2xl:col-span-5 2xl:grid-cols-1">
             <FadeUp delay={0.4} duration={1}>
               <ProfitMargin2
-                totalExpense={data.totalProfitExpense?.totalExpense || 0}
-                totalProfit={data.totalProfitExpense?.totalProfit || 0}
+                totalExpense={data.getTotalProfitAndExpense?.totalExpense}
+                totalProfit={data.getTotalProfitAndExpense?.totalProfit}
               />
             </FadeUp>
             <FadeUp delay={0.5} duration={1}>
-              <ExpenseBreakdown2 data={data.monthlyExpenseByCategory || []} />
+              <ExpenseBreakdown2
+                data={data.getMonthlyExpenseByCategory || []}
+              />
             </FadeUp>
           </section>
         </div>
@@ -169,7 +174,7 @@ const Accounts: React.FC = () => {
         <div className="grid grid-cols-12 gap-5">
           <section className="col-span-12 grid gap-5 xl:col-span-6 2xl:col-span-7">
             <FadeUp delay={0.3} duration={1}>
-              <FinancialPerformance2 data={data.yearlyProfitAndLoss || []} />
+              <FinancialPerformance2 data={data.getYearlyProfitAndLoss || []} />
             </FadeUp>
           </section>
 
@@ -178,7 +183,7 @@ const Accounts: React.FC = () => {
               <SupplierDue />
             </FadeUp>
             <FadeUp delay={0.5} duration={1}>
-              <InvoiceSummary2 invoiceData={data.invoiceSummary || []} />
+              <InvoiceSummary2 invoiceData={data.getInvoiceSummary || []} />
             </FadeUp>
           </section>
         </div>

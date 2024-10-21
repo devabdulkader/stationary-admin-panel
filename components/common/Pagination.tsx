@@ -4,7 +4,7 @@ interface PaginationProps<T> {
   data: T[];
   itemsPerPage?: number;
   currentPage: number;
-  setCurrentPage: (page: number) => void;
+  setCurrentPage: (_page: number) => void;
 }
 
 interface Item {

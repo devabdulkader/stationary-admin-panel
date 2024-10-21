@@ -12,28 +12,32 @@ import {
 } from 'recharts';
 
 interface GrowthProgressionProps {
-  data: {
-    month: string;
-    data: { week: string; current: number; last: number }[];
-  }[];
+  data:
+    | {
+        month: string;
+        data: { week: string; current: number; last: number }[];
+      }[]
+    | null;
 }
 
 const GrowthProgression2: React.FC<GrowthProgressionProps> = ({ data }) => {
-  const [selectedMonth, setSelectedMonth] = useState(data[0].month);
+  const [selectedMonth, setSelectedMonth] = useState(data?.[0]?.month);
 
   const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedMonth(e.target.value);
   };
 
   const selectedData =
-    data.find((item) => item.month === selectedMonth)?.data || [];
+    data?.find((item) => item.month === selectedMonth)?.data || [];
 
   // Find the index of the selected month and the previous month
-  const selectedMonthIndex = data.findIndex(
+  const selectedMonthIndex = data?.findIndex(
     (item) => item.month === selectedMonth,
   );
   const previousMonthData =
-    selectedMonthIndex > 0 ? data[selectedMonthIndex - 1].data : null;
+    selectedMonthIndex !== undefined && selectedMonthIndex > 0
+      ? data?.[selectedMonthIndex - 1].data
+      : null;
 
   // Get total "current" values of the selected month and previous month for comparison
   const selectedMonthTotal = selectedData.reduce(
@@ -63,7 +67,7 @@ const GrowthProgression2: React.FC<GrowthProgressionProps> = ({ data }) => {
             onChange={handleMonthChange}
             className="flex items-center justify-between bg-white py-2 font-semibold text-gray-700"
           >
-            {data.map((item, index) => (
+            {data?.map((item, index) => (
               <option key={index} value={item.month}>
                 {item.month}
               </option>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsBox2 } from 'react-icons/bs';
 import { RiSearchLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -16,143 +16,171 @@ import AverageOrderValue from '@/components/orders/AverageOrderValue';
 import { TfiBag } from 'react-icons/tfi';
 import Modal from '@/components/common/Modal';
 import CustomersPopup from '@/components/orders/CustomersPopup';
-import { gql, useQuery } from '@apollo/client';
 import OrderOverviewCard2 from '@/components/orders/OrderOverviewCard2';
 import PaymentStatus2 from '@/components/orders/PaymentStatus2';
 import RecentOrders2 from '@/components/orders/RecentOrders2';
-import { tempToken } from '@/middleware';
+import { instance } from '@/axios/axiosInstance';
 
-const GET_ALL_ORDERS = gql`
-  query {
-    getAllOrders {
-      totalItems
-      totalPages
-      currentPage
-      items {
-        id
-        vat
-        trackingId
-        shippingAndHandlingFee
-        totalAmount
-        status
-        shippingMethod
-        payment {
-          id
-          amount
-          paymentMethod
-          trxId
-          status
-        }
-        orderedItems {
-          variant
-          quantity
-          price
-          product {
-            id
-            title
-          }
-        }
-        user {
-          fullName
-        }
-      }
-    }
-  }
-`;
-
-const GET_PAYMENT_STATUS = gql`
-  query {
-    getPaymentStatusByMonth {
-      month
-      totalPaid
-      totalPending
-      totalRefund
-      total
-      noOfOrders
-    }
-  }
-`;
-
-const GET_RETURNED_ORDERS = gql`
-  query {
-    getReturnedOrdersByMonth {
-      month
-      totalOrders
-      totalRevenue
-      change
-    }
-  }
-`;
-
-const GET_SHIPPED_ORDERS = gql`
-  query {
-    getShippedOrdersByMonth {
-      month
-      totalOrders
-      totalRevenue
-      change
-    }
-  }
-`;
-
-const GET_COMPLETED_ORDERS = gql`
-  query {
-    getCompletedOrdersByMonth {
-      month
-      totalOrders
-      totalRevenue
-      change
-    }
-  }
-`;
-
-const GET_PENDING_ORDERS = gql`
-  query {
-    getPendingOrdersByMonth {
-      month
-      totalOrders
-      totalRevenue
-      change
-    }
-  }
-`;
-
-const GET_TOTAL_ORDERS = gql`
-  query {
-    getTotalOrdersByMonth {
-      month
-      totalOrders
-      totalRevenue
-      change
-    }
-  }
-`;
-
-const Orders: React.FC = () => {
+const Orders = () => {
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+  const [totalOrdersData, setTotalOrdersData] = useState([]);
+  const [pendingOrdersData, setPendingOrdersData] = useState([]);
+  const [completedOrdersData, setCompletedOrdersData] = useState([]);
+  const [shippedOrdersData, setShippedOrdersData] = useState([]);
+  const [returnedOrdersData, setReturnedOrdersData] = useState([]);
+  const [paymentStatusData, setPaymentStatusData] = useState([]);
+  const [allOrdersData, setAllOrdersData] = useState({
+    items: [],
+  });
+  const [loading, setLoading] = useState(true);
 
-  const { data: totalOrdersData, loading: totalOrdersDataLoading } =
-    useQuery(GET_TOTAL_ORDERS);
-  const { data: pendingOrdersData, loading: pendingOrdersDataLoading } =
-    useQuery(GET_PENDING_ORDERS);
-  const { data: completedOrdersData, loading: completedOrdersDataLoading } =
-    useQuery(GET_COMPLETED_ORDERS);
-  const { data: shippedOrdersData, loading: shippedOrdersDataLoading } =
-    useQuery(GET_SHIPPED_ORDERS);
-  const { data: returnedOrdersData, loading: returnedOrdersDataLoading } =
-    useQuery(GET_RETURNED_ORDERS);
-  const { data: paymentStatusData, loading: paymentStatusDataLoading } =
-    useQuery(GET_PAYMENT_STATUS);
-  const { data: allOrdersData, loading: allOrdersDataLoading } = useQuery(
-    GET_ALL_ORDERS,
-    {
-      context: {
-        headers: {
-          Authorization: tempToken,
-        },
-      },
-    },
-  );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [
+          totalOrders,
+          pendingOrders,
+          completedOrders,
+          shippedOrders,
+          returnedOrders,
+          paymentStatus,
+          allOrders,
+        ] = await Promise.all([
+          instance.post('', {
+            query: `
+            query {
+              getTotalOrdersByMonth {
+                month
+                totalOrders
+                totalRevenue
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getPendingOrdersByMonth {
+                month
+                totalOrders
+                totalRevenue
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getCompletedOrdersByMonth {
+                month
+                totalOrders
+                totalRevenue
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getShippedOrdersByMonth {
+                month
+                totalOrders
+                totalRevenue
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getReturnedOrdersByMonth {
+                month
+                totalOrders
+                totalRevenue
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getPaymentStatusByMonth {
+                month
+                totalPaid
+                totalPending
+                totalRefund
+                total
+                noOfOrders
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getAllOrders {
+                totalItems
+                totalPages
+                currentPage
+                items {
+                  id
+                  vat
+                  trackingId
+                  shippingAndHandlingFee
+                  totalAmount
+                  status
+                  shippingMethod
+                  payment {
+                    id
+                    amount
+                    paymentMethod
+                    trxId
+                    status
+                  }
+                  orderedItems {
+                    variant
+                    quantity
+                    price
+                    product {
+                      id
+                      title
+                    }
+                  }
+                  user {
+                    fullName
+                  }
+                }
+              }
+            }
+          `,
+          }),
+        ]);
+
+        setTotalOrdersData(totalOrders.data.data.getTotalOrdersByMonth);
+        setPendingOrdersData(pendingOrders.data.data.getPendingOrdersByMonth);
+        setCompletedOrdersData(
+          completedOrders.data.data.getCompletedOrdersByMonth,
+        );
+        setShippedOrdersData(shippedOrders.data.data.getShippedOrdersByMonth);
+        setReturnedOrdersData(
+          returnedOrders.data.data.getReturnedOrdersByMonth,
+        );
+        setPaymentStatusData(paymentStatus.data.data.getPaymentStatusByMonth);
+        setAllOrdersData(allOrders.data.data.getAllOrders);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
@@ -162,17 +190,10 @@ const Orders: React.FC = () => {
     setIsCustomerModalOpen(false);
   };
 
-  if (
-    totalOrdersDataLoading ||
-    pendingOrdersDataLoading ||
-    completedOrdersDataLoading ||
-    shippedOrdersDataLoading ||
-    returnedOrdersDataLoading ||
-    paymentStatusDataLoading ||
-    allOrdersDataLoading
-  ) {
+  if (loading) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="">
       {isCustomerModalOpen && (
@@ -217,7 +238,7 @@ const Orders: React.FC = () => {
             <FadeUp delay={0.1} duration={1}>
               <OrderOverviewCard2
                 title="Total Orders"
-                orderData={totalOrdersData.getTotalOrdersByMonth}
+                orderData={totalOrdersData}
                 icon={<BsBox2 size={40} />}
               />
             </FadeUp>
@@ -226,7 +247,7 @@ const Orders: React.FC = () => {
             <FadeUp delay={0.2} duration={1}>
               <OrderOverviewCard2
                 title="Pending Orders"
-                orderData={pendingOrdersData.getPendingOrdersByMonth}
+                orderData={pendingOrdersData}
                 icon={<GiSandsOfTime size={40} />}
               />
             </FadeUp>
@@ -235,7 +256,7 @@ const Orders: React.FC = () => {
             <FadeUp delay={0.3} duration={1}>
               <OrderOverviewCard2
                 title="Completed Orders"
-                orderData={completedOrdersData.getCompletedOrdersByMonth}
+                orderData={completedOrdersData}
                 icon={<IoCheckmarkSharp size={40} />}
               />
             </FadeUp>
@@ -244,7 +265,7 @@ const Orders: React.FC = () => {
             <FadeUp delay={0.4} duration={1}>
               <OrderOverviewCard2
                 title="Shipped Orders"
-                orderData={shippedOrdersData.getShippedOrdersByMonth}
+                orderData={shippedOrdersData}
                 icon={<GrDeliver size={40} />}
               />
             </FadeUp>
@@ -253,7 +274,7 @@ const Orders: React.FC = () => {
             <FadeUp delay={0.5} duration={1}>
               <OrderOverviewCard2
                 title="Returned Orders"
-                orderData={returnedOrdersData.getReturnedOrdersByMonth}
+                orderData={returnedOrdersData}
                 icon={<RiArrowGoBackLine size={40} />}
               />
             </FadeUp>
@@ -263,14 +284,12 @@ const Orders: React.FC = () => {
           <div className="grid grid-cols-12 gap-5">
             <div className="col-span-12 xl:col-span-6 2xl:col-span-8">
               <FadeUp delay={0.6} duration={1}>
-                <RecentOrders2 orders={allOrdersData?.getAllOrders?.items} />
+                <RecentOrders2 orders={allOrdersData?.items} />
               </FadeUp>
             </div>
             <div className="col-span-12 xl:col-span-6 2xl:col-span-4">
               <FadeUp delay={0.7} duration={1}>
-                <PaymentStatus2
-                  paymentData={paymentStatusData.getPaymentStatusByMonth}
-                />
+                <PaymentStatus2 paymentData={paymentStatusData} />
               </FadeUp>
             </div>
           </div>

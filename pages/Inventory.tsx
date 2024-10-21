@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsPlusLg } from 'react-icons/bs';
 import { CgShutterstock } from 'react-icons/cg';
 import { PiFire } from 'react-icons/pi';
@@ -12,133 +12,162 @@ import DeadStock from '@/components/inventory/DeadStock';
 import ProductPerformance from '@/components/inventory/ProductPerformance';
 import Modal from '@/components/common/Modal';
 import AddNewProduct from '@/components/inventory/AddNewProduct';
-import { gql, useQuery } from '@apollo/client';
 import InventoryOverviewCard2 from '@/components/inventory/InventoryOverviewCard2';
-
 import LowStock2 from '@/components/inventory/LowStock2';
 import StockLevel2 from '@/components/inventory/StockLevel2';
 import MyProducts2 from '@/components/inventory/MyProducts2';
 import StocksPopup2 from '@/components/inventory/StocksPopup2';
+import { instance } from '@/axios/axiosInstance';
 
-const GET_ALL_PRODUCTS = gql`
-  query {
-    products {
-      items {
-        id
-        sku
-        title
-        description
-        price
-        buyPrice
-        stockQuantity
-        images {
-          url
-          alt
-        }
-        category {
-          name
-        }
-        variants {
-          id
-          name
-          value
-        }
-        discount {
-          id
-          discountedPrice
-          startsAt
-          endsAt
-          isActive
-        }
-      }
-      totalItems
-      currentPage
-      totalPages
-    }
-  }
-`;
-
-const GET_DEAD_STOCK = gql`
-  query {
-    deadStockProducts {
-      productName
-      daysUnsold
-    }
-  }
-`;
-
-const GET_LOW_STOCK = gql`
-  query {
-    lowStockCategory {
-      categoryName
-      stockQuantity
-    }
-  }
-`;
-
-const GET_MONTHLY_INVOICE = gql`
-  query {
-    getMonthlyInvoiceValues {
-      month
-      value
-      change
-    }
-  }
-`;
-
-const GET_MONTHLY_STOCK = gql`
-  query {
-    getMonthlyStockValues {
-      month
-      value
-      change
-    }
-  }
-`;
-
-const GET_MONTHLY_REVENUE = gql`
-  query {
-    getMonthlyRevenueValues {
-      month
-      value
-      change
-    }
-  }
-`;
-
-const GET_MONTHLY_INVENTORY_VALUE = gql`
-  query {
-    getMonthlyInventoryValues {
-      month
-      value
-      change
-    }
-  }
-`;
-
-const Inventory: React.FC = () => {
-  const { data: monthlyInventoryValue, loading: monthlyInventoryValueLoading } =
-    useQuery(GET_MONTHLY_INVENTORY_VALUE);
-
-  const { data: monthlyRevenue, loading: monthlyRevenueLoading } =
-    useQuery(GET_MONTHLY_REVENUE);
-
-  const { data: monthlyStock, loading: monthlyStockLoading } =
-    useQuery(GET_MONTHLY_STOCK);
-
-  const { data: monthlyInvoice, loading: monthlyInvoiceLoading } =
-    useQuery(GET_MONTHLY_INVOICE);
-
-  const { data: lowStock, loading: lowStockLoading } = useQuery(GET_LOW_STOCK);
-
-  const { data: deadStock, loading: deadStockLoading } =
-    useQuery(GET_DEAD_STOCK);
-
-  const { data: allProducts, loading: allProductsLoading } =
-    useQuery(GET_ALL_PRODUCTS);
-
+const Inventory = () => {
+  const [monthlyInventoryValue, setMonthlyInventoryValue] = useState([]);
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+  const [monthlyStock, setMonthlyStock] = useState([]);
+  const [monthlyInvoice, setMonthlyInvoice] = useState([]);
+  const [lowStock, setLowStock] = useState([]);
+  const [deadStock, setDeadStock] = useState([]);
+  const [allProducts, setAllProducts] = useState({
+    items: [],
+  });
+  const [loading, setLoading] = useState(true);
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [
+          inventoryValue,
+          revenue,
+          stock,
+          invoice,
+          lowStockData,
+          deadStockData,
+          productsData,
+        ] = await Promise.all([
+          instance.post('', {
+            query: `
+            query {
+              getMonthlyInventoryValues {
+                month
+                value
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getMonthlyRevenueValues {
+                month
+                value
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getMonthlyStockValues {
+                month
+                value
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              getMonthlyInvoiceValues {
+                month
+                value
+                change
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              lowStockCategory {
+                categoryName
+                stockQuantity
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              deadStockProducts {
+                productName
+                daysUnsold
+              }
+            }
+          `,
+          }),
+          instance.post('', {
+            query: `
+            query {
+              products {
+                items {
+                  id
+                  sku
+                  title
+                  description
+                  price
+                  buyPrice
+                  stockQuantity
+                  images {
+                    url
+                    alt
+                  }
+                  category {
+                    name
+                  }
+                  variants {
+                    id
+                    name
+                    value
+                  }
+                  discount {
+                    id
+                    discountedPrice
+                    startsAt
+                    endsAt
+                    isActive
+                  }
+                }
+                totalItems
+                currentPage
+                totalPages
+              }
+            }
+          `,
+          }),
+        ]);
+
+        setMonthlyInventoryValue(
+          inventoryValue.data.data.getMonthlyInventoryValues,
+        );
+        setMonthlyRevenue(revenue.data.data.getMonthlyRevenueValues);
+        setMonthlyStock(stock.data.data.getMonthlyStockValues);
+        setMonthlyInvoice(invoice.data.data.getMonthlyInvoiceValues);
+        setLowStock(lowStockData.data.data.lowStockCategory);
+        setDeadStock(deadStockData.data.data.deadStockProducts);
+        setAllProducts(productsData.data.data.products);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const openAddProductModal = () => {
     setIsAddProductModalOpen(true);
@@ -156,15 +185,7 @@ const Inventory: React.FC = () => {
     setIsStockModalOpen(false);
   };
 
-  if (
-    monthlyInventoryValueLoading ||
-    monthlyRevenueLoading ||
-    monthlyStockLoading ||
-    monthlyInvoiceLoading ||
-    lowStockLoading ||
-    deadStockLoading ||
-    allProductsLoading
-  ) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -178,7 +199,7 @@ const Inventory: React.FC = () => {
 
       {isStockModalOpen && (
         <Modal closeModal={closeStockModal}>
-          <StocksPopup2 products={allProducts?.products?.items} />
+          <StocksPopup2 products={allProducts?.items} />
         </Modal>
       )}
 
@@ -223,25 +244,19 @@ const Inventory: React.FC = () => {
             <FadeUp delay={0.1} duration={1}>
               <InventoryOverviewCard2
                 title="Inventory Value"
-                data={monthlyInventoryValue?.getMonthlyInventoryValues}
+                data={monthlyInventoryValue}
               />
             </FadeUp>
             <FadeUp delay={0.2} duration={1}>
-              <InventoryOverviewCard2
-                title="Revenue"
-                data={monthlyRevenue?.getMonthlyRevenueValues}
-              />
+              <InventoryOverviewCard2 title="Revenue" data={monthlyRevenue} />
             </FadeUp>
             <FadeUp delay={0.3} duration={1}>
-              <InventoryOverviewCard2
-                title="Invoice"
-                data={monthlyInvoice?.getMonthlyInvoiceValues}
-              />
+              <InventoryOverviewCard2 title="Invoice" data={monthlyInvoice} />
             </FadeUp>
             <FadeUp delay={0.4} duration={1}>
               <InventoryOverviewCard2
                 title="Stock History"
-                data={monthlyStock?.getMonthlyStockValues}
+                data={monthlyStock}
               />
             </FadeUp>
           </div>
@@ -249,14 +264,14 @@ const Inventory: React.FC = () => {
           <div className="flex flex-col gap-5 2xl:flex-row">
             <div className="flex-1">
               <FadeUp delay={1} duration={1}>
-                <LowStock2 title="Low Stock" data={lowStock.lowStockCategory} />
+                <LowStock2 title="Low Stock" data={lowStock} />
               </FadeUp>
             </div>
             <div className="flex-1">
               <FadeUp delay={0.6} duration={1}>
                 <DeadStock
                   title="Dead Stock Products"
-                  data={deadStock.deadStockProducts}
+                  data={deadStock}
                   linkHref="/dead-stock-details"
                 />
               </FadeUp>
@@ -266,11 +281,11 @@ const Inventory: React.FC = () => {
           {/* table */}
           <FadeUp delay={1.5} duration={1}>
             <StockLevel2
-              data={allProducts?.products?.items?.map((product: any) => ({
+              data={allProducts?.items?.map((product: any) => ({
                 id: product.id,
                 title: product.title,
                 sku: product.sku,
-                category: product.category.name, // Pass the category name (string)
+                category: product.category.name,
                 stockQuantity: Number(product.stockQuantity),
               }))}
             />
@@ -283,7 +298,7 @@ const Inventory: React.FC = () => {
           </FadeUp>
           <FadeUp delay={1} duration={1}>
             <MyProducts2
-              data={allProducts?.products?.items}
+              data={allProducts?.items}
               linkHref="/list-of-products"
             />
           </FadeUp>

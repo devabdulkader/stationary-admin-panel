@@ -16,7 +16,7 @@ interface FinancialData {
 }
 
 interface FinancialPerformanceProps {
-  data: FinancialData[];
+  data: FinancialData[] | null;
 }
 
 const FinancialPerformance2: React.FC<FinancialPerformanceProps> = ({
@@ -32,7 +32,7 @@ const FinancialPerformance2: React.FC<FinancialPerformanceProps> = ({
         <div className="h-[250px] flex-1 overflow-x-auto">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={data}
+              data={data || []}
               margin={{
                 top: 0,
                 right: 0,

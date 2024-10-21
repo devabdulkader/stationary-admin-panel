@@ -12,14 +12,14 @@ interface InvoiceData {
 }
 
 interface InvoiceSummaryProps {
-  invoiceData: InvoiceData[];
+  invoiceData: InvoiceData[] | null;
 }
 
 const InvoiceSummary2: React.FC<InvoiceSummaryProps> = ({ invoiceData }) => {
-  const [selectedMonth, setSelectedMonth] = useState(invoiceData[0].month);
+  const [selectedMonth, setSelectedMonth] = useState(invoiceData?.[0]?.month);
 
   // Find the data for the selected month
-  const selectedData = invoiceData.find(
+  const selectedData = invoiceData?.find(
     (item) => item.month === selectedMonth,
   )?.data;
 
@@ -33,7 +33,7 @@ const InvoiceSummary2: React.FC<InvoiceSummaryProps> = ({ invoiceData }) => {
             onChange={(e) => setSelectedMonth(e.target.value)}
             className="flex cursor-pointer items-center justify-between bg-white py-2 font-semibold text-gray-700"
           >
-            {invoiceData.map((item, index) => (
+            {invoiceData?.map((item, index) => (
               <option key={index} value={item.month}>
                 {item.month}
               </option>

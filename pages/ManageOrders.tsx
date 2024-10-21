@@ -1,74 +1,89 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import { RiMenuUnfold2Line } from 'react-icons/ri';
 import { VscZoomIn } from 'react-icons/vsc';
 import Modal from '@/components/common/Modal';
 import Pagination from '@/components/common/Pagination';
 import ViewOrderPopup from '@/components/orders/ViewOrderPopup';
-import { gql, useQuery } from '@apollo/client';
-import { tempToken } from '@/middleware';
-
-const GET_ALL_ORDERS = gql`
-  query GetAllOrders($pagination: PaginationInput) {
-    getAllOrders(pagination: $pagination) {
-      totalItems
-      totalPages
-      currentPage
-      items {
-        id
-        vat
-        trackingId
-        shippingAndHandlingFee
-        totalAmount
-        status
-        shippingMethod
-        payment {
-          id
-          amount
-          paymentMethod
-          trxId
-          status
-        }
-        orderedItems {
-          variant
-          quantity
-          price
-          product {
-            id
-            title
-          }
-        }
-        user {
-          fullName
-        }
-      }
-    }
-  }
-`;
+import { instance } from '@/axios/axiosInstance';
+import { formatUTCDateTime } from '@/utils/formateDate';
 
 const ManageOrders = () => {
   const [isViewOrderModalOpen, setIsViewOrderModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20; // Adjusted to match your pageSize variable
+  const [orderData, setOrderData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [paginationData, setPaginationData] = useState(null);
+  const itemsPerPage = 20;
 
-  // Fetch orders using the Apollo GraphQL query
-  const { loading, error, data } = useQuery(GET_ALL_ORDERS, {
-    variables: {
-      pagination: {
-        page: currentPage.toString(), // Pagination values passed as strings
-        pageSize: itemsPerPage.toString(),
-      },
-    },
-    context: {
-      headers: {
-        Authorization: tempToken,
-      },
-    },
-  });
+  useEffect(() => {
+    fetchOrders();
+  }, [currentPage]);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const response = await instance.post('', {
+        query: `
+          query GetAllOrders($pagination: PaginationInput) {
+            getAllOrders(pagination: $pagination) {
+              totalItems
+              totalPages
+              currentPage
+              items {
+                id
+                vat
+                trackingId
+                shippingAndHandlingFee
+                totalAmount
+                status
+                shippingMethod
+                createdAt
+                payment {
+                  id
+                  amount
+                  paymentMethod
+                  trxId
+                  status
+                }
+                orderedItems {
+                  variant
+                  quantity
+                  price
+                  product {
+                    id
+                    title
+                  }
+                }
+                user {
+                  fullName
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          pagination: {
+            page: currentPage.toString(),
+            pageSize: itemsPerPage.toString(),
+          },
+        },
+      });
+
+      const { getAllOrders } = response.data.data;
+      setOrderData(getAllOrders.items);
+      setPaginationData(getAllOrders.items);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openViewOrderModal = () => {
     setIsViewOrderModalOpen(true);
@@ -79,9 +94,7 @@ const ManageOrders = () => {
   };
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  const orderData = data.getAllOrders.items;
+  if (error) return <p>Error: {error}</p>;
 
   // Filter orders based on search term
   const filteredData = searchTerm
@@ -144,7 +157,9 @@ const ManageOrders = () => {
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{order.user.fullName}</td>
                 <td className="px-4 py-3">{order.id}</td>
-                <td className="px-4 py-3">{order.orderDate}</td>
+                <td className="px-4 py-3">
+                  {formatUTCDateTime(order.createdAt)}
+                </td>
                 <td className="px-4 py-3">{order.status}</td>
                 <td className="px-4 py-3">{order.totalAmount}</td>
                 <td className="px-4 py-3">{order.payment.status}</td>
@@ -163,12 +178,14 @@ const ManageOrders = () => {
 
         {/* Pagination */}
         <div className="flex w-full items-center justify-center py-5">
-          <Pagination
-            data={data.getAllOrders}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
+          {paginationData && (
+            <Pagination
+              data={paginationData}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
         </div>
       </section>
     </div>
