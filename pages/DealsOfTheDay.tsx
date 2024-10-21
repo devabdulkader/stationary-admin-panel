@@ -1,14 +1,14 @@
 'use client';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CiCalendarDate } from 'react-icons/ci';
-import { toast, ToastContainer } from 'react-toastify';
+// import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HorizontalProductCard from '@/components/card/HorizontalProductCard';
-import { useSelectedProducts } from '@/context/SelectedProductsContext';
+// import { useSelectedProducts } from '@/context/SelectedProductsContext';
 import SelectedProducts from '@/components/deals-day/SelectedProducts';
 import Pagination from '@/components/common/Pagination';
 interface Product {
@@ -24,13 +24,13 @@ interface Product {
   stockQuantity: number;
 }
 const DealsOfTheDay = () => {
-  const { message } = useSelectedProducts();
+  // const { message } = useSelectedProducts();
 
-  useEffect(() => {
-    if (message) {
-      toast(message);
-    }
-  }, [message]);
+  // useEffect(() => {
+  //   if (message) {
+  //     toast(message);
+  //   }
+  // }, [message]);
 
   const [fromDate, setFromDate] = useState<Date | null>(null);
   const [fromTime, setFromTime] = useState<string>('');
@@ -279,7 +279,7 @@ const DealsOfTheDay = () => {
   const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
   return (
     <div className="pt-5">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <Link href="/">
         <h1 className="text-blue mb-10 flex items-center gap-2 text-3xl font-medium">
           <BsArrowLeft className="" />

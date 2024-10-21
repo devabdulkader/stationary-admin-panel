@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+// import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelectedProducts } from '@/context/SelectedProductsContext';
 import { PiDotsSixVerticalLight } from 'react-icons/pi';
@@ -28,13 +28,13 @@ const HorizontalProductCard: React.FC<HorizontalProductCardProps> = ({
 }) => {
   const { addProduct } = useSelectedProducts();
 
-  const [isClient, setIsClient] = useState(false);
+  // const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, []);
 
-  if (!isClient) return null;
+  // if (!isClient) return null;
 
   const handleAddProduct = () => {
     addProduct(product);
