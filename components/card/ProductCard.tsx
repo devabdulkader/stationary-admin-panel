@@ -2,8 +2,8 @@
 import Image from 'next/image';
 import FadeUp from '../motion/FadeUp';
 import { RiDeleteBinLine } from 'react-icons/ri';
-import { useSelectedProducts } from '@/context/SelectedProductsContext';
-import { useEffect, useState } from 'react';
+// import { useSelectedProducts } from '@/context/SelectedProductsContext';
+// import { useEffect, useState } from 'react';
 
 interface Product {
   id: number;
@@ -19,19 +19,19 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { removeProduct } = useSelectedProducts();
+  // const { removeProduct } = useSelectedProducts();
 
-  const [isClient, setIsClient] = useState(false);
+  // const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, []);
 
-  if (!isClient) return null;
+  // if (!isClient) return null;
 
-  const handleRemoveProduct = () => {
-    removeProduct(product.id);
-  };
+  // const handleRemoveProduct = () => {
+  //   removeProduct(product.id);
+  // };
 
   return (
     <FadeUp>
@@ -69,7 +69,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         {/* Bag icon */}
         <div className="absolute bottom-4 right-4">
-          <button onClick={handleRemoveProduct}>
+          <button
+          // onClick={handleRemoveProduct}
+          >
             <RiDeleteBinLine className="text-red-600" size={24} />
           </button>
         </div>

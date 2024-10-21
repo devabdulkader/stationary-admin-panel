@@ -1,4 +1,5 @@
 'use client';
+
 import Form from '@/components/form/Form';
 import ContactNumber from '@/components/settings/ContactNumber';
 import CopyrightText from '@/components/settings/CopyrightText';

@@ -1,10 +1,10 @@
 'use client';
-import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useSelectedProducts } from '@/context/SelectedProductsContext';
+// import { useSelectedProducts } from '@/context/SelectedProductsContext';
 import { PiDotsSixVerticalLight } from 'react-icons/pi';
 import { TfiZoomIn } from 'react-icons/tfi';
 import { HiOutlinePlus } from 'react-icons/hi';
+// import { useEffect, useState } from 'react';
 
 interface Product {
   id: number;
@@ -26,19 +26,21 @@ interface HorizontalProductCardProps {
 const HorizontalProductCard: React.FC<HorizontalProductCardProps> = ({
   product,
 }) => {
-  const { addProduct } = useSelectedProducts();
+  // const { addProduct } = useSelectedProducts();
 
-  const [isClient, setIsClient] = useState(false);
+  // const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, []);
 
-  if (!isClient) return null;
+  // if (!isClient) {
+  //   return null;
+  // }
 
-  const handleAddProduct = () => {
-    addProduct(product);
-  };
+  // const handleAddProduct = () => {
+  //   addProduct(product);
+  // };
 
   return (
     <section className="flex flex-col items-center justify-between gap-4 border-b border-gray-300 p-4 sm:flex-row">
@@ -74,7 +76,7 @@ const HorizontalProductCard: React.FC<HorizontalProductCardProps> = ({
 
         <button
           className="text-blue bg-blue flex w-full items-center justify-center gap-2 rounded-md px-5 py-3 transition hover:bg-blue-700 lg:w-auto"
-          onClick={handleAddProduct}
+          // onClick={handleAddProduct}
         >
           <HiOutlinePlus size={20} className="text-white" />
           <span className="font-semibold text-white">Add to Deals</span>

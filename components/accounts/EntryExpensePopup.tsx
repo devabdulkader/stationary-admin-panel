@@ -1,54 +1,80 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import FormSelect from '../form/FormSelect';
 import Form from './../form/Form';
 import FormInput from '../form/FormInput';
-import { useQuery, useMutation } from '@apollo/client';
-import {
-  CREATE_EXPENSE,
-  GET_ALL_EXPENSE_CATEGORIES,
-} from '@/queries/accountQueries';
-import { tempToken } from '@/middleware';
+import { instance } from '@/axios/axiosInstance';
 
 const EntryExpensePopup: React.FC = () => {
-  const { data: expenseCategories, loading: expenseCategoriesLoading } =
-    useQuery(GET_ALL_EXPENSE_CATEGORIES);
+  const [expenseCategories, setExpenseCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creatingExpense, setCreatingExpense] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
-  const [createExpense, { loading: creatingExpense, error: createError }] =
-    useMutation(CREATE_EXPENSE, {
-      context: {
-        headers: {
-          Authorization: tempToken,
-        },
-      },
-    }); // Initialize the mutation
+  // Fetch expense categories using axios
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await instance.post('', {
+          query: `
+            query {
+              getAllExpenseCategories {
+                id
+                name
+              }
+            }
+          `,
+        });
+        setExpenseCategories(response.data.data.getAllExpenseCategories);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching expense categories:', error);
+        setLoading(false);
+      }
+    };
 
-  const categoryOptions = expenseCategories?.getAllExpenseCategories.map(
-    (category: any) => ({
-      value: category.id,
-      label: category.name,
-    }),
-  );
+    fetchCategories();
+  }, []);
 
-  if (expenseCategoriesLoading) {
+  const categoryOptions = expenseCategories.map((category: any) => ({
+    value: category.id,
+    label: category.name,
+  }));
+
+  if (loading) {
     return <div>Loading...</div>;
   }
 
   const submitHandler = async (data: any) => {
-    try {
-      const { expenseCategory, expenseValue } = data;
+    const { expenseCategory, expenseValue } = data;
 
-      // Call the mutation to create an expense
-      const response = await createExpense({
+    setCreatingExpense(true);
+    setCreateError(null);
+
+    try {
+      // Call the createExpense mutation using axios
+      const response = await instance.post('', {
+        query: `
+          mutation CREATE_EXPENSE($categoryId: ID!, $value: String!) {
+            createExpense(categoryId: $categoryId, value: $value) {
+              id
+            }
+          }
+        `,
         variables: {
           categoryId: expenseCategory,
-          value: expenseValue, // Ensure value is passed as a number
+          value: expenseValue,
         },
       });
 
       // Handle the response if needed (e.g., show a success message)
-      console.log('Expense created:', response.data.createExpense);
-    } catch (error) {
+      console.log('Expense created:', response.data.data.createExpense);
+    } catch (error: any) {
       console.error('Error creating expense:', error);
+      setCreateError(error.message);
+    } finally {
+      setCreatingExpense(false);
     }
   };
 
@@ -89,7 +115,7 @@ const EntryExpensePopup: React.FC = () => {
 
       {createError && (
         <div className="mt-4 text-red-500">
-          Error creating expense: {createError.message}
+          Error creating expense: {createError}
         </div>
       )}
     </Form>
