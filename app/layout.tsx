@@ -3,7 +3,6 @@ import localFont from 'next/font/local';
 import './globals.css';
 import Navbar from '@/components/shared/header/Navbar';
 import { SelectedProductsProvider } from '@/context/SelectedProductsContext';
-import { ApolloWrapper } from '@/lib/apollo-wrapper';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -31,12 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <main className="bg-gray-100 px-5 py-5 2xl:px-10">
-          <ApolloWrapper>
-            <SelectedProductsProvider>{children}</SelectedProductsProvider>
-          </ApolloWrapper>
-        </main>
+        <SelectedProductsProvider>
+          <Navbar />
+          <main className="bg-gray-100 px-5 py-5 2xl:px-10">{children}</main>
+        </SelectedProductsProvider>
       </body>
     </html>
   );

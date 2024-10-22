@@ -1,11 +1,11 @@
 'use client';
-import { useSelectedProducts } from '@/context/SelectedProductsContext';
+// import { useSelectedProducts } from '@/context/SelectedProductsContext';
 // import React, { useEffect, useState } from 'react';
 import { IoImagesOutline } from 'react-icons/io5';
 import ProductCard from '../card/ProductCard';
 
 const SelectedProducts: React.FC = () => {
-  const { selectedProducts } = useSelectedProducts();
+  // const { selectedProducts } = useSelectedProducts();
 
   // const [isClient, setIsClient] = useState(false);
 
@@ -18,7 +18,7 @@ const SelectedProducts: React.FC = () => {
   const maxProducts = 4;
 
   const displayProducts = [
-    ...selectedProducts,
+    // ...selectedProducts,
     ...Array(maxProducts).fill(null),
   ].slice(0, maxProducts);
 

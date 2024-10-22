@@ -11,12 +11,12 @@ interface Transaction {
 }
 
 interface TransactionsProps {
-  transactionData: Transaction[];
+  transactionData: Transaction[] | null;
 }
 
 const Transactions2: React.FC<TransactionsProps> = ({ transactionData }) => {
   // Format the data to fit the table structure
-  const formattedData = transactionData.map((transaction, index) => ({
+  const formattedData = transactionData?.map((transaction, index) => ({
     id: index + 1,
     transactionId: transaction.trxId,
     date: new Date(transaction.createdAt).toLocaleDateString('en-US', {
@@ -33,7 +33,7 @@ const Transactions2: React.FC<TransactionsProps> = ({ transactionData }) => {
     <Table
       title="Transactions"
       headings={['Transaction ID', 'Date', 'Amount', 'Method', 'Status']}
-      data={formattedData}
+      data={formattedData ?? []}
       href="/"
     />
   );

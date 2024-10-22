@@ -1,4 +1,5 @@
 'use client';
+
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
@@ -259,6 +260,14 @@ const DealsOfTheDay = () => {
       stockQuantity: 55,
     },
   ];
+
+  // const { message } = useSelectedProducts();
+
+  // useEffect(() => {
+  //   if (message) {
+  //     toast(message);
+  //   }
+  // }, [message]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

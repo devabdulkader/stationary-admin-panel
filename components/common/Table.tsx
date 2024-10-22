@@ -136,7 +136,7 @@ const Table = <T extends Item>({
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((product, index) => (
+              {currentItems?.map((product, index) => (
                 <tr key={index} className="border-b">
                   <td className="px-4 py-3 text-center">
                     {(index + 1 + (currentPage - 1) * itemsPerPage)

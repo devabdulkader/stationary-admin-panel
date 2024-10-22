@@ -25,15 +25,17 @@ interface YearlyData {
 }
 
 interface ProfitLossProps {
-  data: YearlyData[];
+  data: YearlyData[] | null;
 }
 
 const ProfitLoss2: React.FC<ProfitLossProps> = ({ data }) => {
   // Set the initial year to the first year in the data array
-  const [selectedYear, setSelectedYear] = useState<number>(data[0].year);
+  const [selectedYear, setSelectedYear] = useState<number>(
+    data?.[0]?.year ?? 0,
+  );
 
   // Find the data for the selected year
-  const currentYearData = data.find(
+  const currentYearData = data?.find(
     (yearData) => yearData.year === selectedYear,
   );
 
@@ -56,7 +58,7 @@ const ProfitLoss2: React.FC<ProfitLossProps> = ({ data }) => {
             onChange={(e) => setSelectedYear(Number(e.target.value))}
             className="flex items-center bg-white py-2 font-semibold text-gray-700"
           >
-            {data.map((yearData) => (
+            {data?.map((yearData) => (
               <option key={yearData.year} value={yearData.year}>
                 {yearData.year}
               </option>
