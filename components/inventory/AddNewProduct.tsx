@@ -16,10 +16,11 @@ interface Variant {
 }
 
 const AddNewProduct = () => {
-  // State for product SKU
-  const [sku] = useState<string>(
-    'SKU-' + Math.floor(100000 + Math.random() * 900000),
-  );
+  const [defaultValuesFromPOS, setDefaultValuesFromPOS] = useState({
+    sku: '',
+    title: '',
+    quantity: '',
+  });
 
   // State for variants
   const [variants, setVariants] = useState<Variant[]>([{ id: 1, value: '' }]);
@@ -77,6 +78,7 @@ const AddNewProduct = () => {
     setMutationError(null);
 
     const {
+      sku,
       title,
       category,
       prouctPrice,
@@ -86,12 +88,12 @@ const AddNewProduct = () => {
     } = data;
 
     const formData = {
+      sku,
       title,
       categoryId: category,
       price: prouctPrice,
       buyPrice: buyingPrice,
       stockQuantity: quantity,
-      sku, // Use the generated SKU
       description: productDescription,
       imageUrls: [
         data.photo?.[1],
@@ -147,6 +149,32 @@ const AddNewProduct = () => {
     }
   };
 
+  const handleGetProductInfo = async (ProductId: string) => {
+    try {
+      fetch(
+        `https://api.ewitypos.com/v1/products/locations/207/full-list/${ProductId}`,
+        {
+          method: 'GET',
+          headers: {
+            authorization: `Bearer uat_kGsvfUZy1lCd7OmWlTZQExpcje5V`,
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setDefaultValuesFromPOS({
+            sku: data?.data?.variants?.[0]?.sku,
+            title: data?.data?.name,
+            quantity: data?.data?.variants?.[0]?.stock?.count.toString(),
+          });
+        })
+        .catch((err) => console.log(err));
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
+
   // Show loading state if categories are still being fetched
   if (categoryLoading) return <div>Loading categories...</div>;
 
@@ -154,6 +182,7 @@ const AddNewProduct = () => {
     <Form
       submitHandler={submitHandler}
       className="relative flex h-auto w-full flex-col gap-4"
+      defaultValues={defaultValuesFromPOS}
     >
       <h2 className="text-2xl font-bold">Add New Product</h2>
       <h3 className="text-md font-semibold">Add Product Image</h3>
@@ -183,8 +212,41 @@ const AddNewProduct = () => {
         <CgDanger className="text-gray-500" />
         First image will be the thumbnail
       </p>
+      <div className="grid grid-cols-2 gap-4">
+        <input
+          type="text"
+          id="productId"
+          className="input-bg w-full rounded-md p-2"
+          placeholder="Enter Product ID"
+        />
+        <button
+          type="button"
+          className="rounded-md bg-[#00359E] p-2 text-white"
+          onClick={() => {
+            const productIdElement = document.getElementById(
+              'productId',
+            ) as HTMLInputElement;
+            const productId = productIdElement.value;
+            handleGetProductInfo(productId);
+          }}
+        >
+          Load Product
+        </button>
+      </div>
+
+      {/* Product SKU */}
       <div>
-        <p className="text-md mb-2 font-semibold">Product SKU: {sku}</p>
+        <label className="text-md mb-2 block font-semibold">SKU</label>
+        <FormInput
+          name="sku"
+          className="input-bg w-full rounded-md p-2"
+          disabled
+          required
+        />
+      </div>
+
+      {/* Product Title */}
+      <div>
         <label className="text-md mb-2 block font-semibold">
           Product Title
         </label>
