@@ -43,10 +43,12 @@ const CustomLegend = (props: any) => {
 
 const PaymentStatus2: React.FC<PaymentStatusProps> = ({ paymentData }) => {
   // Initialize the selected month as the first one from the props
-  const [selectedMonth, setSelectedMonth] = useState(paymentData[0].month);
+  const [selectedMonth, setSelectedMonth] = useState(paymentData?.[0]?.month);
 
   // Find the data for the selected month
-  const selectedData = paymentData.find((data) => data.month === selectedMonth);
+  const selectedData = paymentData.find(
+    (data) => data?.month === selectedMonth,
+  );
 
   // Prepare chart data based on the selected month
   const chartData = [

@@ -17,6 +17,7 @@ interface Variant {
 
 const AddNewProduct = () => {
   const [defaultValuesFromPOS, setDefaultValuesFromPOS] = useState({
+    posProductId: '',
     sku: '',
     title: '',
     quantity: '',
@@ -88,6 +89,7 @@ const AddNewProduct = () => {
     } = data;
 
     const formData = {
+      posProductId: defaultValuesFromPOS.posProductId,
       sku,
       title,
       categoryId: category,
@@ -164,6 +166,7 @@ const AddNewProduct = () => {
         .then((data) => {
           console.log(data);
           setDefaultValuesFromPOS({
+            posProductId: ProductId,
             sku: data?.data?.variants?.[0]?.sku,
             title: data?.data?.name,
             quantity: data?.data?.variants?.[0]?.stock?.count.toString(),
@@ -222,7 +225,8 @@ const AddNewProduct = () => {
         <button
           type="button"
           className="rounded-md bg-[#00359E] p-2 text-white"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             const productIdElement = document.getElementById(
               'productId',
             ) as HTMLInputElement;

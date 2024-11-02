@@ -37,7 +37,7 @@ const CustomTooltip: FC<CustomTooltipProps> = ({ active, payload }) => {
 
     return (
       <div className="rounded-lg border border-gray-300 bg-white p-3 shadow-md">
-        <p>{`Day: ${payload[0].payload.name}`}</p>
+        <p>{`Day: ${payload?.[0]?.payload?.name}`}</p>
         {payload.map((entry) => (
           <p key={entry.name} style={{ color: entry.fill }}>
             {`${customLabels[entry.name]}: ${entry.value}`}

@@ -20,7 +20,7 @@ const OrderOverviewCard2: React.FC<OrderOverviewCardProps> = ({
   icon,
 }) => {
   const [selectedMonth, setSelectedMonth] = useState(
-    orderData.length > 0 ? orderData[0]?.month : null,
+    orderData.length > 0 ? orderData?.[0]?.month : null,
   );
 
   // Find data for the selected month

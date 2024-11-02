@@ -42,8 +42,8 @@ const MyProducts2: React.FC<ProductProps> = ({ data, linkHref }) => {
 
             <div className="flex h-full w-1/4 items-center">
               <Image
-                src={product.images[0].url} // Use the first image from the array
-                alt={product.images[0].alt || product.title}
+                src={product.images?.[0]?.url} // Use the first image from the array
+                alt={product.images?.[0]?.alt || product?.title}
                 className="h-full w-auto"
                 height={300}
                 width={300}
