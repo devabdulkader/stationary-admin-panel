@@ -54,6 +54,16 @@ const decodeToken = (token: string) => {
 };
 
 export function middleware(request: NextRequest) {
+
+  if (
+    request.nextUrl.pathname.startsWith('/_next') ||
+    request.nextUrl.pathname.startsWith('/api') ||
+    request.nextUrl.pathname.startsWith('/static') ||
+    request.nextUrl.pathname.includes('.') 
+  ) {
+    return NextResponse.next();
+  }
+
   // Retrieve the token from cookies
   const token = request.cookies.get('accessToken')?.value;
 
@@ -85,6 +95,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!login|signup|public).*)', // Exclude /login, /signup, and other public pages
+    '/((?!login|signup|public|layout).*)', // Exclude /login, /signup, /public, and /layout
   ],
 };

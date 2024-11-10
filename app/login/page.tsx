@@ -1,15 +1,65 @@
 'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { instance } from '@/axios/axiosInstance';
+import { useState } from 'react';
 
 const LoginPage = () => {
+  const router = useRouter();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError('');
+    setLoading(true);
+
     const formData = new FormData(event.currentTarget);
-    const data = {
-      email: formData.get('loginIdentifier'),
-      password: formData.get('password'),
+    const loginData = {
+      query: `
+        mutation Login($input: LoginInput!) {
+          login(input: $input) {
+            accessToken
+            user {
+              id
+              email
+              role
+            }
+          }
+        }
+      `,
+      variables: {
+        input: {
+          loginIdentifier: formData.get('loginIdentifier'),
+          password: formData.get('password'),
+        },
+      },
     };
-    console.log(data);
+
+    try {
+      const response = await instance.post('', loginData);
+
+      if (response.data.errors) {
+        throw new Error(response.data.errors[0].message);
+      }
+
+      const { accessToken, user } = response.data.data.login;
+
+      document.cookie = `accessToken=${accessToken}; path=/`;
+      document.cookie = `user=${JSON.stringify(user)}; path=/`;
+      instance.defaults.headers.Authorization = `Bearer ${accessToken}`;
+
+      // Redirect based on role
+      if (user.role === 'ADMIN') {
+        router.push('/');
+      }
+      // Force a router refresh to update server components
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
