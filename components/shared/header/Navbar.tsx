@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomBackDrop from '@/components/common/CustomBackDrop';
+import { usePathname } from 'next/navigation';
 
 interface NavLink {
   title: string;
@@ -21,8 +22,17 @@ const navLinks: NavLink[] = [
 ];
 
 const Navbar = () => {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // If on the login page, render only the Logo
+  if (pathname === '/login') {
+    return (
+      <header className="bg-blue flex h-20 items-center px-5 py-5 2xl:px-10">
+        <Logo />
+      </header>
+    );
+  }
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };

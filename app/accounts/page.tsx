@@ -1,4 +1,4 @@
-import Accounts from '@/pages/Accounts';
+import Accounts from '@/page-component/Accounts';
 import React from 'react';
 
 const page = () => {

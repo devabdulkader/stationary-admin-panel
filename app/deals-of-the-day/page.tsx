@@ -1,4 +1,4 @@
-import DealsOfTheDay from '@/pages/DealsOfTheDay';
+import DealsOfTheDay from '@/page-component/DealsOfTheDay';
 import React from 'react';
 
 const page = () => {

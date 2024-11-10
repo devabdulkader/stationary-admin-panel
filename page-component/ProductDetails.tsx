@@ -8,7 +8,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { FiEdit2 } from 'react-icons/fi';
 import { IoToggleSharp } from 'react-icons/io5';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import FormTextarea from './../components/form/FormTextarea';
+import FormTextarea from '../components/form/FormTextarea';
 import FormDateTimePicker from '@/components/form/FormDateTimePicker';
 import ProductImages from '@/components/ProductDetails/ProductImages';
 
