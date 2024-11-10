@@ -12,9 +12,7 @@ interface Category {
 }
 
 const EditExpenseCategory: React.FC = () => {
-  const [expenseCategories, setExpenseCategories] = useState<Category[]>([
-    { id: 1, name: 'Office Supplies', isEditable: false },
-  ]);
+  const [expenseCategories, setExpenseCategories] = useState<Category[]>([]);
 
   const handleExpenseDelete = (id: number) => {
     setExpenseCategories((prevCategories) =>
@@ -37,7 +35,7 @@ const EditExpenseCategory: React.FC = () => {
         {expenseCategories.map((category) => (
           <div key={category.id} className="relative flex items-center gap-5">
             <FormInput
-              name={`expense-category${category.id}`}
+              name={`expense_category.${category.id}`}
               className="input-bg flex-grow rounded-md p-3 pr-12"
             />
             <RiDeleteBin6Line
@@ -48,7 +46,10 @@ const EditExpenseCategory: React.FC = () => {
           </div>
         ))}
         <button
-          onClick={handleAddExpenseCategory}
+          onClick={(e) => {
+            e.preventDefault();
+            handleAddExpenseCategory();
+          }}
           className="input-bg text-blue flex items-center justify-center gap-3 rounded-md p-2"
         >
           <GoPlus size={24} className="text-blue" /> Add New Category

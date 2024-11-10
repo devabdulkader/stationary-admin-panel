@@ -159,12 +159,13 @@ const AddNewProduct = () => {
           method: 'GET',
           headers: {
             authorization: `Bearer uat_kGsvfUZy1lCd7OmWlTZQExpcje5V`,
+            // authorization: `Bearer ae7a05a683ca6397801b30bbe6`,
           },
         },
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          console.log('pos data', data);
           setDefaultValuesFromPOS({
             posProductId: ProductId,
             sku: data?.data?.variants?.[0]?.sku,

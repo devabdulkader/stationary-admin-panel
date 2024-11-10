@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-// import { FiEdit2 } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { GoPlus } from 'react-icons/go';
 import FormInput from '../form/FormInput';
@@ -12,9 +11,8 @@ interface Category {
 }
 
 const EditProductCategory: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([
-    { id: 1, name: 'Electronics', isEditable: false },
-  ]);
+  // Initially show one empty editable category field
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const handleDelete = (id: number) => {
     setCategories((prevCategories) =>
@@ -37,7 +35,7 @@ const EditProductCategory: React.FC = () => {
         {categories.map((category) => (
           <div key={category.id} className="relative flex items-center gap-5">
             <FormInput
-              name={`product-category${category.id}`}
+              name={`product_category.${category.id}`}
               className="input-bg flex-grow rounded-md p-3 pr-12"
             />
             <RiDeleteBin6Line
@@ -48,7 +46,10 @@ const EditProductCategory: React.FC = () => {
           </div>
         ))}
         <button
-          onClick={handleAddCategory}
+          onClick={(e) => {
+            e.preventDefault();
+            handleAddCategory();
+          }}
           className="input-bg text-blue flex items-center justify-center gap-3 rounded-md p-2"
         >
           <GoPlus size={24} className="text-blue" /> Add New Category
