@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from './Logo';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { LuSettings } from 'react-icons/lu';
@@ -9,12 +9,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomBackDrop from '@/components/common/CustomBackDrop';
 import { usePathname } from 'next/navigation';
+import { instance } from '@/axios/axiosInstance';
 
 interface NavLink {
   title: string;
   href: string;
 }
-
+interface User {
+  id: string;
+  email: string;
+  role: string;
+}
 const navLinks: NavLink[] = [
   { title: 'Inventory', href: '/' },
   { title: 'Accounts', href: '/accounts' },
@@ -24,8 +29,50 @@ const navLinks: NavLink[] = [
 const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   // If on the login page, render only the Logo
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await instance.post('', {
+          query: `
+            query GetUser {
+              getUserById(id: "USER_ID") {
+                id
+                email
+                role
+              }
+            }
+          `,
+        });
+
+        if (response.data.errors) {
+          throw new Error(response.data.errors[0].message);
+        }
+
+        setUser(response.data.data.getUserById);
+        console.log(user);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching user data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  if (loading) {
+    return <p>Loading user data...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
   if (pathname === '/login') {
     return (
       <header className="bg-blue flex h-20 items-center px-5 py-5 2xl:px-10">
@@ -36,7 +83,6 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
-
   return (
     <div>
       <header className="bg-blue flex h-20 items-center px-5 py-5 2xl:px-10">
