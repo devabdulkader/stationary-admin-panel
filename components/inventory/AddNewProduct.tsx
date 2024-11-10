@@ -239,14 +239,9 @@ const AddNewProduct = () => {
       </div>
 
       {/* Product SKU */}
-      <div>
-        <label className="text-md mb-2 block font-semibold">SKU</label>
-        <FormInput
-          name="sku"
-          className="input-bg w-full rounded-md p-2"
-          disabled
-          required
-        />
+      <div className="flex gap-3">
+        <p className="text-md mb-2 block font-semibold">Product SKU</p>{' '}
+        <span></span>
       </div>
 
       {/* Product Title */}

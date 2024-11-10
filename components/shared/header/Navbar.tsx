@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomBackDrop from '@/components/common/CustomBackDrop';
 import { usePathname } from 'next/navigation';
-import { instance } from '@/axios/axiosInstance';
+import Cookie from 'js-cookie';
 
 interface NavLink {
   title: string;
@@ -35,35 +35,18 @@ const Navbar = () => {
   // If on the login page, render only the Logo
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await instance.post('', {
-          query: `
-            query GetUser {
-              getUserById(id: "USER_ID") {
-                id
-                email
-                role
-              }
-            }
-          `,
-        });
-
-        if (response.data.errors) {
-          throw new Error(response.data.errors[0].message);
-        }
-
-        setUser(response.data.data.getUserById);
-        console.log(user);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        console.error('Error fetching user data:', err);
-      } finally {
-        setLoading(false);
+    try {
+      // Read user data from cookies
+      const userData = Cookie.get('user');
+      if (userData) {
+        setUser(JSON.parse(userData));
       }
-    };
-
-    fetchUserData();
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.error(err);
+      setError('Failed to load user data');
+    }
   }, []);
 
   if (loading) {
@@ -73,6 +56,7 @@ const Navbar = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
+
   if (pathname === '/login') {
     return (
       <header className="bg-blue flex h-20 items-center px-5 py-5 2xl:px-10">
@@ -83,6 +67,8 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
+  // console.log('user data', user);
+
   return (
     <div>
       <header className="bg-blue flex h-20 items-center px-5 py-5 2xl:px-10">
@@ -113,7 +99,7 @@ const Navbar = () => {
                 />
               </Link>
             </button>
-            <ProfileDropdown />
+            <ProfileDropdown user={user} />
           </div>
 
           {/* Mobile Menu Button */}
@@ -194,7 +180,7 @@ const Nav = () => (
   </nav>
 );
 
-const ProfileDropdown = () => {
+const ProfileDropdown = ({ user }: any) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -213,7 +199,7 @@ const ProfileDropdown = () => {
           width={300}
           className="h-8 w-8 rounded-full object-cover"
         />
-        <span className="text-white">Admin</span>
+        <span className="text-white">{user.role}</span>
         <TbChevronDown className="text-white" size={24} />
       </button>
       {/* Dropdown */}

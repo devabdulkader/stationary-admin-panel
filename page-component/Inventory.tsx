@@ -211,9 +211,9 @@ const Inventory = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full rounded-lg border bg-white px-10 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border bg-white px-5 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 transform">
+          <span className="absolute right-5 top-1/2 -translate-y-1/2 transform">
             <RiSearchLine className="text-gray-600" />
           </span>
         </div>
