@@ -120,7 +120,7 @@ const ProductPerformance: React.FC<CardProps> = ({ title }) => {
   ];
 
   return (
-    <div className="h-full rounded-lg bg-white shadow">
+    <div className="mb-5 h-full rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4 font-semibold">
         <span>{title}</span>
         <div className="relative space-x-3">

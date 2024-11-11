@@ -220,7 +220,7 @@ const AddNewProduct = () => {
         <input
           type="text"
           id="productId"
-          className="input-bg w-full rounded-md p-2"
+          className="input-bg w-full rounded-md p-2 outline-none"
           placeholder="Enter Product ID"
         />
         <button
@@ -252,7 +252,7 @@ const AddNewProduct = () => {
         </label>
         <FormInput
           name="title"
-          className="input-bg w-full rounded-md p-2"
+          className="input-bg w-full rounded-md p-2 outline-none"
           required
         />
       </div>
@@ -276,7 +276,7 @@ const AddNewProduct = () => {
           <FormInput
             name="prouctPrice"
             type="number"
-            className="input-bg w-full rounded-md p-2"
+            className="input-bg w-full rounded-md p-2 outline-none"
             placeholder="MVR"
             required
           />
@@ -291,7 +291,7 @@ const AddNewProduct = () => {
           <FormInput
             name="quantity"
             type="number"
-            className="input-bg w-full rounded-md p-2"
+            className="input-bg w-full rounded-md p-2 outline-none"
             placeholder="Unit"
             required
           />
@@ -303,7 +303,7 @@ const AddNewProduct = () => {
           <FormInput
             name="buyingPrice"
             type="number"
-            className="input-bg w-full rounded-md p-2"
+            className="input-bg w-full rounded-md p-2 outline-none"
             placeholder="MVR"
             required
           />
@@ -316,7 +316,7 @@ const AddNewProduct = () => {
         </label>
         <FormTextarea
           name="productDescription"
-          className="input-bg w-full rounded-md p-2"
+          className="input-bg w-full rounded-md p-2 outline-none"
           placeholder="0/300"
           rows={4}
           required
@@ -329,7 +329,7 @@ const AddNewProduct = () => {
             key={variant.id}
             name={`variant.${variant.id}`}
             type="text"
-            className="input-bg w-full rounded-md p-2"
+            className="input-bg w-full rounded-md p-2 outline-none"
             placeholder={`Variant ${index + 1}`}
           />
         ))}

@@ -112,16 +112,16 @@ const Accounts: React.FC = () => {
         </Modal>
       )}
       <header className="flex items-center gap-4">
-        <h1 className="pr-10 text-4xl text-blue-600">Accounts</h1>
+        <h2 className="pr-10 text-3xl text-blue-600">Accounts</h2>
 
         {/* Search Bar */}
-        <div className="relative flex-grow">
+        <div className="relative flex-grow sm:mt-0 sm:w-auto">
           <input
             type="text"
             placeholder="Search..."
-            className="w-full rounded-lg border bg-white px-10 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border bg-white px-5 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 transform">
+          <span className="absolute right-5 top-1/2 -translate-y-1/2 transform">
             <RiSearchLine className="text-gray-600" />
           </span>
         </div>

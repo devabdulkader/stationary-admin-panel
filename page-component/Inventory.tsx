@@ -203,11 +203,11 @@ const Inventory = () => {
         </Modal>
       )}
 
-      <header className="flex flex-wrap items-center gap-4">
+      <header className="flex items-center gap-4">
         <h1 className="text-2xl text-blue-600 sm:text-4xl">Inventory</h1>
 
         {/* Search Bar */}
-        <div className="relative mt-4 w-full flex-grow sm:mt-0 sm:w-auto">
+        <div className="relative flex-grow sm:mt-0 sm:w-auto">
           <input
             type="text"
             placeholder="Search..."
@@ -261,7 +261,7 @@ const Inventory = () => {
             </FadeUp>
           </div>
 
-          <div className="flex flex-col gap-5 2xl:flex-row">
+          <div className="mt-5 flex flex-col gap-5 2xl:flex-row">
             <div className="flex-1">
               <FadeUp delay={1} duration={1}>
                 <LowStock2 title="Low Stock" data={lowStock} />
@@ -292,7 +292,7 @@ const Inventory = () => {
           </FadeUp>
         </section>
 
-        <section className="col-span-12 space-y-5 xl:col-span-4">
+        <section className="col-span-12 xl:col-span-4">
           <FadeUp delay={0.8} duration={1}>
             <ProductPerformance title="Product Performance" />
           </FadeUp>

@@ -1,12 +1,15 @@
 import ProductDetails from '@/page-component/ProductDetails';
-import React from 'react';
 
-const page = () => {
+interface PageParams {
+  productId: string;
+}
+
+const Page = ({ params }: { params: PageParams }) => {
   return (
     <div>
-      <ProductDetails />
+      <ProductDetails productId={params.productId} />
     </div>
   );
 };
 
-export default page;
+export default Page;

@@ -3,7 +3,7 @@
 import Form from '@/components/form/Form';
 import FormInput from '@/components/form/FormInput';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import { FiEdit2 } from 'react-icons/fi';
 import { IoToggleSharp } from 'react-icons/io5';
@@ -11,17 +11,56 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import FormTextarea from '../components/form/FormTextarea';
 import FormDateTimePicker from '@/components/form/FormDateTimePicker';
 import ProductImages from '@/components/ProductDetails/ProductImages';
+import { instance } from '@/axios/axiosInstance';
 
-const ProductDetails = () => {
+interface ProductDetailsProps {
+  productId: string;
+}
+
+const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
   const [isDiscountDisabled, setIsDiscountDisabled] = useState(false);
-
+  const [productDetail, setProductDetail] = useState<any>({});
+  const [loading, setLoading] = useState(true);
   const handleToggleClick = () => {
     setIsDiscountDisabled((prevState) => !prevState);
   };
-
   const submitHandler = async (data: any) => {
     console.log(data);
   };
+
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      try {
+        const response = await instance.post('', {
+          query: `
+          query GetSingleProduct($id: String!) {
+            getSingleProduct(id: $id) {
+              id
+              
+            }
+          }
+        `,
+          variables: {
+            id: productId,
+          },
+        });
+
+        console.log('Product Detail:', response.data.data.getSingleProduct);
+        setProductDetail(response.data.data.getSingleProduct);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching product detail:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchProductDetail();
+  }, [productId]);
+  console.log(productDetail);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <div className="p-5">
