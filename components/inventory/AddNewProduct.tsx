@@ -89,7 +89,7 @@ const AddNewProduct = () => {
     } = data;
 
     const formData = {
-      posProductId: defaultValuesFromPOS.posProductId,
+      // posProductId: defaultValuesFromPOS.posProductId,
       sku,
       title,
       categoryId: category,
@@ -142,7 +142,7 @@ const AddNewProduct = () => {
         },
       });
 
-      console.log('Product created:', response.data.data.createProduct);
+      console.log('Product created:', response.data);
       setMutationLoading(false);
     } catch (error: any) {
       console.error('Error creating product:', error);
@@ -158,8 +158,8 @@ const AddNewProduct = () => {
         {
           method: 'GET',
           headers: {
-            authorization: `Bearer uat_kGsvfUZy1lCd7OmWlTZQExpcje5V`,
-            // authorization: `Bearer ae7a05a683ca6397801b30bbe6`,
+            // authorization: `Bearer uat_kGsvfUZy1lCd7OmWlTZQExpcje5V`,
+            authorization: `Bearer ae7a05a683ca6397801b30bbe6`,
           },
         },
       )

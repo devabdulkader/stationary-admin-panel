@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomBackDrop from '@/components/common/CustomBackDrop';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Cookie from 'js-cookie';
 
 interface NavLink {
@@ -181,9 +181,15 @@ const Nav = () => (
 );
 
 const ProfileDropdown = ({ user }: any) => {
+  const router = useRouter();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
+  };
+
+  const handleClick = () => {
+    router.push('/admin-profile');
+    setDropdownOpen(false);
   };
 
   return (
@@ -199,7 +205,9 @@ const ProfileDropdown = ({ user }: any) => {
           width={300}
           className="h-8 w-8 rounded-full object-cover"
         />
-        <span className="text-white">{user.role}</span>
+        <span className="text-white">
+          {user && user.role ? user.role : 'ADMIN'}
+        </span>
         <TbChevronDown className="text-white" size={24} />
       </button>
       {/* Dropdown */}
@@ -212,7 +220,10 @@ const ProfileDropdown = ({ user }: any) => {
             transition={{ duration: 0.1 }}
             className="absolute right-0 top-12 z-10 w-56 rounded-md border bg-white shadow-lg"
           >
-            <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">
+            <div
+              className="cursor-pointer px-5 py-3 hover:bg-gray-100"
+              onClick={handleClick}
+            >
               Profile
             </div>
             <div className="cursor-pointer px-5 py-3 hover:bg-gray-100">

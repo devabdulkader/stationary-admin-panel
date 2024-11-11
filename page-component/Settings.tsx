@@ -48,39 +48,30 @@ const Settings = () => {
     try {
       const websiteInfoResponse = await instance.post('', {
         query: `
-          mutation UpdateWebsiteInfo(
-            $contactNumber: String, 
-            $copyrightText: String, 
-            $facebookLink: String, 
-            $instagramLink: String, 
-            $whatsAppLink: String, 
-            $viberLink: String
-          ) {
-            updateWebsiteInfo(
-              id,
-              contactNumber: $contactNumber,
-              copyrightText: $copyrightText,
-              facebookLink: $facebookLink,
-              instagramLink: $instagramLink,
-              whatsAppLink: $whatsAppLink,
-              viberLink: $viberLink
-            ) {
-              success
-              message
+          mutation CreateWebsiteInfo($input: CreateWebsiteInfoInput!) {
+            createWebsiteInfo(input: $input) {
+              contactNumber
+              copyrightText
+              facebookLink
+              instagramLink
+              whatsAppLink
+              viberLink
             }
           }
         `,
         variables: {
-          contactNumber,
-          copyrightText,
-          facebookLink: facebook,
-          instagramLink: instagram,
-          whatsAppLink: whatsApp,
-          viberLink: viber,
+          input: {
+            contactNumber,
+            copyrightText,
+            facebookLink: facebook,
+            instagramLink: instagram,
+            whatsAppLink: whatsApp,
+            viberLink: viber
+          }
         },
       });
 
-      console.log('Website Info Update Response:', websiteInfoResponse.data);
+      console.log('Website Info Update Response:', websiteInfoResponse.data.data);
 
       if (filteredProductCategories.length > 0) {
         const productCategoryResponses = await Promise.all(

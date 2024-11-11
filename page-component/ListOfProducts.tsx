@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import 'react-datepicker/dist/react-datepicker.css';
 import HorizontalProductCard from '@/components/card/HorizontalProductCard';
 import Pagination from '@/components/common/Pagination';
 import { RiMenuUnfold2Line } from 'react-icons/ri';
+import { instance } from '@/axios/axiosInstance';
 interface Product {
   id: number;
   name: string;
@@ -244,7 +245,64 @@ const productData: Product[] = [
 ];
 const ListOfProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [products, setProducts] = useState<any[]>([]);
   const itemsPerPage = 4;
+
+  const fetchProducts = async (pagination:any, sort:any) => {
+    try {
+      const response = await instance.post('', {
+            query: `
+            query GetProducts($pagination: PaginationInput, $sort: SortInput) {
+                products(pagination: $pagination, sort: $sort) {
+                    items {
+                        id
+                        title
+                        description
+                        price
+                        buyPrice
+                        stockQuantity
+                        images {
+                            url
+                            alt
+                        }
+                        category {
+                            name
+                        }
+                        variants {
+                            id
+                            name
+                            value
+                        }
+                    }
+                    totalItems
+                    totalPages
+                    currentPage
+                }
+            }
+        `,
+          variables: {
+            pagination,
+            sort,
+          },
+        }
+      );
+      console.log('Products:', response.data.data.products);
+      setProducts(response.data?.data?.products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch initial products when the component mounts
+    const pagination = {
+      page: currentPage.toString(),
+      pageSize: itemsPerPage.toString(),
+    };
+    const sort = { field: 'createdAt', order: 'DESC' };
+
+    fetchProducts(pagination, sort);
+  }, [currentPage]);
 
   let filteredData = productData;
   const [searchTerm, setSearchTerm] = useState('');
