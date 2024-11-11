@@ -66,12 +66,15 @@ const Settings = () => {
             facebookLink: facebook,
             instagramLink: instagram,
             whatsAppLink: whatsApp,
-            viberLink: viber
-          }
+            viberLink: viber,
+          },
         },
       });
 
-      console.log('Website Info Update Response:', websiteInfoResponse.data.data);
+      console.log(
+        'Website Info Update Response:',
+        websiteInfoResponse.data.data,
+      );
 
       if (filteredProductCategories.length > 0) {
         const productCategoryResponses = await Promise.all(

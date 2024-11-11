@@ -12,7 +12,9 @@ interface Category {
 
 const EditProductCategory: React.FC = () => {
   // Initially show one empty editable category field
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([
+    { id: 1, name: '', isEditable: true },
+  ]);
 
   const handleDelete = (id: number) => {
     setCategories((prevCategories) =>
@@ -36,7 +38,7 @@ const EditProductCategory: React.FC = () => {
           <div key={category.id} className="relative flex items-center gap-5">
             <FormInput
               name={`product_category.${category.id}`}
-              className="input-bg flex-grow rounded-md p-3 pr-12"
+              className="input-bg flex-grow rounded-md p-3 pr-12 outline-none"
             />
             <RiDeleteBin6Line
               className="absolute right-5 cursor-pointer text-red-600"

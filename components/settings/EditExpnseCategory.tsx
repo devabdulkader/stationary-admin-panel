@@ -12,7 +12,9 @@ interface Category {
 }
 
 const EditExpenseCategory: React.FC = () => {
-  const [expenseCategories, setExpenseCategories] = useState<Category[]>([]);
+  const [expenseCategories, setExpenseCategories] = useState<Category[]>([
+    { id: 1, name: '', isEditable: true },
+  ]);
 
   const handleExpenseDelete = (id: number) => {
     setExpenseCategories((prevCategories) =>
@@ -36,7 +38,7 @@ const EditExpenseCategory: React.FC = () => {
           <div key={category.id} className="relative flex items-center gap-5">
             <FormInput
               name={`expense_category.${category.id}`}
-              className="input-bg flex-grow rounded-md p-3 pr-12"
+              className="input-bg flex-grow rounded-md p-3 pr-12 outline-none"
             />
             <RiDeleteBin6Line
               className="absolute right-5 cursor-pointer text-red-600"
