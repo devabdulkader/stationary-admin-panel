@@ -23,7 +23,7 @@ const ProductImages = () => {
   //   const handleDeleteImage = () => {};
 
   return (
-    <div className="">
+    <div className="relative w-full">
       <h1 className="py-5 text-2xl font-medium">Product Image</h1>
 
       <div className="grid grid-cols-1 gap-5 rounded-lg sm:grid-cols-2 lg:grid-cols-4">

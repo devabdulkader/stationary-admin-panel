@@ -37,7 +37,7 @@ const ContactNumber = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-  console.log('contact', websiteInfo.contactNumber);
+  // console.log('contact', websiteInfo.contactNumber);
 
   return (
     <div className="rounded-lg bg-white p-5">

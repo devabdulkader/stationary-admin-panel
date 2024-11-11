@@ -19,7 +19,7 @@ const DeadStock: React.FC<DeadStockProps> = ({ title, data, linkHref }) => {
   const totalDaysInYear = 365;
 
   return (
-    <div className="rounded-lg bg-white shadow">
+    <div className="mb-5 rounded-lg bg-white shadow">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-2 font-semibold">
         <span>{title}</span>
         <Link href={linkHref}>
