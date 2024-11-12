@@ -23,10 +23,10 @@ const FormInput = ({
   type = 'text',
   value,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // id,
+  id,
   placeholder,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // validation,
+  validation,
   label,
   required,
   disabled,
