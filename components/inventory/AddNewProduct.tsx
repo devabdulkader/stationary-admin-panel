@@ -21,6 +21,7 @@ const AddNewProduct = () => {
     sku: '',
     title: '',
     quantity: '',
+    basePrice: '',
   });
 
   // State for variants
@@ -82,7 +83,7 @@ const AddNewProduct = () => {
       sku,
       title,
       category,
-      prouctPrice,
+      basePrice,
       buyingPrice,
       quantity,
       productDescription,
@@ -93,7 +94,7 @@ const AddNewProduct = () => {
       sku,
       title,
       categoryId: category,
-      price: prouctPrice,
+      price: basePrice,
       buyPrice: buyingPrice,
       stockQuantity: quantity,
       description: productDescription,
@@ -158,7 +159,6 @@ const AddNewProduct = () => {
         {
           method: 'GET',
           headers: {
-            // authorization: `Bearer uat_kGsvfUZy1lCd7OmWlTZQExpcje5V`,
             authorization: `Bearer uat_JiOCYHBrhhcFoXtqxhT8zmfV2hrz`,
           },
         },
@@ -171,6 +171,7 @@ const AddNewProduct = () => {
             sku: data?.data?.variants?.[0]?.sku,
             title: data?.data?.name,
             quantity: data?.data?.variants?.[0]?.stock?.count.toString(),
+            basePrice: data?.data?.variants?.[0]?.pricing?.base?.price,
           });
         })
         .catch((err) => console.log(err));
@@ -178,10 +179,9 @@ const AddNewProduct = () => {
       console.log(err);
     }
   };
-
+  console.log('price is', defaultValuesFromPOS.basePrice);
   // Show loading state if categories are still being fetched
   if (categoryLoading) return <div>Loading categories...</div>;
-
   return (
     <Form
       submitHandler={submitHandler}
@@ -240,9 +240,13 @@ const AddNewProduct = () => {
       </div>
 
       {/* Product SKU */}
-      <div className="flex gap-3">
-        <p className="text-md mb-2 block font-semibold">Product SKU</p>{' '}
-        <span></span>
+      <div className="flex items-center gap-2">
+        <label className="text-md block font-semibold">Product Sku</label>
+        <FormInput
+          name="sku"
+          className="input-bg w-full rounded-md p-2 outline-none"
+          required
+        />
       </div>
 
       {/* Product Title */}
@@ -274,7 +278,7 @@ const AddNewProduct = () => {
             Product Price
           </label>
           <FormInput
-            name="prouctPrice"
+            name="basePrice"
             type="number"
             className="input-bg w-full rounded-md p-2 outline-none"
             placeholder="MVR"
