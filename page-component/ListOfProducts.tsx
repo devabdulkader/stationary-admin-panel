@@ -8,250 +8,16 @@ import HorizontalProductCard from '@/components/card/HorizontalProductCard';
 import Pagination from '@/components/common/Pagination';
 import { RiMenuUnfold2Line } from 'react-icons/ri';
 import { instance } from '@/axios/axiosInstance';
-interface Product {
-  id: number;
-  name: string;
-  description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.';
-  currentPrice: number;
-  originalPrice?: number;
-  discountedPrice?: number;
-  image: string;
-  imageVariants?: string[];
-  colorOptions?: string[];
-  stockQuantity: number;
-}
 
-const productData: Product[] = [
-  {
-    id: 1,
-    name: 'Elegant Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 15,
-    originalPrice: 20,
-    discountedPrice: 15,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Black', 'Blue', 'Red'],
-    stockQuantity: 50,
-  },
-  {
-    id: 2,
-    name: 'Classic Fountain Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 45,
-    originalPrice: 50,
-    discountedPrice: 45,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Gold', 'Silver'],
-    stockQuantity: 30,
-  },
-  {
-    id: 3,
-    name: 'Ballpoint Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 8,
-    originalPrice: 10,
-    discountedPrice: 8,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Black', 'Green'],
-    stockQuantity: 100,
-  },
-  {
-    id: 4,
-    name: 'Gel Ink Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 12,
-    originalPrice: 15,
-    discountedPrice: 12,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Pink', 'Purple'],
-    stockQuantity: 75,
-  },
-  {
-    id: 5,
-    name: 'Rollerball Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 25,
-    originalPrice: 30,
-    discountedPrice: 25,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Black', 'Burgundy'],
-    stockQuantity: 40,
-  },
-  {
-    id: 6,
-    name: 'Calligraphy Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 30,
-    originalPrice: 35,
-    discountedPrice: 30,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Black', 'Brown'],
-    stockQuantity: 20,
-  },
-  {
-    id: 7,
-    name: 'Executive Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 60,
-    originalPrice: 70,
-    discountedPrice: 60,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Black', 'Silver'],
-    stockQuantity: 15,
-  },
-  {
-    id: 8,
-    name: 'Colored Gel Pen Set',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 20,
-    originalPrice: 25,
-    discountedPrice: 20,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Assorted'],
-    stockQuantity: 60,
-  },
-  {
-    id: 9,
-    name: 'Mechanical Pencil',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 10,
-    originalPrice: 12,
-    discountedPrice: 10,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Black', 'Yellow'],
-    stockQuantity: 90,
-  },
-  {
-    id: 10,
-    name: 'Stylus Pen',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, nihil.',
-    currentPrice: 18,
-    originalPrice: 22,
-    discountedPrice: 18,
-    image: '/product.webp',
-    imageVariants: [
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-      '/product.webp',
-    ],
-    colorOptions: ['Black', 'Silver'],
-    stockQuantity: 55,
-  },
-];
 const ListOfProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<any[]>([]);
   const itemsPerPage = 4;
 
-  const fetchProducts = async (pagination:any, sort:any) => {
+  const fetchProducts = async (pagination: any, sort: any) => {
     try {
       const response = await instance.post('', {
-            query: `
+        query: `
             query GetProducts($pagination: PaginationInput, $sort: SortInput) {
                 products(pagination: $pagination, sort: $sort) {
                     items {
@@ -280,12 +46,11 @@ const ListOfProducts = () => {
                 }
             }
         `,
-          variables: {
-            pagination,
-            sort,
-          },
-        }
-      );
+        variables: {
+          pagination,
+          sort,
+        },
+      });
       console.log('Products:', response.data.data.products);
       setProducts(response.data?.data?.products || []);
     } catch (error) {
@@ -304,7 +69,7 @@ const ListOfProducts = () => {
     fetchProducts(pagination, sort);
   }, [currentPage]);
 
-  let filteredData = productData;
+  let filteredData = products;
   const [searchTerm, setSearchTerm] = useState('');
 
   // Apply search filter

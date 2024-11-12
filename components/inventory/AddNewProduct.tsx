@@ -172,7 +172,7 @@ const AddNewProduct = () => {
             sku: data?.data?.variants?.[0]?.sku,
             title: data?.data?.name,
             quantity: data?.data?.variants?.[0]?.stock?.count.toString(),
-            price: data?.data?.variants?.[0]?.pricing?.base?.price,
+            price: data?.data?.variants?.[0]?.pricing?.base?.price.toString(),
           });
         })
         .catch((err) => console.log(err));
