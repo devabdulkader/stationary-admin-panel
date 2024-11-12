@@ -21,7 +21,7 @@ const AddNewProduct = () => {
     sku: '',
     title: '',
     quantity: '',
-    basePrice: '',
+    price: '',
   });
 
   // State for variants
@@ -76,6 +76,7 @@ const AddNewProduct = () => {
 
   // Handle form submission
   const submitHandler = async (data: any) => {
+    console.log('product data', data);
     setMutationLoading(true);
     setMutationError(null);
 
@@ -83,7 +84,7 @@ const AddNewProduct = () => {
       sku,
       title,
       category,
-      basePrice,
+      price,
       buyingPrice,
       quantity,
       productDescription,
@@ -94,7 +95,7 @@ const AddNewProduct = () => {
       sku,
       title,
       categoryId: category,
-      price: basePrice,
+      price,
       buyPrice: buyingPrice,
       stockQuantity: quantity,
       description: productDescription,
@@ -171,7 +172,7 @@ const AddNewProduct = () => {
             sku: data?.data?.variants?.[0]?.sku,
             title: data?.data?.name,
             quantity: data?.data?.variants?.[0]?.stock?.count.toString(),
-            basePrice: data?.data?.variants?.[0]?.pricing?.base?.price,
+            price: data?.data?.variants?.[0]?.pricing?.base?.price,
           });
         })
         .catch((err) => console.log(err));
@@ -179,7 +180,7 @@ const AddNewProduct = () => {
       console.log(err);
     }
   };
-  console.log('price is', defaultValuesFromPOS.basePrice);
+  console.log('price is', defaultValuesFromPOS.price);
   // Show loading state if categories are still being fetched
   if (categoryLoading) return <div>Loading categories...</div>;
   return (
@@ -278,7 +279,7 @@ const AddNewProduct = () => {
             Product Price
           </label>
           <FormInput
-            name="basePrice"
+            name="price"
             type="number"
             className="input-bg w-full rounded-md p-2 outline-none"
             placeholder="MVR"
