@@ -159,7 +159,7 @@ const AddNewProduct = () => {
           method: 'GET',
           headers: {
             // authorization: `Bearer uat_kGsvfUZy1lCd7OmWlTZQExpcje5V`,
-            authorization: `Bearer ae7a05a683ca6397801b30bbe6`,
+            authorization: `Bearer uat_JiOCYHBrhhcFoXtqxhT8zmfV2hrz`,
           },
         },
       )
