@@ -203,11 +203,11 @@ const Inventory = () => {
         </Modal>
       )}
 
-      <header className="flex items-center gap-4">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <h1 className="text-2xl text-blue-600 sm:text-4xl">Inventory</h1>
 
         {/* Search Bar */}
-        <div className="relative flex-grow sm:mt-0 sm:w-auto">
+        <div className="relative w-full flex-grow sm:mt-0 sm:w-auto">
           <input
             type="text"
             placeholder="Search..."
@@ -219,7 +219,7 @@ const Inventory = () => {
         </div>
 
         {/* Button Section */}
-        <div className="flex flex-wrap gap-2 sm:gap-4">
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto lg:flex-row lg:gap-4">
           <ButtonWithIcon
             icon={<BsPlusLg />}
             text="Add New Product"

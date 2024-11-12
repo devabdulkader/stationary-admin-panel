@@ -201,11 +201,11 @@ const Orders = () => {
           <CustomersPopup />
         </Modal>
       )}
-      <header className="flex items-center gap-4">
-        <h2 className="pr-10 text-3xl text-blue-600">Orders</h2>
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <h2 className="text-2xl text-blue-600 lg:text-3xl">Orders</h2>
 
         {/* Search Bar */}
-        <div className="relative flex-grow sm:mt-0 sm:w-auto">
+        <div className="relative w-full flex-grow lg:w-auto">
           <input
             type="text"
             placeholder="Search..."
@@ -217,7 +217,7 @@ const Orders = () => {
         </div>
 
         {/* Button Section */}
-        <div className="flex gap-4">
+        <div className="flex w-full gap-2 lg:w-auto lg:gap-4">
           <ButtonWithIcon
             iconClassName="text-xl"
             icon={<IoManOutline />}
@@ -231,6 +231,7 @@ const Orders = () => {
           />
         </div>
       </header>
+
       <main className="mt-5 grid grid-cols-12 gap-5">
         <section className="col-span-12 space-y-5">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">

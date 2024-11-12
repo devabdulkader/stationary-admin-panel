@@ -111,11 +111,11 @@ const Accounts: React.FC = () => {
           <EntryExpensePopup />{' '}
         </Modal>
       )}
-      <header className="flex items-center gap-4">
-        <h2 className="pr-10 text-3xl text-blue-600">Accounts</h2>
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <h2 className="text-2xl text-blue-600 sm:text-3xl">Accounts</h2>
 
         {/* Search Bar */}
-        <div className="relative flex-grow sm:mt-0 sm:w-auto">
+        <div className="relative w-full flex-grow sm:w-auto">
           <input
             type="text"
             placeholder="Search..."
@@ -127,7 +127,7 @@ const Accounts: React.FC = () => {
         </div>
 
         {/* Button Section */}
-        <div className="flex gap-4">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:gap-4 lg:flex-row">
           <ButtonWithIcon icon={<BsArrowRepeat />} text="Generate Report" />
           <ButtonWithIcon
             icon={<AiOutlineInbox />}
