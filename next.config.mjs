@@ -6,6 +6,7 @@ const nextConfig = {
         hostname: 'dummyimage.com',
       },
       {
+        protocol: 'https',
         hostname: 'test-bucket-zorgit.s3.amazonaws.com',
       },
     ],

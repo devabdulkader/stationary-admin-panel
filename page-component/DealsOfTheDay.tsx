@@ -32,6 +32,7 @@ const DealsOfTheDay = () => {
   const [products, setProducts] = useState<any[]>([]);
   const itemsPerPage = 4;
   const [searchTerm, setSearchTerm] = useState('');
+  const [update, setUpdate] = useState(false);
 
   const fetchProducts = async (pagination: any, sort: any) => {
     try {
@@ -100,6 +101,10 @@ const DealsOfTheDay = () => {
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
 
+  const handleUpdateProducts = (updated: boolean) => {
+    setUpdate(updated);
+  }
+
   return (
     <div className="pt-5">
       {/* <ToastContainer /> */}
@@ -158,7 +163,7 @@ const DealsOfTheDay = () => {
           </div>
         </div>
       </section>
-      <SelectedProducts />
+      <SelectedProducts update={update} setUpdate={setUpdate} />
 
       <div className="mt-5 flex justify-end py-5">
         <input
@@ -175,7 +180,7 @@ const DealsOfTheDay = () => {
 
         <div className="flex flex-col px-5 py-5">
           {currentItems.map((product) => (
-            <HorizontalProductCard key={product.id} product={product} />
+            <HorizontalProductCard key={product.id} product={product} onUpdate={handleUpdateProducts} />
           ))}
         </div>
         <Pagination

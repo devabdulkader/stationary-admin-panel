@@ -6,7 +6,8 @@ instance.defaults.timeout = 60000;
 instance.defaults.baseURL =
   // 'https://stationary-backend-five.vercel.app/graphql';
   instance.defaults.baseURL =
-    'https://dolphin-app-gsaqy.ondigitalocean.app/graphql';
+    // 'https://dolphin-app-gsaqy.ondigitalocean.app/graphql';
+    'http://localhost:5000/graphql';
 
 // Add a request interceptor
 instance.interceptors.request.use(

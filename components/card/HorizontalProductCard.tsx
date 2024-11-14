@@ -4,32 +4,32 @@ import { PiDotsSixVerticalLight } from 'react-icons/pi';
 import { TfiZoomIn } from 'react-icons/tfi';
 import { HiOutlinePlus } from 'react-icons/hi';
 import { instance } from '@/axios/axiosInstance';
+import { toast } from 'react-toastify';
 
-const HorizontalProductCard: React.FC<any> = ({ product }) => {
+const HorizontalProductCard: React.FC<any> = ({ product, onUpdate }) => {
+  console.log("PRODUCT", product);
   const handleAddProduct = async () => {
     try {
       const response = await instance.post('', {
         query: `
-          mutation AddProductToDealsOfTheDay($id: String!, $productIds: [String!]!) {
-            addProductToDealsOfTheDay(id: $id, productIds: $productIds) {
+          mutation addProductToDeal($productId: String!) {
+            addProductToDeal(productId: $productId) {
               success
               message
             }
           }
         `,
         variables: {
-          id: 'dbd3576a-7d1a-42c3-8a4e-43c8e473337d',
-          productIds: [product.id],
+          productId: product.id,
         },
       });
-
       // Handle the response
-      if (response.data.data.addProductToDealsOfTheDay.success) {
-        alert('Product added to Deals of the Day successfully');
+      if (response.data.data) {
+        toast.success('Product added to Deals of the Day successfully');
+        onUpdate(true);
       } else {
-        alert(
-          'Failed to add product: ' +
-            response.data.data.addProductToDealsOfTheDay.message,
+        toast.error(
+          'Failed to add product: ' + response.data.data
         );
       }
     } catch (err) {
@@ -45,7 +45,7 @@ const HorizontalProductCard: React.FC<any> = ({ product }) => {
 
         <div className="relative h-48 w-full sm:h-36 md:w-64">
           <Image
-            src={product.image}
+            src={product.images && product.images.length > 0 ? product.images[0].url : undefined}
             alt={product.name}
             width={200}
             height={200}
