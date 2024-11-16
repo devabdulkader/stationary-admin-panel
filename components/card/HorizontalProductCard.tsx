@@ -2,12 +2,60 @@
 import Image from 'next/image';
 import { PiDotsSixVerticalLight } from 'react-icons/pi';
 import { TfiZoomIn } from 'react-icons/tfi';
-import { HiOutlinePlus } from 'react-icons/hi';
+import { HiOutlineMinus, HiOutlinePlus } from 'react-icons/hi';
 import { instance } from '@/axios/axiosInstance';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the default styles
+interface HorizontalProductCardProps {
+  product: any;
 
-const HorizontalProductCard: React.FC<any> = ({ product, onUpdate }) => {
-  console.log("PRODUCT", product);
+  showAddToDeals?: boolean;
+  onProductDeleted?: () => void;
+}
+
+const HorizontalProductCard: React.FC<HorizontalProductCardProps> = ({
+  product,
+
+  showAddToDeals = true,
+  onProductDeleted,
+}) => {
+  const handleDeleteProduct = async () => {
+    try {
+      const response = await instance.post('', {
+        query: `
+          mutation deleteProduct($id: String!) {
+            deleteProduct(id: $id) {
+              success
+              message
+            }
+          }
+        `,
+        variables: {
+          id: product.id,
+        },
+      });
+
+      // Handle the response
+      if (response.data.data && response.data.data.deleteProduct.success) {
+        toast.success('Product deleted successfully');
+        if (onProductDeleted) {
+          onProductDeleted();
+        }
+      } else {
+        toast.error(
+          'Failed to delete product: ' +
+            response.data.data.deleteProduct.message,
+        );
+      }
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      toast.error('An error occurred. Please try again.');
+    }
+  };
+
+  console.log('PRODUCT', product);
+
   const handleAddProduct = async () => {
     try {
       const response = await instance.post('', {
@@ -26,11 +74,11 @@ const HorizontalProductCard: React.FC<any> = ({ product, onUpdate }) => {
       // Handle the response
       if (response.data.data) {
         toast.success('Product added to Deals of the Day successfully');
-        onUpdate(true);
+        if (onProductDeleted) {
+          onProductDeleted();
+        }
       } else {
-        toast.error(
-          'Failed to add product: ' + response.data.data
-        );
+        toast.error('Failed to add product: ' + response.data.data);
       }
     } catch (err) {
       console.error('Error adding product to deals:', err);
@@ -40,12 +88,28 @@ const HorizontalProductCard: React.FC<any> = ({ product, onUpdate }) => {
 
   return (
     <section className="flex flex-col items-center justify-between gap-4 border-b border-gray-300 p-4 sm:flex-row">
+      <div className="absolute">
+        <ToastContainer
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </div>
       <div className="flex w-full flex-col gap-5 sm:flex-row lg:w-auto">
-        <PiDotsSixVerticalLight size={30} className="hidden lg:block" />
+        <PiDotsSixVerticalLight size={30} style={{ cursor: 'pointer' }} />
 
         <div className="relative h-48 w-full sm:h-36 md:w-64">
           <Image
-            src={product.images && product.images.length > 0 ? product.images[0].url : undefined}
+            src={
+              product.images && product.images.length > 0
+                ? product.images[0].url
+                : undefined
+            }
             alt={product.name}
             width={200}
             height={200}
@@ -70,13 +134,23 @@ const HorizontalProductCard: React.FC<any> = ({ product, onUpdate }) => {
           <span className="font-semibold">View Details</span>
         </button>
 
-        <button
-          className="text-blue bg-blue flex w-full items-center justify-center gap-2 rounded-md px-5 py-3 transition hover:bg-blue-700 lg:w-auto"
-          onClick={handleAddProduct} // Trigger mutation on click
-        >
-          <HiOutlinePlus size={20} className="text-white" />
-          <span className="font-semibold text-white">Add to Deals</span>
-        </button>
+        {showAddToDeals ? (
+          <button
+            className="text-blue bg-blue flex w-full items-center justify-center gap-2 rounded-md px-5 py-3 transition hover:bg-blue-700 lg:w-auto"
+            onClick={handleAddProduct}
+          >
+            <HiOutlinePlus size={20} className="text-white" />
+            <span className="font-semibold text-white">Add to Deals</span>
+          </button>
+        ) : (
+          <button
+            className="flex w-full items-center justify-center gap-2 rounded-md bg-red-700 px-5 py-3 transition lg:w-auto"
+            onClick={handleDeleteProduct}
+          >
+            <HiOutlineMinus size={20} className="text-white" />
+            <span className="font-semibold text-white">Delete Product</span>
+          </button>
+        )}
       </div>
     </section>
   );

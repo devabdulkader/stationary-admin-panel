@@ -8,11 +8,51 @@ import EditExpenseCategory from '@/components/settings/EditExpnseCategory';
 import EditProductCategory from '@/components/settings/EditProductCategory';
 import HeroCarousel from '@/components/settings/HeroCarousel';
 import ManageSocials from '@/components/settings/ManageSocials';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Settings = () => {
+  const [websiteInfo, setWebsiteInfo] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWebsiteInfo = async () => {
+      try {
+        const response = await instance.post('', {
+          query: `
+          query {
+            getAllWebsiteInfo {
+              id
+             contactNumber
+              copyrightText
+              facebookLink
+              instagramLink
+              whatsAppLink
+              viberLink
+              heroImages
+            }
+          }
+        `,
+        });
+
+        console.log('Website Info:', response.data.data.getAllWebsiteInfo[0]);
+        setWebsiteInfo(response.data.data.getAllWebsiteInfo[0]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching website info:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchWebsiteInfo();
+  }, []);
+
+  console.log('website info', websiteInfo);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   const submitHandler = async (data: any) => {
     console.log('Data is:', data);
+
     const {
       contactNumber,
       copyrightText,
@@ -20,28 +60,34 @@ const Settings = () => {
       instagram,
       viber,
       whatsApp,
+      photo = [],
     } = data;
-    // Update website info individually
+
+    const filteredPhoto = photo.filter(
+      (url: string) => url && url.trim() !== '',
+    );
+    console.log('Filtered Photo URLs:', filteredPhoto);
 
     const filteredProductCategories =
       data.product_category?.filter(
-        (category: string) => category.trim() !== '',
+        (category: string) => category && category.trim() !== '',
       ) || [];
 
     console.log('Filtered Product Categories:', filteredProductCategories);
 
     const filteredExpenseCategories =
       data.expense_category?.filter(
-        (category: string) => category.trim() !== '',
+        (category: string) => category && category.trim() !== '',
       ) || [];
 
     console.log('Filtered Expense Categories:', filteredExpenseCategories);
 
     if (
       filteredProductCategories.length === 0 &&
-      filteredExpenseCategories.length === 0
+      filteredExpenseCategories.length === 0 &&
+      filteredPhoto.length === 0
     ) {
-      console.log('No categories to submit');
+      console.log('No categories or photos to submit');
       return;
     }
 
@@ -56,6 +102,10 @@ const Settings = () => {
               instagramLink
               whatsAppLink
               viberLink
+              heroImages {
+                id
+                url  
+              }
             }
           }
         `,
@@ -67,6 +117,7 @@ const Settings = () => {
             instagramLink: instagram,
             whatsAppLink: whatsApp,
             viberLink: viber,
+            heroImages: filteredPhoto,
           },
         },
       });
@@ -76,6 +127,7 @@ const Settings = () => {
         websiteInfoResponse.data.data,
       );
 
+      // Handle product categories if provided
       if (filteredProductCategories.length > 0) {
         const productCategoryResponses = await Promise.all(
           filteredProductCategories.map(async (categoryName: string) => {
@@ -98,6 +150,7 @@ const Settings = () => {
         console.log('Product Category Responses:', productCategoryResponses);
       }
 
+      // Handle expense categories if provided
       if (filteredExpenseCategories.length > 0) {
         const expenseCategoryResponses = await Promise.all(
           filteredExpenseCategories.map(async (categoryName: string) => {
@@ -132,11 +185,18 @@ const Settings = () => {
 
       <Form submitHandler={submitHandler} className="flex flex-col gap-5">
         <HeroCarousel />
-        <ManageSocials />
-        <ContactNumber />
+        <ManageSocials
+          data={{
+            facebook: websiteInfo.facebooklink,
+            instagram: websiteInfo.instagramLink,
+            viber: websiteInfo.viberLink,
+            whatsApp: websiteInfo.whatsAppLink,
+          }}
+        />
+        <ContactNumber contactNumber={websiteInfo.contactNumber} />
         <EditProductCategory />
         <EditExpenseCategory />
-        <CopyrightText />
+        <CopyrightText copyrightText={websiteInfo.copyrightText} />
         <button
           type="submit"
           className={`w-full rounded-lg border border-[#00359E] bg-[#00359E] py-3 text-white transition-all active:scale-[0.96]`}

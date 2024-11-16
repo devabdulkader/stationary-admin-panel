@@ -59,7 +59,10 @@ const MyProducts2: React.FC<ProductProps> = ({ data, linkHref }) => {
             </div>
 
             <div className="flex items-center justify-end">
-              <Link href="#" className="text-gray-600">
+              <Link
+                href={`/product-details/${product.id}`}
+                className="text-gray-600"
+              >
                 <GoChevronRight size={24} />
               </Link>
             </div>

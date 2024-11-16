@@ -1,42 +1,13 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import FormPhoneInput from '../form/FormPhoneInput';
-import { instance } from '@/axios/axiosInstance';
+
 import { GoPencil } from 'react-icons/go';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 
-const ContactNumber = () => {
-  const [websiteInfo, setWebsiteInfo] = useState<any>({});
-  const [loading, setLoading] = useState(true);
+const ContactNumber = ({ contactNumber }: any) => {
   const [editable, setEditable] = useState(false);
-  useEffect(() => {
-    const fetchWebsiteInfo = async () => {
-      try {
-        const response = await instance.post('', {
-          query: `
-          query {
-            getAllWebsiteInfo {
-              id
-              contactNumber
-            }
-          }
-        `,
-        });
 
-        setWebsiteInfo(response.data.data.getAllWebsiteInfo[0]);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching website info:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchWebsiteInfo();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
   // console.log('contact', websiteInfo.contactNumber);
 
   return (
@@ -60,7 +31,7 @@ const ContactNumber = () => {
           ) : (
             <div className="relative w-full">
               <input
-                value={websiteInfo.contactNumber || ''}
+                value={contactNumber || ''}
                 className="input-bg w-full flex-grow rounded-md p-2 outline-none"
               />
               <GoPencil

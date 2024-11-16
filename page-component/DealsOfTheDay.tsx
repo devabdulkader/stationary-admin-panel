@@ -101,9 +101,9 @@ const DealsOfTheDay = () => {
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
 
-  const handleUpdateProducts = (updated: boolean) => {
-    setUpdate(updated);
-  }
+  // const handleUpdateProducts = (updated: boolean) => {
+  //   setUpdate(updated);
+  // }
 
   return (
     <div className="pt-5">
@@ -180,7 +180,11 @@ const DealsOfTheDay = () => {
 
         <div className="flex flex-col px-5 py-5">
           {currentItems.map((product) => (
-            <HorizontalProductCard key={product.id} product={product} onUpdate={handleUpdateProducts} />
+            <HorizontalProductCard
+              key={product.id}
+              product={product}
+              //  onUpdate={handleUpdateProducts}
+            />
           ))}
         </div>
         <Pagination

@@ -5,12 +5,11 @@ import React, { useEffect, useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import 'react-datepicker/dist/react-datepicker.css';
 import HorizontalProductCard from '@/components/card/HorizontalProductCard';
-import Pagination from '@/components/common/Pagination';
+
 import { RiMenuUnfold2Line } from 'react-icons/ri';
 import { instance } from '@/axios/axiosInstance';
 
 const ListOfProducts = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<any[]>([]);
   const itemsPerPage = 4;
 
@@ -51,40 +50,50 @@ const ListOfProducts = () => {
           sort,
         },
       });
-      console.log('Products:', response.data.data.products);
-      setProducts(response.data?.data?.products || []);
+      console.log('Products:', response.data.data.products.items);
+      setProducts(response.data?.data?.products.items || []);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   };
 
+  const handleProductDeleted = () => {
+    const pagination = {
+      page: null,
+      pageSize: itemsPerPage.toString(),
+    };
+    const sort = { field: 'createdAt', order: 'DESC' };
+
+    fetchProducts(pagination, sort); // Refetch the product list
+  };
+
   useEffect(() => {
     // Fetch initial products when the component mounts
     const pagination = {
-      page: currentPage.toString(),
+      page: null,
       pageSize: itemsPerPage.toString(),
     };
     const sort = { field: 'createdAt', order: 'DESC' };
 
     fetchProducts(pagination, sort);
-  }, [currentPage]);
+  }, []);
 
-  let filteredData = products;
+  // let filteredData = products;
   const [searchTerm, setSearchTerm] = useState('');
 
   // Apply search filter
-  if (searchTerm) {
-    filteredData = filteredData.filter((item) =>
-      Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
-    );
-  }
+  // if (searchTerm) {
+  //   filteredData = filteredData?.filter((item) =>
+  //     Object.values(item).some((value) =>
+  //       String(value).toLowerCase().includes(searchTerm.toLowerCase()),
+  //     ),
+  //   );
+  // }
 
   // Calculate current items to display based on current page
-  const indexOfLast = currentPage * itemsPerPage;
-  const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
+  // const indexOfLast = currentPage * itemsPerPage;
+  // const indexOfFirst = indexOfLast - itemsPerPage;
+  // const currentItems = filteredData?.slice(indexOfFirst, indexOfLast);
   return (
     <div className="p-5">
       <div className="flex flex-col gap-5 pb-10 lg:flex-row">
@@ -114,18 +123,23 @@ const ListOfProducts = () => {
         <p className="pl-5 pt-5 text-2xl">List of Products</p>
 
         <div className="flex flex-col px-5 py-5">
-          {currentItems.map((product) => (
-            <HorizontalProductCard key={product.id} product={product} />
+          {products?.map((product) => (
+            <HorizontalProductCard
+              showAddToDeals={false}
+              key={product.id}
+              product={product}
+              onProductDeleted={handleProductDeleted}
+            />
           ))}
         </div>
-        <div className="flex items-center justify-center pb-2">
+        {/* <div className="flex items-center justify-center pb-2">
           <Pagination
             data={filteredData}
             itemsPerPage={itemsPerPage}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
