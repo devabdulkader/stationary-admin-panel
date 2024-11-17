@@ -16,6 +16,7 @@ interface IInput {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FormInput = ({
@@ -31,6 +32,7 @@ const FormInput = ({
   required,
   disabled,
   className,
+  onChange,
 }: IInput) => {
   const [isPasswordShow, setIsPasswordShow] = useState(false);
 
@@ -86,6 +88,7 @@ const FormInput = ({
               required={required}
               disabled={disabled}
               className={`${className} w-full py-2`}
+              onChange={onChange}
             />
           );
         }}

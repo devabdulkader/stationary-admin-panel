@@ -10,6 +10,7 @@ interface IImageUpload {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  defaultValue?: string;
 }
 
 const FormImageUpload = ({
@@ -18,9 +19,10 @@ const FormImageUpload = ({
   required,
   disabled,
   className,
+  defaultValue
 }: IImageUpload) => {
   const { control, setValue } = useFormContext();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(defaultValue || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

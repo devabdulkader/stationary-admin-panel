@@ -50,7 +50,7 @@ const ProductDiscount = () => {
     };
 
     fetchProductDiscount();
-  });
+  },[]);
   console.log(discountData);
 
   if (loading) {

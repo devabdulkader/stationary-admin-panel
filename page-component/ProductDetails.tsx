@@ -9,15 +9,100 @@ import { BsArrowLeft } from 'react-icons/bs';
 import ProductImages from '@/components/ProductDetails/ProductImages';
 import ProductDiscount from '@/components/ProductDetails/ProductDiscount';
 import ProductInformation from '@/components/ProductDetails/ProductInformation';
+import { instance } from '@/axios/axiosInstance';
+import { useEffect, useState } from 'react';
 
 interface ProductDetailsProps {
   productId: string;
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
-  const submitHandler = async (data: any) => {
-    console.log(data);
+  const [productDetail, setProductDetail] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      try {
+        const productResponse = await instance.post('', {
+          query: `
+              query GetProduct($id: String!) {
+                product(id: $id) {
+                  id
+                  sku
+                  title
+                  description
+                  price
+                  buyPrice
+                  stockQuantity
+                  images {
+                    url
+                    alt
+                  }
+                  category {
+                    name
+                  }
+                  variants {
+                    id
+                    name
+                    value
+                  }
+                }
+              }
+            `,
+          variables: {
+            id: productId, // Make sure to replace productId with actual value
+          },
+        });
+
+        console.log('Product Detail:', productResponse.data.data.product);
+        setProductDetail(productResponse.data.data.product);
+      } catch (error) {
+        console.error('Error fetching product detail or discount data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductDetail();
+  }, [productId]);
+
+  const submitHandler = async (data:any) => {
+    const sanitizedProductDetail = {
+      ...productDetail,
+      imageUrls: [
+        data.photo?.[1],
+        data.photo?.[2],
+        data.photo?.[3],
+        data.photo?.[4],
+      ].filter((imageUrl) => imageUrl !== undefined && imageUrl !== ''),
+      // imageUrls: productDetail.images?.map((img: any) => img.url), // Assuming `img` has a `url` property
+      categoryId: productDetail.category?.id, // Assuming `category` has an `id` field
+    };
+    // Remove unnecessary fields
+    delete sanitizedProductDetail.id;
+    delete sanitizedProductDetail.category;
+    delete sanitizedProductDetail.images;
+    const response = await instance.post('', {
+      query: `
+        mutation UpdateProduct($id: String!, $input: UpdateProductInput!) {
+          updateProduct( id: $id, input: $input) {
+            success
+            message
+          }
+        }
+      `,
+      variables: {
+        id: productId,
+        input: sanitizedProductDetail,
+      },
+    });
+    console.log('Product Update Response:', response.data.data);
+
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="w-full p-5">
@@ -41,10 +126,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
 
       <Form submitHandler={submitHandler} className="w-full">
         <div>
-          <ProductImages />
+          <ProductImages images={productDetail.images}/>
         </div>
         <div className="flex w-full gap-5 py-5">
-          <ProductInformation productId={productId} />
+          <ProductInformation
+            productDetail={productDetail}
+            setProductDetail={setProductDetail}
+           />
 
           <ProductDiscount />
         </div>

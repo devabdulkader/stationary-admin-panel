@@ -15,6 +15,7 @@ interface FormTextareaProps {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FormTextarea = ({

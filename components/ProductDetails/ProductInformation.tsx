@@ -1,172 +1,185 @@
 'use client';
 
-import { instance } from '@/axios/axiosInstance';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import FormInput from '../form/FormInput';
 import { FiEdit2 } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import FormTextarea from '../form/FormTextarea';
 
 interface ProductInformationProps {
-  productId: string;
+  productDetail: {
+    title: string;
+    category: { name: string };
+    price: any;
+    stockQuantity: any;
+    sku: string;
+    description: string;
+  };
+  setProductDetail: (details: any) => void;
 }
 
 const ProductInformation: React.FC<ProductInformationProps> = ({
-  productId,
+  productDetail,
+  setProductDetail,
 }) => {
-  const [productDetail, setProductDetail] = useState<any>({});
-  const [loading, setLoading] = useState(true);
+  const [editableFields, setEditableFields] = useState<Record<string, boolean>>({
+    title: false,
+    category: false,
+    price: false,
+    stockQuantity: false,
+    description: false,
+  });
 
-  useEffect(() => {
-    const fetchProductDetail = async () => {
-      try {
-        const productResponse = await instance.post('', {
-          query: `
-              query GetProduct($id: String!) {
-                product(id: $id) {
-                  id
-                  title
-                  description
-                  price
-                  buyPrice
-                  stockQuantity
-                  images {
-                    url
-                    alt
-                  }
-                  category {
-                    name
-                  }
-                  variants {
-                    id
-                    name
-                    value
-                  }
-                }
-              }
-            `,
-          variables: {
-            id: productId, // Make sure to replace productId with actual value
-          },
-        });
+  const toggleEditable = (field: string) => {
+    setEditableFields((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
 
-        console.log('Product Detail:', productResponse.data.data.product);
-        setProductDetail(productResponse.data.data.product);
-      } catch (error) {
-        console.error('Error fetching product detail or discount data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleChange = (field: string, value: any) => {
+    setProductDetail((prev: any) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-    fetchProductDetail();
-  }, [productId]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
   return (
     <div className="w-[60%]">
       <div className="flex flex-col gap-5 rounded-lg bg-white p-5">
-        {/* Product Title Input */}
+        {/* Product Title */}
         <div className="flex flex-col gap-2">
           <label className="text-lg font-medium">Product Title</label>
           <div className="relative">
             <FormInput
               name="productTitle"
-              className="input-bg w-full rounded-md p-3 pr-10 outline-none"
-              placeholder={productDetail.title || ' '}
+              value={productDetail.title}
+              disabled={!editableFields.title}
+              className={`input-bg w-full rounded-md p-3 outline-none ${
+                editableFields.title ? 'bg-yellow-100 border border-yellow-500' : 'bg-gray-100'
+              }`}
+              onChange={(e) => handleChange('title', e.target.value)}
             />
             <div className="absolute right-4 top-1/2 flex -translate-y-1/2 transform items-center gap-3">
-              <FiEdit2 className="cursor-pointer text-gray-600" size={24} />
-              <RiDeleteBin6Line
-                className="cursor-pointer text-red-600"
+              <FiEdit2
+                className="cursor-pointer text-gray-600"
                 size={24}
+                onClick={() => toggleEditable('title')}
               />
+              <RiDeleteBin6Line className="cursor-pointer text-red-600" size={24} />
             </div>
           </div>
         </div>
 
-        {/* Product Category Input */}
-        <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <label className="text-lg font-medium">Product Category</label>
-            <div className="relative">
-              <FormInput
-                name="productCategory"
-                className="input-bg w-full rounded-md p-3 pr-10 outline-none"
-                placeholder={productDetail.category?.name || ' '}
+        {/* Product Category */}
+        <div className="flex flex-col gap-2">
+          <label className="text-lg font-medium">Product Category</label>
+          <div className="relative">
+            <FormInput
+              name="productCategory"
+              value={productDetail.category?.name}
+              disabled={!editableFields.category}
+              className={`input-bg w-full rounded-md p-3 outline-none ${
+                editableFields.category ? 'bg-yellow-100 border border-yellow-500' : 'bg-gray-100'
+              }`}
+              onChange={(e) =>
+                handleChange('category', { ...productDetail.category, name: e.target.value })
+              }
+            />
+            <div className="absolute right-4 top-1/2 flex -translate-y-1/2 transform items-center gap-3">
+              <FiEdit2
+                className="cursor-pointer text-gray-600"
+                size={24}
+                onClick={() => toggleEditable('category')}
               />
-              <div className="absolute right-4 top-1/2 flex -translate-y-1/2 transform items-center gap-3">
-                <FiEdit2 className="cursor-pointer text-gray-600" size={24} />
-                <RiDeleteBin6Line
-                  className="cursor-pointer text-red-600"
-                  size={24}
-                />
-              </div>
+              <RiDeleteBin6Line className="cursor-pointer text-red-600" size={24} />
             </div>
           </div>
+        </div>
 
-          {/* Product Price Input */}
-          <div className="flex flex-col gap-2">
-            <label className="text-lg font-medium">Product Price</label>
-            <div className="relative">
-              <FormInput
-                name="productPrice"
-                type="number"
-                className="input-bg w-full rounded-md p-3 pr-10 outline-none"
-                placeholder={productDetail.price?.toString() || ' '}
+        {/* Product Price */}
+        <div className="flex flex-col gap-2">
+          <label className="text-lg font-medium">Product Price</label>
+          <div className="relative">
+            <FormInput
+              name="productPrice"
+              type="number"
+              value={productDetail.price}
+              disabled={!editableFields.price}
+              className={`input-bg w-full rounded-md p-3 outline-none ${
+                editableFields.price ? 'bg-yellow-100 border border-yellow-500' : 'bg-gray-100'
+              }`}
+              onChange={(e) => handleChange('price', parseFloat(e.target.value))}
+            />
+            <div className="absolute right-4 top-1/2 flex -translate-y-1/2 transform items-center gap-3">
+              <FiEdit2
+                className="cursor-pointer text-gray-600"
+                size={24}
+                onClick={() => toggleEditable('price')}
               />
-              <div className="absolute right-4 top-1/2 flex -translate-y-1/2 transform items-center gap-3">
-                <FiEdit2 className="cursor-pointer text-gray-600" size={24} />
-                <RiDeleteBin6Line
-                  className="cursor-pointer text-red-600"
-                  size={24}
-                />
-              </div>
+              <RiDeleteBin6Line className="cursor-pointer text-red-600" size={24} />
             </div>
           </div>
+        </div>
 
-          {/* Product Quantity Input */}
-          <div className="flex flex-col gap-2">
-            <label className="text-lg font-medium">Product Quantity</label>
-            <div className="relative">
-              <FormInput
-                name="productQuantity"
-                className="input-bg w-full rounded-md p-3 outline-none"
-                placeholder={productDetail.stockQuantity?.toString() || ' '}
+        {/* Product Quantity */}
+        <div className="flex flex-col gap-2">
+          <label className="text-lg font-medium">Product Quantity</label>
+          <div className="relative">
+            <FormInput
+              name="productQuantity"
+              type="number"
+              value={productDetail.stockQuantity}
+              disabled={!editableFields.stockQuantity}
+              className={`input-bg w-full rounded-md p-3 outline-none ${
+                editableFields.stockQuantity ? 'bg-yellow-100 border border-yellow-500' : 'bg-gray-100'
+              }`}
+              onChange={(e) => handleChange('stockQuantity', parseInt(e.target.value))}
+            />
+            <div className="absolute right-4 top-1/2 flex -translate-y-1/2 transform items-center gap-3">
+              <FiEdit2
+                className="cursor-pointer text-gray-600"
+                size={24}
+                onClick={() => toggleEditable('stockQuantity')}
               />
-              <div className="absolute right-4 top-1/2 flex -translate-y-1/2 transform items-center gap-3">
-                <FiEdit2 className="cursor-pointer text-gray-600" size={24} />
-                <RiDeleteBin6Line
-                  className="cursor-pointer text-red-600"
-                  size={24}
-                />
-              </div>
+              <RiDeleteBin6Line className="cursor-pointer text-red-600" size={24} />
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-lg font-medium">Product SKU</label>
-            <div className="relative">
-              <input
-                className="input-bg w-full rounded-md p-2 pr-10"
-                value="2302u32"
-                disabled
-              />
-            </div>
-          </div>
-        </section>
+        </div>
+
+        {/* Product SKU (Read-only) */}
+        <div className="flex flex-col gap-2">
+          <label className="text-lg font-medium">Product SKU</label>
+          <input
+            name="productSku"
+            className="input-bg w-full rounded-md p-3"
+            value={productDetail.sku}
+            disabled
+          />
+        </div>
       </div>
 
-      <div className="rounded-lg bg-white p-5">
-        <div className="relative flex flex-col gap-2">
+      {/* Product Description */}
+      <div className="rounded-lg bg-white p-5 mt-5">
+        <div className="flex flex-col gap-2">
           <label className="text-lg font-medium">Product Description</label>
           <FormTextarea
             name="productDescription"
-            className="min-h-40 outline-none"
+            value={productDetail.description}
+            disabled={!editableFields.description}
+            className={`min-h-40 w-full rounded-md p-3 outline-none ${
+              editableFields.description ? 'bg-yellow-100 border border-yellow-500' : 'bg-gray-100'
+            }`}
             rows={4}
-            placeholder={productDetail.description || ' '}
+            onChange={(e) => handleChange('description', e.target.value)}
           />
+          <div className="flex -translate-y-1/2 transform items-center gap-3">
+            <FiEdit2
+              className="cursor-pointer text-gray-600"
+              size={24}
+              onClick={() => toggleEditable('description')}
+            />
+          </div>
         </div>
       </div>
     </div>
